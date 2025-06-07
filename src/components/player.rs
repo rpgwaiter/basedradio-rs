@@ -1,13 +1,8 @@
-use dioxus::{
-    html::{track, u::rest},
-    prelude::*,
-};
+use crate::components::audio::RadioAudio;
+use dioxus::{html::u::rest, prelude::*};
+
 use dioxus_sdk::utils::timing::use_interval;
-use serde::Deserialize;
-use std::thread::sleep;
 use std::time::Duration;
-use web_sys::{window, HtmlAudioElement};
-use web_sys::wasm_bindgen::JsCast;
 
 pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
 pub static API_URL: &str = "https://api.based.radio";
@@ -21,6 +16,7 @@ struct Song {
     game: String,
     system: String,
     title: String,
+    cover: String,
 }
 
 #[derive(serde::Deserialize)]
@@ -46,16 +42,6 @@ fn format_time(e: i16) -> String {
     let min = add_zeros(e / 60, 2);
     let sec = add_zeros(e % 60, 2);
     format!("{}:{}", min, sec)
-}
-
-fn play_audio() {
-    let document = window().unwrap().document().unwrap();
-    if let Some(audio) = document
-        .get_element_by_id("main-audio")
-        .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
-    {
-        let _ = audio.play(); // Can handle result if you want
-    }
 }
 
 // #[layout]
@@ -176,6 +162,7 @@ pub fn PlayerContent() -> Element {
     let mut game = use_signal(|| "Loading stream info...".to_string());
     let mut track = use_signal(|| "".to_string());
     let mut system = use_signal(|| "".to_string());
+    let mut cover_art = use_signal(|| "".to_string());
 
     let fetch_info = move || async move {
         let response = reqwest::get(API_URL)
@@ -188,6 +175,7 @@ pub fn PlayerContent() -> Element {
         game.set(response.song.game);
         track.set(response.song.title);
         system.set(response.song.system);
+        cover_art.set(response.song.cover);
         // There just has to be a better way
         elapsed.set(response.status.elapsed.parse::<f32>().unwrap().round() as i16);
         duration.set(response.status.duration.parse::<f32>().unwrap().round() as i16);
@@ -209,15 +197,11 @@ pub fn PlayerContent() -> Element {
     });
 
     rsx! {
-        audio {
-            id: "main-audio",
-            src: STREAM_MP3
-        },
         div {
             class: "stream-meta",
             div {
                 class: "player-cover-art",
-                img { id: "current-cover", alt: "Cover Art" }
+                img { id: "current-cover", src: "{cover_art}", alt: "Cover Art" }
             },
             PlayerStats { game: game, system: system, track: track  }
         },
@@ -232,10 +216,7 @@ pub fn PlayerContent() -> Element {
                     " ~~~"
                 }
             },
-            div {
-              class: "content-buttons",
-              button { onclick: move |_| play_audio(), id: "play-btn", u {"P"}, "lay" }
-            }
+            RadioAudio {  }
         }
     }
 }
