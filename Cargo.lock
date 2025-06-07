@@ -252,6 +252,7 @@ version = "0.1.0"
 dependencies = [
  "dioxus",
  "dioxus-sdk",
+ "js-sys",
  "reqwest",
  "rodio",
  "serde",

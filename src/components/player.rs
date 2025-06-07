@@ -165,20 +165,20 @@ pub fn PlayerContent() -> Element {
     let mut cover_art = use_signal(|| "".to_string());
 
     let fetch_info = move || async move {
-        let response = reqwest::get(API_URL)
+        if let Ok(response) = reqwest::get(API_URL)
             .await
             .unwrap()
             .json::<RadioApi>()
             .await
-            .unwrap();
-
-        game.set(response.song.game);
-        track.set(response.song.title);
-        system.set(response.song.system);
-        cover_art.set(response.song.cover);
-        // There just has to be a better way
-        elapsed.set(response.status.elapsed.parse::<f32>().unwrap().round() as i16);
-        duration.set(response.status.duration.parse::<f32>().unwrap().round() as i16);
+        {
+            game.set(response.song.game);
+            track.set(response.song.title);
+            system.set(response.song.system);
+            cover_art.set(response.song.cover);
+            // There just has to be a better way
+            elapsed.set(response.status.elapsed.parse::<f32>().unwrap().round() as i16);
+            duration.set(response.status.duration.parse::<f32>().unwrap().round() as i16);
+        }
     };
 
     // Initial load

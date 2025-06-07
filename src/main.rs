@@ -10,11 +10,9 @@ enum Route {
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
-// const MAIN_CSS: Asset = asset!("/assets/main.css");
 // TODO: unify and clean these up
 const BASED_RADIO_CSS: Asset = asset!("/assets/style/based98.css");
 const APP_CSS: Asset = asset!("/assets/style/app.css");
-const HEADER_SVG: Asset = asset!("/assets/header.svg");
 
 fn main() {
     dioxus::launch(App);

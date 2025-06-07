@@ -1,10 +1,11 @@
 use dioxus::prelude::*;
 
 #[cfg(feature = "web")]
-use web_sys::wasm_bindgen::JsCast;
-
+use js_sys::Promise;
 #[cfg(feature = "web")]
-use web_sys::{window, HtmlAudioElement, HtmlElement};
+use web_sys::wasm_bindgen::JsCast;
+#[cfg(feature = "web")]
+use web_sys::{console, window, HtmlAudioElement, HtmlElement};
 
 #[cfg(feature = "desktop")]
 use rodio::{Decoder, OutputStream, Sink};
@@ -24,25 +25,24 @@ use stream_download::{Settings, StreamDownload};
 pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
 
 #[cfg(feature = "web")]
-pub async fn play_audio() { // TODO: get element from event
+pub async fn play_audio() {
     let document = window().unwrap().document().unwrap();
 
     if let Some(audio) = document
         .get_element_by_id("main-audio")
         .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
     {
-        
-        audio.load();
-        let _ = audio.play(); // Can handle result if you want
-
-        if let Some(buttonEl) = document.get_element_by_id("play-btn").and_then(|el| el.dyn_into::<HtmlElement>().ok()) {
-          println!("Got the button")
+        if audio.paused() || audio.ready_state() != 4 {
+            // TODO: cache busting query param
+            audio.load();
+            audio.play();
+        } else {
+            audio.pause();
         }
-        
-    }
+    };
 }
 
-
+// TODO: update button text
 #[cfg(feature = "desktop")]
 pub async fn play_audio() {
     println!("attemting to play audio");
@@ -75,17 +75,21 @@ pub async fn play_audio() {
 
 #[component]
 pub fn RadioAudio() -> Element {
+    let mut play_button_text = use_signal(|| "Play");
     rsx! {
         audio {
             id: "main-audio",
+            onplay: move |_| play_button_text.set("Pause"),
+            onpause: move |_| play_button_text.set("Play"),
+            // onloadstart: move |_| play_button_text.set("Loading..."),
             src: STREAM_MP3
         },
         div {
           class: "content-buttons",
           button {
-              onclick: |event| play_audio(),
+              onclick: |_| play_audio(),
               id: "play-btn",
-              u {"P"}, "lay"
+              "{play_button_text}"
           }
         }
     }
