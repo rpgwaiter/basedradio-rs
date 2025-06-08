@@ -44,23 +44,6 @@ fn format_time(e: i16) -> String {
     format!("{}:{}", min, sec)
 }
 
-// #[layout]
-// pub fn Window(id: String) -> Element {
-//     rsx! {
-//         div {
-//             id: "player",
-//             div {
-//                 id: "window-player",
-//                 class: "win98",
-//                 div {
-//                     id: id,
-//                     class: "window",
-//                 }
-//             }
-//         }
-//     }
-// }
-
 #[component]
 pub fn PlayerMenu() -> Element {
     rsx! {
@@ -107,23 +90,6 @@ pub fn PlayerMenu() -> Element {
 
 #[component]
 pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<String>) -> Element {
-    // TODO: make this global to this player file
-    // let mut game = use_signal(|| "Loading stream info...".to_string());
-    // let mut track = use_signal(|| "".to_string());
-    // let mut system = use_signal(|| "".to_string());
-
-    // counter increment
-    // use_effect(move || loop {
-    //     elapsed.set(elapsed + 1 as i16);
-    //     println!("Looping now");
-
-    //     sleep(Duration::from_secs(1));
-    // });
-
-    // use_interva
-
-    // fetch_info().await();
-
     rsx! {
         div {
             class: "player-stats",
@@ -244,42 +210,3 @@ pub fn Player() -> Element {
       }
     }
 }
-
-// pub fn Player() -> Element {
-//     rsx! {
-//         div {
-//             id: "player",
-//             div {
-//                 id: "window-player",
-//                 class: "win98",
-//                 div {
-//                     id: "based-radio",
-//                     class: "window",
-//                     div {
-//                         class: "header",
-//                         div { class: "icon" },
-//                         "BasedRadio",
-//                         div {
-//                             class: "buttons",
-//                             button { class: "button-minimize" }
-//                         }
-//                     },
-//                     PlayerMenu {  }
-//                     div {
-//                         class: "inner",
-//                         div {
-//                             id: "player-container",
-//                             class: "minimizable content",
-//                             PlayerContent {  }
-//                         }
-//                     },
-//                     div {
-//                         class: "player-footer",
-//                         div { "Keep it Based." },
-//                         div { class: "footer-end" }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// }
