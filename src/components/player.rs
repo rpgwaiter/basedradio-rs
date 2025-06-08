@@ -1,4 +1,4 @@
-use crate::components::audio::RadioAudio;
+use crate::components::{audio::RadioAudio, Window};
 use dioxus::{html::u::rest, prelude::*};
 
 use dioxus_sdk::utils::timing::use_interval;
@@ -225,39 +225,61 @@ pub fn PlayerContent() -> Element {
 #[component]
 pub fn Player() -> Element {
     rsx! {
+      Window {
+        title: "BasedRadio",
+        PlayerMenu {  },
         div {
-            id: "player",
+            class: "inner",
             div {
-                id: "window-player",
-                class: "win98",
-                div {
-                    id: "based-radio",
-                    class: "window",
-                    div {
-                        class: "header",
-                        div { class: "icon" },
-                        "BasedRadio",
-                        div {
-                            class: "buttons",
-                            button { class: "button-minimize" }
-                        }
-                    },
-                    PlayerMenu {  }
-                    div {
-                        class: "inner",
-                        div {
-                            id: "player-container",
-                            class: "minimizable content",
-                            PlayerContent {  }
-                        }
-                    },
-                    div {
-                        class: "player-footer",
-                        div { "Keep it Based." },
-                        div { class: "footer-end" }
-                    }
-                }
+                id: "player-container",
+                class: "minimizable content",
+                PlayerContent {  }
             }
+        },
+        div {
+            class: "player-footer",
+            div { "Keep it Based." },
+            div { class: "footer-end" }
         }
+      }
     }
 }
+
+// pub fn Player() -> Element {
+//     rsx! {
+//         div {
+//             id: "player",
+//             div {
+//                 id: "window-player",
+//                 class: "win98",
+//                 div {
+//                     id: "based-radio",
+//                     class: "window",
+//                     div {
+//                         class: "header",
+//                         div { class: "icon" },
+//                         "BasedRadio",
+//                         div {
+//                             class: "buttons",
+//                             button { class: "button-minimize" }
+//                         }
+//                     },
+//                     PlayerMenu {  }
+//                     div {
+//                         class: "inner",
+//                         div {
+//                             id: "player-container",
+//                             class: "minimizable content",
+//                             PlayerContent {  }
+//                         }
+//                     },
+//                     div {
+//                         class: "player-footer",
+//                         div { "Keep it Based." },
+//                         div { class: "footer-end" }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }

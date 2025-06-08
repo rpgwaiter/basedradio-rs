@@ -24,6 +24,7 @@ use stream_download::{Settings, StreamDownload};
 
 pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
 
+
 #[cfg(feature = "web")]
 pub async fn play_audio() {
     let document = window().unwrap().document().unwrap();
@@ -33,7 +34,7 @@ pub async fn play_audio() {
         .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
     {
         if audio.paused() || audio.ready_state() != 4 {
-            // TODO: cache busting query param
+            audio.set_src(STREAM_MP3);
             audio.load();
             audio.play();
         } else {
@@ -76,13 +77,29 @@ pub async fn play_audio() {
 #[component]
 pub fn RadioAudio() -> Element {
     let mut play_button_text = use_signal(|| "Play");
+    let mut audio_num = use_signal(|| 0 as i8);
+    let mut audio_url = use_signal(|| format_url(audio_num()));
+
+    // url param cache buster int
+    fn format_url(num: i8) -> String {
+      return format!(
+            "{}?t={:?}",
+            STREAM_MP3,
+            num
+        )
+    }
+
     rsx! {
         audio {
             id: "main-audio",
             onplay: move |_| play_button_text.set("Pause"),
-            onpause: move |_| play_button_text.set("Play"),
+            onpause: move |_| {
+              audio_num += 1;
+              audio_url.set(format_url(audio_num()));
+              play_button_text.set("Play");
+            },
             // onloadstart: move |_| play_button_text.set("Loading..."),
-            src: STREAM_MP3
+            src: "{audio_url}"
         },
         div {
           class: "content-buttons",

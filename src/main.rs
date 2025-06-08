@@ -24,6 +24,7 @@ fn App() -> Element {
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: APP_CSS }
         document::Link { rel: "stylesheet", href: BASED_RADIO_CSS }
+        document::Script { src: asset!("/assets/js/draggable.js") }
         Router::<Route> {}
     }
 }
