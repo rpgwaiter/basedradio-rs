@@ -61,18 +61,16 @@ pub fn PlayerMenu() -> Element {
             },
             div {
                 class: "action",
-                a {
-                    id: "about-show",
-                    role: "button",
-                    u {"A"}, "bout"
-                }
+                id: "about-show",
+                role: "button",
+                "About"
             },
             div {
                 class: "action",
                 a {
                     id: "download-btn",
                     role: "button",
-                    u {"D"}, "ownload"
+                    "Download"
                 }
             },
             // div {
@@ -187,26 +185,30 @@ pub fn PlayerContent() -> Element {
     }
 }
 
-// TODO: make this a layout
 #[component]
 pub fn Player() -> Element {
     rsx! {
-      Window {
-        title: "BasedRadio",
-        PlayerMenu {  },
         div {
-            class: "inner",
-            div {
-                id: "player-container",
-                class: "minimizable content",
-                PlayerContent {  }
+            id: "window-player",
+            class: "win98",
+            Window {
+                title: "BasedRadio",
+                id: "based-radio",
+                PlayerMenu {  },
+                div {
+                    class: "inner",
+                    div {
+                        id: "player-container",
+                        class: "minimizable content",
+                        PlayerContent {  }
+                    }
+                },
+                div {
+                    class: "player-footer",
+                    div { "Keep it Based." },
+                    div { class: "footer-end" }
+                }
             }
-        },
-        div {
-            class: "player-footer",
-            div { "Keep it Based." },
-            div { class: "footer-end" }
         }
-      }
     }
 }

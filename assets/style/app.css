@@ -11,7 +11,15 @@ body {
     background-color: var(--page-bg);
 }
 
-button:first-letter {
+button::first-letter {
+    text-decoration: underline;
+}
+
+#based-radio {
+    user-select: none;
+}
+
+.action::first-letter {
     text-decoration: underline;
 }
 
