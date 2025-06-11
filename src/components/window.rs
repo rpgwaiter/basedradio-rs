@@ -38,6 +38,7 @@ pub fn Window(props: WindowProps) -> Element {
         }
     };
 
+    // TODO: don't let the window move out of bounds
     let mouse_move = move |event: Event<MouseData>| async move {
         if event.held_buttons().contains(MouseButton::Primary) && is_dragging() {
             // current mouse pos
@@ -53,8 +54,8 @@ pub fn Window(props: WindowProps) -> Element {
             let offset_x = previous_x() - screen_coords.x as f32;
             let offset_y = previous_y() - screen_coords.y as f32;
 
-            let new_x = dim_x().replace("%", "").parse::<f32>().unwrap() - offset_x;
-            let new_y = dim_y().replace("%", "").parse::<f32>().unwrap() - offset_y;
+            let new_x = (dim_x().replace("%", "").parse::<f32>().unwrap() - offset_x).abs();
+            let new_y = (dim_y().replace("%", "").parse::<f32>().unwrap() - offset_y).abs();
 
             dim_x.set(format!("{:?}", new_x));
             dim_y.set(format!("{:?}", new_y));
@@ -70,26 +71,33 @@ pub fn Window(props: WindowProps) -> Element {
             id: "{props.id}",
             class: "window",
             onmounted: move |cx| div_element.set(Some(cx.data())),
-            style: "top: {dim_y}px; left: {dim_x}px;", //left: {dim_x.or(\"50%\");};
+            style: "top: {dim_y}px; left: {dim_x}px;",
             div {
-                class: "header",
-                onmousedown: move |_| {
-                    is_dragging.set(true);
-
-                    read_dims()
-                },
-                onmouseup: move |_| { info!("mouseup!!"); is_dragging.set(false) },
-                onmousemove: move |event| mouse_move(event),
-                onmouseleave: move |event| mouse_move(event),
-                div { class: "icon" },
-                "{props.title}",
+                class: "inner",
                 div {
-                    class: "buttons",
-                    button { class: "button-minimize" }
-                }
+                    class: "header",
+                    onmousedown: move |_| {
+                        is_dragging.set(true);
+                        read_dims()
+                    },
+                    onmouseup: move |_| { info!("mouseup!!"); is_dragging.set(false) },
+                    onmousemove: move |event| mouse_move(event),
+                    onmouseleave: move |event| mouse_move(event),
+                    onmouseout: move |event| mouse_move(event),
+                    div { class: "icon" },
+                    "{props.title}",
+                    div {
+                        class: "buttons",
+                        button { class: "button-minimize" }
+                    }
+                },
+                {props.children}
             },
-            {props.children}
+            div {
+                class: "player-footer",
+                div { "Keep it Based." },
+                div { class: "footer-end" }
+            }
         }
-
     }
 }

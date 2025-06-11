@@ -24,7 +24,6 @@ use stream_download::{Settings, StreamDownload};
 
 pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
 
-
 #[cfg(feature = "web")]
 pub async fn play_audio() {
     let document = window().unwrap().document().unwrap();
@@ -82,11 +81,7 @@ pub fn RadioAudio() -> Element {
 
     // url param cache buster int
     fn format_url(num: i8) -> String {
-      return format!(
-            "{}?t={:?}",
-            STREAM_MP3,
-            num
-        )
+        return format!("{}?t={:?}", STREAM_MP3, num);
     }
 
     rsx! {

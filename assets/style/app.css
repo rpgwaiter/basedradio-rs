@@ -19,7 +19,16 @@ button::first-letter {
     user-select: none;
 }
 
-.action::first-letter {
+.player-visualizer {
+    width: 89%;
+    height: 13%;
+    top: 64%;
+    left: 6.5%;
+    z-index: 1;
+    position: absolute;
+  }
+
+.action a::first-letter {
     text-decoration: underline;
 }
 

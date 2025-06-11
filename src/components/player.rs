@@ -1,4 +1,4 @@
-use crate::components::{audio::RadioAudio, Window};
+use crate::components::{audio::RadioAudio, Visualizer, Window};
 use dioxus::{html::u::rest, prelude::*};
 
 use dioxus_sdk::utils::timing::use_interval;
@@ -56,14 +56,16 @@ pub fn PlayerMenu() -> Element {
                     id: "home-button",
                     href: "/",
                     role: "button",
-                    u {"H"}, "ome"
+                    "Home"
                 },
             },
             div {
                 class: "action",
-                id: "about-show",
-                role: "button",
-                "About"
+                a {
+                    id: "about-show",
+                    role: "button",
+                    "About"
+                }
             },
             div {
                 class: "action",
@@ -73,15 +75,15 @@ pub fn PlayerMenu() -> Element {
                     "Download"
                 }
             },
-            // div {
-            //     class: "action",
-            //     a {
-            //         id: "updates-show",
-            //         role: "button",
-            //         style: "float: right;",
-            //         u {"U"}, "pdates"
-            //     }
-            // }
+            div {
+                class: "action",
+                style: "float: right;",
+                a {
+                    id: "updates-show",
+                    role: "button",
+                    "Updates"
+                }
+            }
         }
     }
 }
@@ -109,15 +111,6 @@ pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<S
         }
     }
 }
-
-// #[component]
-// pub fn Visualizer() -> Element {
-//     rsx! {
-//         script {
-
-//         }
-//     }
-// }
 
 #[component]
 pub fn PlayerContent() -> Element {
@@ -171,6 +164,7 @@ pub fn PlayerContent() -> Element {
         },
         div {
             class: "player-meta",
+            Visualizer { },
             div {
                 class: "player-time-container text-field",
                 div {
@@ -195,20 +189,14 @@ pub fn Player() -> Element {
                 title: "BasedRadio",
                 id: "based-radio",
                 PlayerMenu {  },
-                div {
-                    class: "inner",
                     div {
                         id: "player-container",
                         class: "minimizable content",
                         PlayerContent {  }
                     }
-                },
-                div {
-                    class: "player-footer",
-                    div { "Keep it Based." },
-                    div { class: "footer-end" }
-                }
-            }
+
+            },
+
         }
     }
 }
