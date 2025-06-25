@@ -14,7 +14,7 @@ pub struct WindowProps {
     title: String,
     id: String,
     children: Element,
-    headerIcon: bool
+    header_icon: bool
 }
 
 #[component]
