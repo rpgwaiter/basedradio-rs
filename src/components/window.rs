@@ -6,11 +6,15 @@ use dioxus::{
 };
 use std::rc::Rc;
 
+static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
+static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
+
 #[derive(PartialEq, Props, Clone)]
 pub struct WindowProps {
     title: String,
     id: String,
     children: Element,
+    headerIcon: bool
 }
 
 #[component]
@@ -84,11 +88,11 @@ pub fn Window(props: WindowProps) -> Element {
                     onmousemove: move |event| mouse_move(event),
                     onmouseleave: move |event| mouse_move(event),
                     onmouseout: move |event| mouse_move(event),
-                    div { class: "icon" },
+                    div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover;", ICON_FAVICON.to_string()) },
                     "{props.title}",
                     div {
                         class: "buttons",
-                        button { class: "button-minimize" }
+                        button { class: "button-minimize", style: format!("background-image: url({});", ICON_CLOSE.to_string()) }
                     }
                 },
                 {props.children}

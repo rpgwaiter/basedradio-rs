@@ -188,6 +188,7 @@ pub fn Player() -> Element {
             Window {
                 title: "BasedRadio",
                 id: "based-radio",
+                headerIcon: true,
                 PlayerMenu {  },
                     div {
                         id: "player-container",

@@ -5,7 +5,7 @@ use js_sys::Promise;
 #[cfg(feature = "web")]
 use web_sys::wasm_bindgen::JsCast;
 #[cfg(feature = "web")]
-use web_sys::{console, window, HtmlAudioElement, HtmlElement};
+use web_sys::{console, window, HtmlAudioElement, HtmlCanvasElement, HtmlElement};
 
 #[cfg(feature = "desktop")]
 use rodio::{Decoder, OutputStream, Sink};
@@ -71,6 +71,21 @@ pub async fn play_audio() {
             }
         }
     });
+}
+
+// Get raw audio bytestream for use in the visualizer
+// TODO:
+#[cfg(feature = "web")]
+pub async fn get_audio_stream() {
+    let document = window().unwrap().document().unwrap();
+
+    // If we have a valid audio obj
+//     if let Some(audio) = document
+//         .get_element_by_id("main-audio")
+//         .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
+//     {
+//         audio
+//     }
 }
 
 #[component]
