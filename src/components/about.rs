@@ -18,7 +18,16 @@ pub fn About() -> Element {
               isVisible: isVisible,
               div {
                 id: "about-radio",
-                class: "inner content"
+                class: "inner content",
+                h3 {
+                  "BasedRadio is an internet radio station playing classic and obscure music from the pre-32bit era. Heavily inspired by ",
+                  a { href: "https://plaza.one", target: "_blank", rel: "noopener noreferrer", "plaza.one" },
+                  ", all of the code for this site is custom (and written in rust)."
+                },
+                br {},
+                p { "If you're interested: ", a { href: "https://github.com/rpgwaiter/basedradio-rs", target: "_blank", rel: "noopener noreferrer", "source code" } }
+                br {},
+                h4 { "-- No AI/LLM tools were used in the making of BasedRadio. --" },  
               }
           },
         }
