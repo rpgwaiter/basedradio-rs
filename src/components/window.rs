@@ -14,7 +14,8 @@ pub struct WindowProps {
     title: String,
     id: String,
     children: Element,
-    header_icon: bool
+    header_icon: bool,
+    isVisible: Option<Signal<bool>>
 }
 
 #[component]
@@ -92,7 +93,11 @@ pub fn Window(props: WindowProps) -> Element {
                     "{props.title}",
                     div {
                         class: "buttons",
-                        button { class: "button-minimize", style: format!("background-image: url({});", ICON_CLOSE.to_string()) }
+                        button {
+                          onclick: move |_| { if let Some(mut vis) = props.isVisible { vis.set(false); } },
+                          class: "button-minimize",
+                          style: format!("background-image: url({});", ICON_CLOSE.to_string())
+                        }
                     }
                 },
                 {props.children}
