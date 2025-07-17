@@ -1,6 +1,5 @@
-use crate::RadioState;
-use crate::components::{Visualizer, Window, audio::RadioAudio};
-use dioxus::{html::u::rest, prelude::*};
+use crate::components::{PlayerState, RadioApi, RadioState, Visualizer, Window, audio::RadioAudio};
+use dioxus::prelude::*;
 use urlencoding::encode;
 
 use dioxus_sdk::utils::timing::use_interval;
@@ -8,30 +7,6 @@ use std::time::Duration;
 
 pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
 pub static API_URL: &str = "https://api.based.radio";
-
-#[derive(serde::Deserialize)]
-struct Song {
-  album: String,
-  artist: String,
-  file: String,
-  duration: String, // Eventually will be a number
-  game: String,
-  system: String,
-  title: String,
-  cover: String,
-}
-
-#[derive(serde::Deserialize)]
-struct Status {
-  elapsed: String,
-  duration: String,
-}
-
-#[derive(serde::Deserialize)]
-struct RadioApi {
-  song: Song,
-  status: Status,
-}
 
 // TODO: move to a lib
 fn add_zeros(e: i16, t: usize) -> String {
@@ -123,12 +98,12 @@ pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<S
 
 #[component]
 pub fn PlayerContent() -> Element {
-  let mut elapsed = use_signal(|| 0 as i16);
-  let mut duration = use_signal(|| 0 as i16);
-  let mut game = use_signal(|| "Loading stream info...".to_string());
-  let mut track = use_signal(|| "".to_string());
-  let mut system = use_signal(|| "".to_string());
-  let mut cover_art = use_signal(|| "".to_string());
+  let mut elapsed = use_context::<PlayerState>().elapsed;
+  let mut duration = use_context::<PlayerState>().duration;
+  let mut game = use_context::<PlayerState>().game;
+  let mut track = use_context::<PlayerState>().title;
+  let mut system = use_context::<PlayerState>().system;
+  let mut cover_art = use_context::<PlayerState>().cover;
   let mut downloadLink = use_context::<RadioState>().downloadLink;
 
   let fetch_info = move || async move {
@@ -172,7 +147,7 @@ pub fn PlayerContent() -> Element {
           class: "stream-meta",
           div {
               class: "player-cover-art",
-              img { id: "current-cover", src: "{cover_art}", alt: "Cover Art" }
+              img { id: "current-cover", src: "{cover_art}", alt: "Cover Art", style: "margin: auto; display: block;" }
           },
           PlayerStats { game: game, system: system, track: track  }
       },
@@ -195,6 +170,7 @@ pub fn PlayerContent() -> Element {
 
 #[component]
 pub fn Player() -> Element {
+  let playerState = use_context_provider(|| PlayerState::new());
   rsx! {
       div {
           id: "window-player",

@@ -1,5 +1,5 @@
 mod components;
-use components::{About, Player};
+use components::{About, Player, PlayerState, RadioState};
 use dioxus::prelude::*;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
@@ -28,20 +28,10 @@ fn App() -> Element {
   }
 }
 
-// TODO: add basically all state here
-#[derive(Clone, Copy)]
-pub struct RadioState {
-  aboutIsVisible: Signal<bool>,
-  downloadLink: Signal<String>,
-}
-
 /// Home page
 #[component]
 fn Home() -> Element {
-  let state = use_context_provider(|| RadioState {
-    aboutIsVisible: Signal::new(false),
-    downloadLink: Signal::new("/".to_string()),
-  });
+  let state = use_context_provider(|| RadioState::new());
   rsx! {
       About {},
       Player {}

@@ -27,7 +27,7 @@ pub fn About() -> Element {
                 br {},
                 p { "If you're interested: ", a { href: "https://github.com/rpgwaiter/basedradio-rs", target: "_blank", rel: "noopener noreferrer", "source code" } }
                 br {},
-                h4 { "-- No AI/LLM tools were used in the making of BasedRadio. --" },  
+                h4 { "-- No AI/LLM tools were used in the making of BasedRadio. --" },
               }
           },
         }
