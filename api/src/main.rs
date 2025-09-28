@@ -1,21 +1,51 @@
-extern crate actix_web;
-extern crate mpd;
+use actix_web::middleware::Logger;
+use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use async_mpd::{MpdClient, cmd};
 
-use actix_web::{App, HttpServer, Responder, web};
-use mpd::Client;
-// use serde::{Deserialize, Serialize};
-use std::io;
 
-async fn get_info() -> impl Responder {
-  let mut conn = Client::connect("127.0.0.1:6600").unwrap(); // TODO: get from env
-  println!("Status: {:?}", conn.status());
-  "Hello, world!"
+#[get("/stats")]
+async fn get_stats() -> impl Responder {
+  let mut mpd = MpdClient::new();
+  mpd.connect("localhost:6600").await.unwrap();
+
+  let response_json = mpd.stats().await.unwrap();
+  HttpResponse::Ok().json(response_json)
 }
 
+#[get("/status")]
+async fn get_status() -> impl Responder {
+  let mut mpd = MpdClient::new();
+  mpd.connect("localhost:6600").await.unwrap();
+
+  let response_json = mpd.status().await.unwrap();
+  HttpResponse::Ok().json(response_json)
+}
+
+#[get("/")]
+async fn get_playing_song() -> impl Responder {
+  let mut mpd = MpdClient::new();
+  mpd.connect("localhost:6600").await.unwrap();
+
+  let status = mpd.status().await.unwrap();
+  let playlist = mpd.exec(cmd::PlaylistInfo).await.unwrap();
+  HttpResponse::Ok().json(&playlist[status.songid.unwrap() as usize])
+}
+
+
 #[actix_web::main]
-async fn main() -> io::Result<()> {
-  HttpServer::new(|| App::new().route("/", web::get().to(get_info)))
-    .bind("0.0.0.0:6969")?
-    .run()
-    .await
+async fn main() -> std::io::Result<()> {
+  env_logger::init();
+
+  println!("BasedRadio API started successfully");
+
+  HttpServer::new(move || {
+    App::new()
+      .service(get_playing_song)
+      .service(get_status)
+      .service(get_stats)
+      .wrap(Logger::default())
+  })
+  .bind(("0.0.0.0", 8000))?
+  .run()
+  .await
 }
