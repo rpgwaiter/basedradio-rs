@@ -103,24 +103,24 @@ pub fn RadioAudio() -> Element {
   }
 
   rsx! {
+    
+    div {
       audio {
-          id: "main-audio",
-          onplay: move |_| play_button_text.set("Pause"),
-          onpause: move |_| {
-            audio_num += 1;
-            audio_url.set(format_url(audio_num()));
-            play_button_text.set("Play");
-          },
-          // onloadstart: move |_| play_button_text.set("Loading..."),
-          src: "{audio_url}"
+        id: "main-audio",
+        onplay: move |_| play_button_text.set("Pause"),
+        onpause: move |_| {
+          audio_num += 1;
+          audio_url.set(format_url(audio_num()));
+          play_button_text.set("Play");
+        },
+        // onloadstart: move |_| play_button_text.set("Loading..."),
+        src: "{audio_url}"
       },
-      div {
-        class: "content-buttons",
-        button {
-            onclick: |_| play_audio(),
-            id: "play-btn",
-            "{play_button_text}"
-        }
+      button {
+        onclick: |_| play_audio(),
+        id: "play-btn",
+        "{play_button_text}"
       }
+    }
   }
 }

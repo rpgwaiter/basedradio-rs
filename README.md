@@ -40,3 +40,4 @@ dx serve --platform=desktop --features desktop --package basedradio-rs
 - [ ] different playlists for events, livecasting, etc
 - [ ] login system
 - [ ] voting w/ weights (would require replacement of mpd playlist management)
+- [ ] option to bounce the player window around the screen like those old dvd menus

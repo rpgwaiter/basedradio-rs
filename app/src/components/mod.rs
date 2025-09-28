@@ -1,10 +1,19 @@
 use dioxus::prelude::Signal;
 
+pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
+pub static API_URL: &str = "https://api.based.radio";
+
 pub mod player;
 pub use player::Player;
 
 pub mod about;
 pub use about::About;
+
+pub mod updates;
+pub use updates::Updates;
+
+pub mod moreinfo;
+pub use moreinfo::{MoreInfo, MoreInfoButton};
 
 pub mod audio;
 
@@ -71,6 +80,8 @@ impl PlayerState {
 #[derive(Clone, Copy)]
 pub struct RadioState {
   aboutIsVisible: Signal<bool>,
+  updatesIsVisible: Signal<bool>,
+  moreInfoIsVisible: Signal<bool>,
   downloadLink: Signal<String>,
 }
 
@@ -78,7 +89,10 @@ impl RadioState {
   pub fn new() -> Self {
     RadioState {
       aboutIsVisible: Signal::new(false),
+      updatesIsVisible: Signal::new(false),
+      moreInfoIsVisible: Signal::new(false),
       downloadLink: Signal::new("/".to_string()),
     }
   }
 }
+

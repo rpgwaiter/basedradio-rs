@@ -1,5 +1,5 @@
 mod components;
-use components::{About, Player, PlayerState, RadioState};
+use components::{About, Player, MoreInfo, PlayerState, RadioState, Updates, moreinfo::TrackMoreInfo};
 use dioxus::prelude::*;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
@@ -32,8 +32,11 @@ fn App() -> Element {
 #[component]
 fn Home() -> Element {
   let state = use_context_provider(|| RadioState::new());
+  let moreInfoState = use_context_provider(|| TrackMoreInfo::new());
   rsx! {
       About {},
-      Player {}
+      Player {},
+      Updates {},
+      MoreInfo {}
   }
 }

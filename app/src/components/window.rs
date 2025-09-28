@@ -72,41 +72,41 @@ pub fn Window(props: WindowProps) -> Element {
   };
 
   rsx! {
+    div {
+      id: "{props.id}",
+      class: "window",
+      onmounted: move |cx| div_element.set(Some(cx.data())),
+      style: "top: {dim_y}px; left: {dim_x}px;",
       div {
-          id: "{props.id}",
-          class: "window",
-          onmounted: move |cx| div_element.set(Some(cx.data())),
-          style: "top: {dim_y}px; left: {dim_x}px;",
-          div {
-              class: "inner",
-              div {
-                  class: "header",
-                  onmousedown: move |_| {
-                      is_dragging.set(true);
-                      read_dims()
-                  },
-                  onmouseup: move |_| { info!("mouseup!!"); is_dragging.set(false) },
-                  onmousemove: move |event| mouse_move(event),
-                  onmouseleave: move |event| mouse_move(event),
-                  onmouseout: move |event| mouse_move(event),
-                  div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover;", ICON_FAVICON.to_string()) },
-                  "{props.title}",
-                  div {
-                      class: "buttons",
-                      button {
-                        onclick: move |_| { if let Some(mut vis) = props.isVisible { vis.set(false); } },
-                        class: "button-minimize",
-                        style: format!("background-image: url({});", ICON_CLOSE.to_string())
-                      }
-                  }
-              },
-              {props.children}
+        class: "inner",
+        div {
+          class: "header",
+          onmousedown: move |_| {
+            is_dragging.set(true);
+            read_dims()
           },
+          onmouseup: move |_| { info!("mouseup!!"); is_dragging.set(false) },
+          onmousemove: move |event| mouse_move(event),
+          onmouseleave: move |event| mouse_move(event),
+          onmouseout: move |event| mouse_move(event),
+          div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover;", ICON_FAVICON.to_string()) },
+          "{props.title}",
           div {
-              class: "player-footer",
-              div { "Keep it Based." },
-              div { class: "footer-end" }
+            class: "buttons",
+            button {
+              onclick: move |_| { if let Some(mut vis) = props.isVisible { vis.set(false); } },
+              class: "button-minimize",
+              style: format!("background-image: url({});", ICON_CLOSE.to_string())
+            }
           }
+        },
+        {props.children}
+      },
+      div {
+        class: "player-footer",
+        div { "Keep it Based." },
+        div { class: "footer-end" }
       }
+    }
   }
 }
