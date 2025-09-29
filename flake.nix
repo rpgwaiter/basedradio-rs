@@ -17,6 +17,7 @@
       }: {
         packages.basedradio-app = pkgs.callPackage ./app {};
         packages.basedradio-api = pkgs.callPackage ./api {};
+        nixosModules.radio-api = import ./api/module.nix;
       };
     };
 }
