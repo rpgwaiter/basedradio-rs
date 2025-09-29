@@ -1,5 +1,7 @@
 mod components;
-use components::{About, Player, MoreInfo, PlayerState, RadioState, Updates, moreinfo::TrackMoreInfo};
+use components::{
+  About, MoreInfo, Player, PlayerState, RadioState, Updates, moreinfo::TrackMoreInfo,
+};
 use dioxus::prelude::*;
 
 #[derive(Debug, Clone, Routable, PartialEq)]

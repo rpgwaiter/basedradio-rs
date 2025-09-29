@@ -34,6 +34,11 @@ in {
         default = 9969;
         description = "Port of the radio api";
       };
+      openFirewall = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Open ports for the api";
+      };
     };
 
     mpd = {
@@ -54,6 +59,7 @@ in {
     # environment.systemPackages = [cfg.package]; # if user should have the command available as well
     # services.dbus.packages = [cfg.package]; # if the package has dbus related configuration
 
+    networking.firewall.allowedTCPPorts = mkIf cfg.api.openFirewall [cfg.api.port];
     systemd.services.radio-api = {
       description = "BasedRadio Api server daemon.";
 
@@ -67,7 +73,7 @@ in {
         MPD_PORT = toString cfg.mpd.port;
         RADIO_MUSIC_DIR = cfg.musicDir;
         RADIO_API_HOST = cfg.api.hostName;
-        RADIO_API_PORT = cfg.api.port;
+        RADIO_API_PORT = toString cfg.api.port;
       };
 
       serviceConfig = {

@@ -1,7 +1,6 @@
 use crate::RadioState;
-use crate::components::{Visualizer, Window, audio::RadioAudio, API_URL};
+use crate::components::{API_URL, Visualizer, Window, audio::RadioAudio};
 use dioxus::prelude::*;
-
 
 // pub struct RegionalTitles {
 //   en: Option<String>,
@@ -17,7 +16,7 @@ use dioxus::prelude::*;
 
 #[derive(Clone, serde::Deserialize)]
 pub struct TrackMoreInfoUpstream {
-  notes: Vec<String>
+  notes: Vec<String>,
   // game: RegionalTitles,
   // links: InfoLinks
   // notes: Vec<String> // Site owner's notes. Fun facts, random stuff
@@ -25,18 +24,18 @@ pub struct TrackMoreInfoUpstream {
 
 #[derive(Clone)]
 pub struct TrackMoreInfo {
-  notes: Signal<Vec<String>>
+  notes: Signal<Vec<String>>,
   // game: RegionalTitles,
   // links: InfoLinks
   // notes: Vec<String> // Site owner's notes. Fun facts, random stuff
 }
 
-
-
 impl TrackMoreInfo {
   pub fn new() -> Self {
     TrackMoreInfo {
-      notes: Signal::new(vec![String::from("Default note, you should never see this")])
+      notes: Signal::new(vec![String::from(
+        "Default note, you should never see this",
+      )]),
     }
   }
 }
@@ -52,12 +51,11 @@ pub fn MoreInfoButton() -> Element {
       .unwrap() // TODO: handle a dead api
       .json::<TrackMoreInfoUpstream>()
       .await
-      {
-        let n = response.notes[0].clone();
-        println!("NOTE REEE: {:?}", n);
-        notes.set(response.notes);
-        // println!("NOTE REEE3: {:?}", n);
-      }
+    {
+      let n = response.notes[0].clone();
+      println!("NOTE: {:?}", n);
+      notes.set(response.notes);
+    }
   };
 
   rsx! {
@@ -78,7 +76,6 @@ pub fn MoreInfo() -> Element {
   let mut isVisible = use_context::<RadioState>().moreInfoIsVisible;
   let mut notes = use_context::<TrackMoreInfo>().notes;
   let mut initialLoad = Signal::new(false);
-
 
   println!("notes is: {:?}", notes());
 

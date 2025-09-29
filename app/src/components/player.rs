@@ -1,11 +1,12 @@
-use crate::components::{PlayerState, MoreInfoButton, RadioApi, RadioState, Visualizer, Window, audio::RadioAudio, STREAM_MP3, API_URL};
+use crate::components::{
+  API_URL, MoreInfoButton, PlayerState, RadioApi, RadioState, STREAM_MP3, Visualizer, Window,
+  audio::RadioAudio,
+};
 use dioxus::prelude::*;
 use urlencoding::encode;
 
 use dioxus_sdk::utils::timing::use_interval;
 use std::time::Duration;
-
-
 
 // TODO: move to a lib
 fn add_zeros(e: i16, t: usize) -> String {
@@ -121,7 +122,6 @@ pub fn PlayerContent() -> Element {
         "https://files.based.radio/{}",
         encode(&response.song.file).to_string()
       )); // TODO: grab link url from env or something
-      
     }
   };
 

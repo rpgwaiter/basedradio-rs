@@ -1,14 +1,19 @@
 use actix_web::middleware::Logger;
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, get};
 use async_mpd::{MpdClient, cmd};
 use std::env;
 
 async fn get_mpd() -> Result<MpdClient, async_mpd::Error> {
   let mpd_host = env::var("MPD_HOST").unwrap_or("localhost".into());
-  let mpd_port: u16 = env::var("MPD_PORT").unwrap_or("9969".into()).parse::<u16>().unwrap();
+  let mpd_port: u16 = env::var("MPD_PORT")
+    .unwrap_or("6600".into())
+    .parse::<u16>()
+    .unwrap();
   let mut mpd = MpdClient::new();
-  mpd.connect(format!("{:?}:{:?}", mpd_host, mpd_port)).await?;
-  return Ok(mpd)
+  let mpd_addr = format!("{mpd_host}:{mpd_port}");
+
+  mpd.connect(mpd_addr).await?;
+  return Ok(mpd);
 }
 
 #[get("/stats")]
@@ -36,7 +41,6 @@ async fn get_playing_song() -> impl Responder {
   HttpResponse::Ok().json(&playlist[status.songid.unwrap() as usize])
 }
 
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
   env_logger::init();
@@ -44,7 +48,10 @@ async fn main() -> std::io::Result<()> {
   println!("BasedRadio API started successfully");
 
   let radio_host = env::var("RADIO_API_HOST").unwrap_or("localhost".into());
-  let radio_port: u16 = env::var("RADIO_API_POST").unwrap_or("9969".into()).parse::<u16>().unwrap();
+  let radio_port: u16 = env::var("RADIO_API_PORT")
+    .unwrap_or("9969".into())
+    .parse::<u16>()
+    .unwrap();
 
   HttpServer::new(move || {
     App::new()
