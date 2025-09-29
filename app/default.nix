@@ -1,4 +1,4 @@
-{pkgs, ...}: let
+{pkgs, lib, ...}: let
   rust-toolchain = pkgs.symlinkJoin {
     name = "rust-toolchain";
     paths = with pkgs; [
@@ -20,7 +20,7 @@ in
     pname = "basedradio-rs";
     version = "0.0.1";
 
-    src = ./.;
+    src = lib.cleanSource ./.;
 
     cargoDeps = pkgs.rustPlatform.importCargoLock {
       lockFile = ./Cargo.lock;

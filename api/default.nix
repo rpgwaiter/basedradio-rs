@@ -1,4 +1,4 @@
-{pkgs, ...}: let
+{pkgs, lib, ...}: let
   manifest = (pkgs.lib.importTOML ./Cargo.toml).package;
 in
   pkgs.rustPlatform.buildRustPackage rec {
@@ -15,6 +15,6 @@ in
     # buildInputs = [pkgs.dbus pkgs.glib.dev];
 
     # cargohook = pkgs.rustPlatform.cargoSetupHook;
-    src = ./.;
+    src = lib.cleanSource ./.;
     # cargoBuildFlags = ["--package" "api"];
   }
