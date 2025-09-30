@@ -1,5 +1,3 @@
-# So this doesnt work as dx add some extra deps not included in cargo.lock
-# I don't want all that extra stuff in there, so this package is on hold for now
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";

@@ -1,7 +1,8 @@
 use dioxus::prelude::Signal;
+use std::env;
 
-pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
-pub static API_URL: &str = "https://api.based.radio";
+pub static STREAM_MP3: &str = env::var("STREAM_MP3").unwrap_or("https://cast.based.radio/vgm.mp3".into());
+pub static API_URL: &str = env::var("API_URL").unwrap_or("https://api.based.radio".into());
 
 pub mod player;
 pub use player::Player;
