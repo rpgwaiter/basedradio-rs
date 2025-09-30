@@ -5,16 +5,5 @@ in
     pname = manifest.name;
     version = manifest.version;
     cargoLock.lockFile = ./Cargo.lock;
-
-    # nativeBuildInputs = [
-    #   pkgs.pkg-config
-    #   pkgs.glib # for glib-compile-resources
-    #   # wrapGAppsHook3
-    # ];
-
-    # buildInputs = [pkgs.dbus pkgs.glib.dev];
-
-    # cargohook = pkgs.rustPlatform.cargoSetupHook;
     src = lib.cleanSource ./.;
-    # cargoBuildFlags = ["--package" "api"];
   }

@@ -122,7 +122,7 @@ async fn get_playing_song() -> impl Responder {
 
   let status = mpd.status().await.unwrap();
   let playlist = mpd.exec(cmd::PlaylistInfo).await.unwrap();
-  let current_song = &playlist[status.songid.unwrap() as usize];
+  let current_song = &playlist[status.song.unwrap() as usize];
   let meta = get_meta(&current_song.file);
   let status = mpd.status().await.unwrap();
 
