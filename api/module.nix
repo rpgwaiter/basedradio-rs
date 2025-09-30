@@ -23,6 +23,12 @@ in {
       description = "Local path to the radio files";
     };
 
+    fileHostUrl = mkOption {
+      type = types.str;
+      default = "http://localhost";
+      description = "URL of the file host for music downloads";
+    };
+
     api = {
       hostName = mkOption {
         type = types.str;
@@ -74,6 +80,7 @@ in {
         RADIO_MUSIC_DIR = cfg.musicDir;
         RADIO_API_HOST = cfg.api.hostName;
         RADIO_API_PORT = toString cfg.api.port;
+        RADIO_FILEHOST_URL = toString cfg.fileHostUrl;
       };
 
       serviceConfig = {

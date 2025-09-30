@@ -23,28 +23,28 @@ pub use window::Window;
 pub mod visualizer;
 pub use visualizer::Visualizer;
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct Song {
   album: String,
   artist: String,
+  cover: String,
   file: String,
-  duration: String, // Eventually will be a number
   game: String,
   system: String,
   title: String,
-  cover: String,
+  download_link: String
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct Status {
-  elapsed: String,
-  duration: String,
+  elapsed: i16,
+  duration: i16,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct RadioApi {
   song: Song,
-  status: Status,
+  status: Status
 }
 
 #[derive(Clone, Copy)]

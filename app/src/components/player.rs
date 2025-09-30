@@ -3,7 +3,6 @@ use crate::components::{
   audio::RadioAudio,
 };
 use dioxus::prelude::*;
-use urlencoding::encode;
 
 use dioxus_sdk::utils::timing::use_interval;
 use std::time::Duration;
@@ -115,21 +114,15 @@ pub fn PlayerContent() -> Element {
       track.set(response.song.title);
       system.set(response.song.system);
       cover_art.set(response.song.cover);
-      // There just has to be a better way
-      elapsed.set(response.status.elapsed.parse::<f32>().unwrap().round() as i16);
-      duration.set(response.status.duration.parse::<f32>().unwrap().round() as i16);
-      downloadLink.set(format!(
-        "https://files.based.radio/{}",
-        encode(&response.song.file).to_string()
-      )); // TODO: grab link url from env or something
+      elapsed.set(response.status.elapsed);
+      duration.set(response.status.duration);
+      downloadLink.set(response.song.download_link);
     }
   };
 
   // Initial load
   // This if ensures that we don't spam the api
-  // TODO: track this better. If the api is dead it will get spammed
-  if track.peek().as_str() == "" {
-    print!("loading thing");
+  if track.peek().as_str() == "Loading info..." {
     spawn(fetch_info());
   };
 
