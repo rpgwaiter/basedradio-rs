@@ -5,12 +5,26 @@ use regex::Regex;
 use std::path::{Path, PathBuf};
 use std::{env, fs}; // TODO: async fs
 use urlencoding::encode;
+use icecast_stats::IcecastStatsRoot;
 
 #[derive(serde::Serialize)]
 struct ApiResponse {
   song: Song,
   status: RadioStatus,
 }
+
+// #[derive(serde::Serialize)]
+// struct MoreInfo {
+//   game: TitleLangs,
+//   links: Option<InfoSites>,
+//   notes: Vec<String>
+// }
+// #[derive(serde::Serialize)]
+// struct InfoSites {
+//   wikipedia: Option<String>,
+//   khinsider: Option<String>
+// }
+
 
 #[derive(serde::Serialize)]
 struct Song {
@@ -28,6 +42,7 @@ struct Song {
 struct RadioStatus {
   elapsed: u64,
   duration: u64,
+  listeners: u32
 }
 
 // Probably could be named better
@@ -87,6 +102,17 @@ fn get_cover(file: &str) -> String {
   return format!("{filehost_url}/cover.png");
 }
 
+// TODO: err handle
+async fn get_icecast_info() -> Result<IcecastStatsRoot, reqwest::Error> {
+  let icecast_url = env::var("ICECAST_JSON_URL").unwrap_or("https://cast.based.radio/status-json.xsl".into());
+
+  return reqwest::get(icecast_url)
+      .await
+      .unwrap()
+      .json::<IcecastStatsRoot>()
+      .await
+}
+
 async fn get_mpd() -> Result<MpdClient, async_mpd::Error> {
   let mpd_host = env::var("MPD_HOST").unwrap_or("localhost".into());
   let mpd_port: u16 = env::var("MPD_PORT")
@@ -126,6 +152,8 @@ async fn get_playing_song() -> impl Responder {
   let meta = get_meta(&current_song.file);
   let status = mpd.status().await.unwrap();
 
+  let icecast_info = get_icecast_info().await.unwrap();
+
   HttpResponse::Ok().json(ApiResponse {
     song: Song {
       album: current_song.clone().album,
@@ -140,6 +168,7 @@ async fn get_playing_song() -> impl Responder {
     status: RadioStatus {
       elapsed: status.elapsed.unwrap().as_secs(),
       duration: status.duration.unwrap().as_secs(),
+      listeners: icecast_info.icestats.sources_vec().pop().unwrap().listeners().unwrap_or(0)
     },
   })
 }

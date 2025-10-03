@@ -29,6 +29,12 @@ in {
       description = "URL of the file host for music downloads";
     };
 
+    icecastApiUrl = mkOption {
+      type = types.str;
+      default = "https://cast.based.radio/status-json.xsl";
+      description = "URL of the icecast JSON api (mostly used to grab num of listeners)";
+    };
+
     api = {
       hostName = mkOption {
         type = types.str;
@@ -62,9 +68,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # environment.systemPackages = [cfg.package]; # if user should have the command available as well
-    # services.dbus.packages = [cfg.package]; # if the package has dbus related configuration
-
     networking.firewall.allowedTCPPorts = mkIf cfg.api.openFirewall [cfg.api.port];
     systemd.services.radio-api = {
       description = "BasedRadio Api server daemon.";

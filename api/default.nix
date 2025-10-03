@@ -6,4 +6,6 @@ in
     version = manifest.version;
     cargoLock.lockFile = ./Cargo.lock;
     src = lib.cleanSource ./.;
+    nativeBuildInputs = [ pkgs.pkg-config ];
+    buildInputs = [ pkgs.openssl ];
   }

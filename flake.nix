@@ -17,6 +17,6 @@
       };
     } // { 
       nixosModules.radio-api = import ./api/module.nix;
-      nixosModules.basedradio = import ./app/module.nix;
+      # nixosModules.basedradio-app = import ./app/module.nix;
     };
 }
