@@ -1,55 +1,14 @@
+mod types;
+
 use actix_web::middleware::Logger;
 use actix_web::{App, HttpResponse, HttpServer, Responder, get};
 use async_mpd::{MpdClient, cmd};
+use icecast_stats::IcecastStatsRoot;
 use regex::Regex;
 use std::path::{Path, PathBuf};
 use std::{env, fs}; // TODO: async fs
+use types::{ApiResponse, MetaInfo, MoreInfo, RadioStatus, Song};
 use urlencoding::encode;
-use icecast_stats::IcecastStatsRoot;
-
-#[derive(serde::Serialize)]
-struct ApiResponse {
-  song: Song,
-  status: RadioStatus,
-}
-
-// #[derive(serde::Serialize)]
-// struct MoreInfo {
-//   game: TitleLangs,
-//   links: Option<InfoSites>,
-//   notes: Vec<String>
-// }
-// #[derive(serde::Serialize)]
-// struct InfoSites {
-//   wikipedia: Option<String>,
-//   khinsider: Option<String>
-// }
-
-
-#[derive(serde::Serialize)]
-struct Song {
-  album: Option<String>,
-  artist: Option<String>,
-  cover: String,
-  file: String,
-  download_link: String,
-  game: String,
-  system: String,
-  title: Option<String>,
-}
-
-#[derive(serde::Serialize)]
-struct RadioStatus {
-  elapsed: u64,
-  duration: u64,
-  listeners: u32
-}
-
-// Probably could be named better
-struct MetaInfo {
-  game: String,
-  system: String,
-}
 
 fn get_meta(file: &str) -> MetaInfo {
   let mut sp = file.split("/");
@@ -102,15 +61,33 @@ fn get_cover(file: &str) -> String {
   return format!("{filehost_url}/cover.png");
 }
 
+// Takes the file path from an mpd status
+fn get_more_info(file: &str) -> MoreInfo {
+  let music_root = env::var("RADIO_MUSIC_DIR").unwrap_or("/Music".into());
+  let song_full_path: PathBuf = Path::new(&music_root).join(file);
+  let song_parent = song_full_path.parent().unwrap();
+
+  let potential_json = song_parent.join("info.json");
+
+  if let Ok(raw_file) = fs::read_to_string(potential_json) {
+    if let Ok(info) = serde_json::from_str::<MoreInfo>(&raw_file) {
+      return info;
+    };
+  };
+
+  MoreInfo::new()
+}
+
 // TODO: err handle
 async fn get_icecast_info() -> Result<IcecastStatsRoot, reqwest::Error> {
-  let icecast_url = env::var("ICECAST_JSON_URL").unwrap_or("https://cast.based.radio/status-json.xsl".into());
+  let icecast_url =
+    env::var("ICECAST_JSON_URL").unwrap_or("https://cast.based.radio/status-json.xsl".into());
 
   return reqwest::get(icecast_url)
-      .await
-      .unwrap()
-      .json::<IcecastStatsRoot>()
-      .await
+    .await
+    .unwrap()
+    .json::<IcecastStatsRoot>()
+    .await;
 }
 
 async fn get_mpd() -> Result<MpdClient, async_mpd::Error> {
@@ -126,20 +103,16 @@ async fn get_mpd() -> Result<MpdClient, async_mpd::Error> {
   return Ok(mpd);
 }
 
-#[get("/stats")]
-async fn get_stats() -> impl Responder {
+#[get("/more-info")]
+async fn more_info() -> impl Responder {
   let mut mpd = get_mpd().await.unwrap();
+  let status = mpd.status().await.unwrap();
+  let playlist = mpd.exec(cmd::PlaylistInfo).await.unwrap();
+  let current_song = &playlist[status.song.unwrap() as usize];
 
-  let response_json = mpd.stats().await.unwrap();
-  HttpResponse::Ok().json(response_json)
-}
+  let more_info = get_more_info(&current_song.file);
 
-#[get("/status")]
-async fn get_status() -> impl Responder {
-  let mut mpd = get_mpd().await.unwrap();
-
-  let response_json = mpd.status().await.unwrap();
-  HttpResponse::Ok().json(response_json)
+  HttpResponse::Ok().json(more_info)
 }
 
 #[get("/")]
@@ -153,14 +126,15 @@ async fn get_playing_song() -> impl Responder {
   let status = mpd.status().await.unwrap();
 
   let icecast_info = get_icecast_info().await.unwrap();
+  let file = &current_song.file;
 
   HttpResponse::Ok().json(ApiResponse {
     song: Song {
       album: current_song.clone().album,
       artist: current_song.clone().artist,
-      cover: get_cover(&current_song.file),
+      cover: get_cover(&file),
       file: current_song.clone().file,
-      download_link: get_download_link(&current_song.file),
+      download_link: get_download_link(&file),
       game: meta.game,
       system: meta.system,
       title: current_song.clone().title,
@@ -168,8 +142,15 @@ async fn get_playing_song() -> impl Responder {
     status: RadioStatus {
       elapsed: status.elapsed.unwrap().as_secs(),
       duration: status.duration.unwrap().as_secs(),
-      listeners: icecast_info.icestats.sources_vec().pop().unwrap().listeners().unwrap_or(0)
+      listeners: icecast_info
+        .icestats
+        .sources_vec()
+        .pop()
+        .unwrap()
+        .listeners()
+        .unwrap_or(0),
     },
+    more_info: get_more_info(&file),
   })
 }
 
@@ -190,9 +171,8 @@ async fn main() -> std::io::Result<()> {
 
   HttpServer::new(move || {
     App::new()
+      .service(more_info)
       .service(get_playing_song)
-      .service(get_status)
-      .service(get_stats)
       .wrap(Logger::default())
   })
   .bind((radio_host, radio_port))?

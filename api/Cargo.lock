@@ -294,6 +294,7 @@ dependencies = [
  "regex",
  "reqwest",
  "serde",
+ "serde_json",
  "urlencoding",
 ]
 
