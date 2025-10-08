@@ -8,12 +8,12 @@ pub fn About() -> Element {
   rsx! {
     if is_visible() {
       div {
-        id: "window-player",
+        id: "container-about",
         class: "win98",
         style: "z-index: 4 !important;",
         Window {
           title: "About",
-          id: "about-window",
+          id: "window-about",
           header_icon: true,
           is_visible: is_visible,
           div {

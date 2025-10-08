@@ -8,12 +8,12 @@ pub fn Updates() -> Element {
   rsx! {
     if is_visible() {
       div {
-        id: "window-updates",
+        id: "container-updates",
         class: "win98",
         style: "z-index: 2 !important;",
         Window {
           title: "Updates",
-          id: "update-window",
+          id: "window-updates",
           header_icon: true,
           is_visible: is_visible,
           div {

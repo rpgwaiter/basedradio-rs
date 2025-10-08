@@ -43,12 +43,12 @@ pub fn MoreInfo() -> Element {
   rsx! {
     if is_visible() {
       div {
-        // id: "window-more-info",
+        id: "container-more-info",
         class: "win98",
         style: "z-index: 2 !important;",
         Window {
           title: "More Info",
-          id: "more-info-window",
+          id: "window-more-info",
           header_icon: true,
           is_visible: is_visible,
           div {

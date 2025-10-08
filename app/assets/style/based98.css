@@ -1,5 +1,5 @@
-#window-about .window {
-  width: 497px;
+#based-radio {
+  width: 497px !important;
 }
 
 #window-about .win98 {
@@ -48,7 +48,7 @@
   border-right-color: gray;
   border-bottom-color: gray;
   box-shadow: 1px 1px 0 0 #000;
-  width: 497px;
+  /* width: 497px; */
   cursor: default;
   margin: 0 auto;
 }

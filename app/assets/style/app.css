@@ -21,6 +21,10 @@
   }
 }
 
+/* .window {
+  width: auto;
+} */
+
 html,
 body {
   margin: 0;
@@ -51,10 +55,6 @@ button::first-letter {
   text-decoration: underline;
 }
 
-#based-radio {
-  user-select: none;
-}
-
 .player-visualizer {
   width: 89%;
   height: 13%;
@@ -62,6 +62,10 @@ button::first-letter {
   left: 6.5%;
   z-index: 1;
   position: absolute;
+}
+
+.player-stats {
+  user-select: text;
 }
 
 .action a::first-letter {
@@ -81,12 +85,14 @@ button::first-letter {
   top: 50%;
   transform: translate(-50%, -50%);
   image-rendering: auto;
+  max-width: 497px;
+  width: auto;
+  user-select: none;
 }
 
 .footer-end {
   margin-left: auto;
   padding-top: -20px;
-  user-select: none;
   height: 20px;
   width: 25px;
 }
