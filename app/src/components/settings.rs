@@ -11,7 +11,7 @@ pub fn SettingsButton() -> Element {
 
   rsx! {
     button {
-      onclick: move |event| is_visible.toggle(),
+      onclick: move |_| is_visible.toggle(),
       id: "settings-btn",
       "Settings"
     }
@@ -20,7 +20,7 @@ pub fn SettingsButton() -> Element {
 
 #[component]
 pub fn SettingsWindow() -> Element {
-  let mut is_visible = use_context::<RadioState>().settings_is_visible;
+  let is_visible = use_context::<RadioState>().settings_is_visible;
   let mut settings_state = use_context::<SettingsState>();
 
   rsx! {

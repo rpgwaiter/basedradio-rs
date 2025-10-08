@@ -40,8 +40,8 @@ fn Home() -> Element {
   use_context_provider(|| SettingsState::new());
   let player_state = use_context_provider(|| PlayerState::new());
 
-  let mut bg_toggle = use_context::<SettingsState>().use_background;
-  let mut background_img = player_state.background;
+  let bg_toggle = use_context::<SettingsState>().use_background;
+  let background_img = player_state.background;
 
 
 

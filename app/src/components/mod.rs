@@ -61,9 +61,6 @@ pub struct RadioApi {
 
 #[derive(Clone, Copy)]
 pub struct PlayerState {
-  pub album: Signal<Option<String>>,
-  pub artist: Signal<Option<String>>,
-  pub file: Signal<String>,
   pub duration: Signal<i16>, // Eventually will be a number
   pub elapsed: Signal<i16>,
   pub game: Signal<String>,
@@ -77,9 +74,6 @@ pub struct PlayerState {
 impl PlayerState {
   pub fn new() -> Self {
     PlayerState {
-      album: Signal::new(None as Option<String>),
-      artist: Signal::new(None as Option<String>),
-      file: Signal::new("".to_string()),
       duration: Signal::new(0 as i16), // Eventually will be a number
       elapsed: Signal::new(0 as i16),
       game: Signal::new("".to_string()),
@@ -149,7 +143,6 @@ impl MoreInfoState {
 impl UpstreamMoreInfo {
   pub fn new() -> UpstreamMoreInfo {
     let mut notes: Vec<String> = Vec::new();
-    let info_email = env::var("MOREINFO_EMAIL").unwrap_or("info@based.radio".into());
     notes.push(format!("You should never see this"));
     UpstreamMoreInfo {
       game: None,
