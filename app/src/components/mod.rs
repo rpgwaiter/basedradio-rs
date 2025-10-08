@@ -34,8 +34,8 @@ pub use visualizer::Visualizer;
 
 #[derive(serde::Deserialize, Debug)]
 pub struct Song {
-  album: String,
-  artist: String,
+  album: Option<String>,
+  artist: Option<String>,
   background: Option<String>,
   cover: String,
   file: String,
@@ -61,8 +61,8 @@ pub struct RadioApi {
 
 #[derive(Clone, Copy)]
 pub struct PlayerState {
-  pub album: Signal<String>,
-  pub artist: Signal<String>,
+  pub album: Signal<Option<String>>,
+  pub artist: Signal<Option<String>>,
   pub file: Signal<String>,
   pub duration: Signal<i16>, // Eventually will be a number
   pub elapsed: Signal<i16>,
@@ -77,8 +77,8 @@ pub struct PlayerState {
 impl PlayerState {
   pub fn new() -> Self {
     PlayerState {
-      album: Signal::new("".to_string()),
-      artist: Signal::new("".to_string()),
+      album: Signal::new(None as Option<String>),
+      artist: Signal::new(None as Option<String>),
       file: Signal::new("".to_string()),
       duration: Signal::new(0 as i16), // Eventually will be a number
       elapsed: Signal::new(0 as i16),
