@@ -48,7 +48,7 @@ fn Home() -> Element {
   rsx! {
     div {
       id: "main-container",
-      style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"} else {"background-color: #008080;"}, 
+      style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"}, 
       About {},
       Player {},
       Updates {},
