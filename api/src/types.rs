@@ -11,6 +11,7 @@ pub struct ApiResponse {
 pub struct Song {
   pub album: Option<String>,
   pub artist: Option<String>,
+  pub background: Option<String>,
   pub cover: String,
   pub file: String,
   pub download_link: String,

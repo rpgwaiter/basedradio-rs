@@ -29,8 +29,8 @@ fn get_download_link(file: &str) -> String {
 }
 
 // Takes the file path from an mpd status
-fn get_cover(file: &str) -> String {
-  let regex = Regex::new(r"(?i)^cover\.(gif|jpeg|jpg|png|webp)$").unwrap();
+fn get_cover(file: &str, target: &str) -> Option<String> {
+  let regex = Regex::new(&format!(r"(?i)^{}\.(gif|jpeg|jpg|png|webp)$", target)).unwrap();
   let music_root = env::var("RADIO_MUSIC_DIR").unwrap_or("/Music".into());
   let filehost_url = env::var("RADIO_FILEHOST_URL").unwrap_or("http://localhost:6969".into());
   let song_full_path: PathBuf = Path::new(&music_root).join(file);
@@ -54,11 +54,12 @@ fn get_cover(file: &str) -> String {
 
         let encoded = encode(path_str).into_owned().replace("%2F", "/");
 
-        return format!("{filehost_url}{encoded}");
+        return Some(format!("{filehost_url}{encoded}"));
       }
     }
   }
-  return format!("{filehost_url}/cover.png");
+  None
+  // return format!("{filehost_url}/{target}.png");
 }
 
 // Takes the file path from an mpd status
@@ -117,6 +118,7 @@ async fn more_info() -> impl Responder {
 
 #[get("/")]
 async fn get_playing_song() -> impl Responder {
+  let filehost_url = env::var("RADIO_FILEHOST_URL").unwrap_or("http://localhost:6969".into());
   let mut mpd = get_mpd().await.unwrap();
 
   let status = mpd.status().await.unwrap();
@@ -128,21 +130,25 @@ async fn get_playing_song() -> impl Responder {
   let icecast_info = get_icecast_info().await.unwrap();
   let file = &current_song.file;
 
+  // Deal with titles not being in the metadata
+  let title = current_song.clone().title.unwrap_or(String::from(current_song.file.rsplit_once("/").unwrap().1));
+
   HttpResponse::Ok().json(ApiResponse {
     song: Song {
       album: current_song.clone().album,
       artist: current_song.clone().artist,
-      cover: get_cover(&file),
+      background: get_cover(&file, "bg"),
+      cover: get_cover(&file, "cover").unwrap_or(format!("{filehost_url}/{}/cover.png", meta.system)),
       file: current_song.clone().file,
       download_link: get_download_link(&file),
       game: meta.game,
       system: meta.system,
-      title: current_song.clone().title,
+      title: Some(title)
     },
     status: RadioStatus {
       elapsed: status.elapsed.unwrap().as_secs(),
       duration: status.duration.unwrap().as_secs(),
-      listeners: icecast_info
+      listeners: icecast_info // TODO: map over an iter
         .icestats
         .sources_vec()
         .pop()
