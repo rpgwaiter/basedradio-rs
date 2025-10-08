@@ -1,8 +1,13 @@
 use dioxus::prelude::Signal;
 use std::env;
 
-pub static STREAM_MP3: &str = env::var("STREAM_MP3").unwrap_or("https://cast.based.radio/vgm.mp3".into());
-pub static API_URL: &str = env::var("API_URL").unwrap_or("https://api.based.radio".into());
+pub fn get_stream_mp3 () -> String {
+  env::var("STREAM_MP3").unwrap_or("https://cast.based.radio/vgm.mp3".into())
+}
+
+pub fn get_api_url () -> String {
+  env::var("API_URL").unwrap_or("https://api.based.radio".into())
+}
 
 pub mod player;
 pub use player::Player;
@@ -16,6 +21,9 @@ pub use updates::Updates;
 pub mod moreinfo;
 pub use moreinfo::{MoreInfo, MoreInfoButton};
 
+pub mod settings;
+pub use settings::{SettingsButton, SettingsWindow};
+
 pub mod audio;
 
 pub mod window;
@@ -28,6 +36,7 @@ pub use visualizer::Visualizer;
 pub struct Song {
   album: String,
   artist: String,
+  background: Option<String>,
   cover: String,
   file: String,
   game: String,
@@ -40,25 +49,29 @@ pub struct Song {
 pub struct Status {
   elapsed: i16,
   duration: i16,
+  listeners: i16
 }
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize)]
 pub struct RadioApi {
   song: Song,
-  status: Status
+  status: Status,
+  more_info: UpstreamMoreInfo
 }
 
 #[derive(Clone, Copy)]
 pub struct PlayerState {
-  album: Signal<String>,
-  artist: Signal<String>,
-  file: Signal<String>,
-  duration: Signal<i16>, // Eventually will be a number
-  elapsed: Signal<i16>,
-  game: Signal<String>,
-  system: Signal<String>,
-  title: Signal<String>,
-  cover: Signal<String>,
+  pub album: Signal<String>,
+  pub artist: Signal<String>,
+  pub file: Signal<String>,
+  pub duration: Signal<i16>, // Eventually will be a number
+  pub elapsed: Signal<i16>,
+  pub game: Signal<String>,
+  pub system: Signal<String>,
+  pub title: Signal<String>,
+  pub cover: Signal<String>,
+  pub background: Signal<Option<String>>,
+  pub listeners: Signal<i16>
 }
 
 impl PlayerState {
@@ -73,6 +86,21 @@ impl PlayerState {
       system: Signal::new("".to_string()),
       title: Signal::new("Loading info...".to_string()),
       cover: Signal::new("".to_string()),
+      background: Signal::new(None as Option<String>),
+      listeners: Signal::new(0 as i16)
+    }
+  }
+}
+
+#[derive(Clone, Copy)]
+pub struct SettingsState {
+  pub use_background: Signal<bool>,
+}
+
+impl SettingsState {
+  pub fn new() -> Self {
+    SettingsState {
+      use_background: Signal::new(true),
     }
   }
 }
@@ -80,19 +108,65 @@ impl PlayerState {
 // TODO: add basically all state here
 #[derive(Clone, Copy)]
 pub struct RadioState {
-  aboutIsVisible: Signal<bool>,
-  updatesIsVisible: Signal<bool>,
-  moreInfoIsVisible: Signal<bool>,
-  downloadLink: Signal<String>,
+  about_is_visible: Signal<bool>,
+  settings_is_visible: Signal<bool>,
+  updates_is_visible: Signal<bool>,
+  more_info_is_visible: Signal<bool>,
+  download_link: Signal<String>,
 }
 
 impl RadioState {
   pub fn new() -> Self {
     RadioState {
-      aboutIsVisible: Signal::new(false),
-      updatesIsVisible: Signal::new(false),
-      moreInfoIsVisible: Signal::new(false),
-      downloadLink: Signal::new("/".to_string()),
+      about_is_visible: Signal::new(false),
+      settings_is_visible: Signal::new(false),
+      updates_is_visible: Signal::new(false),
+      more_info_is_visible: Signal::new(false),
+      download_link: Signal::new("/".to_string()),
     }
   }
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Clone)]
+pub struct UpstreamMoreInfo {
+  pub game: Option<TitleLangs>,
+  pub links: Option<InfoSites>,
+  pub notes: Vec<String>,
+}
+
+#[derive(Clone)]
+pub struct MoreInfoState {
+  pub more_info:  Signal<UpstreamMoreInfo>
+}
+
+impl MoreInfoState {
+  pub fn new() -> MoreInfoState {
+    MoreInfoState { more_info: Signal::new(UpstreamMoreInfo::new()) }
+  }
+}
+
+
+impl UpstreamMoreInfo {
+  pub fn new() -> UpstreamMoreInfo {
+    let mut notes: Vec<String> = Vec::new();
+    let info_email = env::var("MOREINFO_EMAIL").unwrap_or("info@based.radio".into());
+    notes.push(format!("You should never see this"));
+    UpstreamMoreInfo {
+      game: None,
+      links: None,
+      notes: notes,
+    }
+  }
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Clone)]
+pub struct InfoSites {
+  pub wikipedia: Option<String>,
+  pub khinsider: Option<String>,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Clone)]
+pub struct TitleLangs {
+  pub en: Option<String>,
+  pub ja: Option<String>,
 }

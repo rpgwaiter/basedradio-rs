@@ -1,68 +1,31 @@
 use crate::RadioState;
-use crate::components::{API_URL, Visualizer, Window, audio::RadioAudio};
+use crate::components::{get_api_url, Visualizer, Window, audio::RadioAudio, UpstreamMoreInfo, MoreInfoState};
 use dioxus::prelude::*;
-
-// pub struct RegionalTitles {
-//   en: Option<String>,
-//   jp: Option<String>,
-//   others: Option<<Vec<String>>,
-// }
-
-// // External links related to games
-// pub struct InfoLinks {
-//   wikipedia: Option<String>,
-//   khinsider: Option<String>,
-// }
-
-#[derive(Clone, serde::Deserialize)]
-pub struct TrackMoreInfoUpstream {
-  notes: Vec<String>,
-  // game: RegionalTitles,
-  // links: InfoLinks
-  // notes: Vec<String> // Site owner's notes. Fun facts, random stuff
-}
-
-#[derive(Clone)]
-pub struct TrackMoreInfo {
-  notes: Signal<Vec<String>>,
-  // game: RegionalTitles,
-  // links: InfoLinks
-  // notes: Vec<String> // Site owner's notes. Fun facts, random stuff
-}
-
-impl TrackMoreInfo {
-  pub fn new() -> Self {
-    TrackMoreInfo {
-      notes: Signal::new(vec![String::from(
-        "Default note, you should never see this",
-      )]),
-    }
-  }
-}
+use std::env;
 
 #[component]
 pub fn MoreInfoButton() -> Element {
-  let mut isVisible = use_context::<RadioState>().moreInfoIsVisible;
-  let mut notes = use_context::<TrackMoreInfo>().notes;
+  let mut is_visible = use_context::<RadioState>().more_info_is_visible;
+  let mut more = use_context::<MoreInfoState>();
 
   let get_more_info = move || async move {
-    if let Ok(response) = reqwest::get(format!("{}/more-info", API_URL))
+    if let Ok(response) = reqwest::get(format!("{}/more-info", get_api_url()))
       .await
-      .unwrap() // TODO: handle a dead api
-      .json::<TrackMoreInfoUpstream>()
+      .unwrap()
+      .json::<UpstreamMoreInfo>()
       .await
     {
-      let n = response.notes[0].clone();
-      println!("NOTE: {:?}", n);
-      notes.set(response.notes);
+      more.more_info.set(response);
     }
   };
 
   rsx! {
     button {
       onclick: move |event| {
-        spawn(get_more_info());
-        isVisible.toggle()
+        if (!is_visible()) {
+          spawn(get_more_info());
+        }
+        is_visible.toggle()
       },
       id: "more-info-btn",
       "More Info"
@@ -73,14 +36,12 @@ pub fn MoreInfoButton() -> Element {
 #[component]
 pub fn MoreInfo() -> Element {
   println!("Rendering more info");
-  let mut isVisible = use_context::<RadioState>().moreInfoIsVisible;
-  let mut notes = use_context::<TrackMoreInfo>().notes;
-  let mut initialLoad = Signal::new(false);
-
-  println!("notes is: {:?}", notes());
+  let mut is_visible = use_context::<RadioState>().more_info_is_visible;
+  let mut more_info = use_context::<MoreInfoState>().more_info;
+  let mut initial_load = Signal::new(false);
 
   rsx! {
-    if isVisible() {
+    if is_visible() {
       div {
         // id: "window-more-info",
         class: "win98",
@@ -89,14 +50,14 @@ pub fn MoreInfo() -> Element {
           title: "More Info",
           id: "more-info-window",
           header_icon: true,
-          isVisible: isVisible,
+          is_visible: is_visible,
           div {
             id: "more-info-radio",
             class: "inner content",
             // TODO: add info here
             div {
               h2 { style: "text-align: center;", u { "- Fun Fact -" }  },
-              p { "{notes()[0]}" }// TODO: randomize cross-platform
+              p { "{more_info().notes[0]}" }// TODO: randomize cross-platform
 
             }
           }

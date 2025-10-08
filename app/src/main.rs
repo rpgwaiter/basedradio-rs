@@ -1,8 +1,10 @@
 mod components;
 use components::{
-  About, MoreInfo, Player, PlayerState, RadioState, Updates, moreinfo::TrackMoreInfo,
+  About, UpstreamMoreInfo, MoreInfoState, moreinfo::MoreInfo, Player, PlayerState, RadioState, Updates, SettingsWindow, SettingsState
 };
 use dioxus::prelude::*;
+
+use crate::components::player::PlayerStats;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -33,12 +35,25 @@ fn App() -> Element {
 /// Home page
 #[component]
 fn Home() -> Element {
-  let state = use_context_provider(|| RadioState::new());
-  let moreInfoState = use_context_provider(|| TrackMoreInfo::new());
+  use_context_provider(|| RadioState::new());
+  use_context_provider(|| MoreInfoState::new());
+  use_context_provider(|| SettingsState::new());
+  let player_state = use_context_provider(|| PlayerState::new());
+
+  let mut bg_toggle = use_context::<SettingsState>().use_background;
+  let mut background_img = player_state.background;
+
+
+
   rsx! {
+    div {
+      id: "main-container",
+      style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"} else {"background-color: #008080;"}, 
       About {},
       Player {},
       Updates {},
-      MoreInfo {}
+      MoreInfo {},
+      SettingsWindow {}
+    }
   }
 }

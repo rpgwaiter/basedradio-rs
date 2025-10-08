@@ -4,9 +4,9 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn About() -> Element {
-  let mut isVisible = use_context::<RadioState>().aboutIsVisible;
+  let mut is_visible = use_context::<RadioState>().about_is_visible;
   rsx! {
-    if isVisible() {
+    if is_visible() {
       div {
         id: "window-player",
         class: "win98",
@@ -15,7 +15,7 @@ pub fn About() -> Element {
           title: "About",
           id: "about-window",
           header_icon: true,
-          isVisible: isVisible,
+          is_visible: is_visible,
           div {
             id: "about-radio",
             class: "inner content",

@@ -8,6 +8,7 @@ use std::rc::Rc;
 
 static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
 static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
+static RESIZE_ICON: Asset = asset!("/assets/ui/resize.png");
 
 #[derive(PartialEq, Props, Clone)]
 pub struct WindowProps {
@@ -15,7 +16,8 @@ pub struct WindowProps {
   id: String,
   children: Element,
   header_icon: bool,
-  isVisible: Option<Signal<bool>>,
+  is_visible: Option<Signal<bool>>,
+  footer_text: Option<String>
 }
 
 #[component]
@@ -85,7 +87,7 @@ pub fn Window(props: WindowProps) -> Element {
             is_dragging.set(true);
             read_dims()
           },
-          onmouseup: move |_| { info!("mouseup!!"); is_dragging.set(false) },
+          onmouseup: move |_| { previous_x.set(0.0); previous_y.set(0.0); is_dragging.set(false) },
           onmousemove: move |event| mouse_move(event),
           onmouseleave: move |event| mouse_move(event),
           onmouseout: move |event| mouse_move(event),
@@ -94,7 +96,7 @@ pub fn Window(props: WindowProps) -> Element {
           div {
             class: "buttons",
             button {
-              onclick: move |_| { if let Some(mut vis) = props.isVisible { vis.set(false); } },
+              onclick: move |_| { if let Some(mut vis) = props.is_visible { vis.set(false); } },
               class: "button-minimize",
               style: format!("background-image: url({});", ICON_CLOSE.to_string())
             }
@@ -104,8 +106,8 @@ pub fn Window(props: WindowProps) -> Element {
       },
       div {
         class: "player-footer",
-        div { "Keep it Based." },
-        div { class: "footer-end" }
+        div { if let Some(foot) = props.footer_text { {foot} } else { {"Keep it Based."} } },
+        div { class: "footer-end", style: format!("background: url({}) no-repeat; background-size: cover;", RESIZE_ICON.to_string()) }
       }
     }
   }

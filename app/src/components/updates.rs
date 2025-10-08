@@ -4,9 +4,9 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn Updates() -> Element {
-  let mut isVisible = use_context::<RadioState>().updatesIsVisible;
+  let mut is_visible = use_context::<RadioState>().updates_is_visible;
   rsx! {
-    if isVisible() {
+    if is_visible() {
       div {
         id: "window-updates",
         class: "win98",
@@ -15,12 +15,13 @@ pub fn Updates() -> Element {
           title: "Updates",
           id: "update-window",
           header_icon: true,
-          isVisible: isVisible,
+          is_visible: is_visible,
           div {
             id: "updates",
             class: "inner content",
             ul {
-              li { "[Jul 17 2025] This rewrite is a very early WIP. Stay tuned" }
+              li { "[1 Oct 2025] Rewrote the api in rust, moved back to using icecast" }
+              li { "[17 Jul 2025] This rewrite is a very early WIP. Stay tuned" }
             }
           }
         },

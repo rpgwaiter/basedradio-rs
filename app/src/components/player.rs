@@ -1,6 +1,5 @@
 use crate::components::{
-  API_URL, MoreInfoButton, PlayerState, RadioApi, RadioState, STREAM_MP3, Visualizer, Window,
-  audio::RadioAudio,
+  audio::RadioAudio, get_api_url, MoreInfoButton, SettingsButton, MoreInfoState, PlayerState, RadioApi, RadioState, Visualizer, Window
 };
 use dioxus::prelude::*;
 
@@ -22,9 +21,9 @@ fn format_time(e: i16) -> String {
 
 #[component]
 pub fn PlayerMenu() -> Element {
-  let mut downloadLink = use_context::<RadioState>().downloadLink;
-  let mut aboutIsVisible = use_context::<RadioState>().aboutIsVisible;
-  let mut updatesIsVisible = use_context::<RadioState>().updatesIsVisible;
+  let mut download_link = use_context::<RadioState>().download_link;
+  let mut about_is_visible = use_context::<RadioState>().about_is_visible;
+  let mut updates_is_visible = use_context::<RadioState>().updates_is_visible;
   rsx! {
     div {
       id: "player-menu",
@@ -41,7 +40,7 @@ pub fn PlayerMenu() -> Element {
       div {
         class: "action",
         a {
-          onclick: move |event| aboutIsVisible.toggle(),
+          onclick: move |event| about_is_visible.toggle(),
           id: "about-show",
           role: "button",
           "About"
@@ -52,8 +51,8 @@ pub fn PlayerMenu() -> Element {
         a {
           id: "download-btn",
           role: "button",
-          href: downloadLink,
-          download: downloadLink().rsplit_once('/').unwrap().1,
+          href: download_link,
+          download: download_link().rsplit_once('/').unwrap().1,
           target: "_blank",
           "Download"
         }
@@ -62,7 +61,7 @@ pub fn PlayerMenu() -> Element {
         class: "action",
         style: "float: right;",
         a {
-          onclick: move |event| updatesIsVisible.toggle(),
+          onclick: move |event| updates_is_visible.toggle(),
           id: "updates-show",
           role: "button",
           "Updates"
@@ -95,34 +94,42 @@ pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<S
 
 #[component]
 pub fn PlayerContent() -> Element {
+  let mut player_state = use_context::<PlayerState>();
+  let mut radio_state = use_context::<RadioState>();
   let mut elapsed = use_context::<PlayerState>().elapsed;
   let mut duration = use_context::<PlayerState>().duration;
-  let mut game = use_context::<PlayerState>().game;
-  let mut track = use_context::<PlayerState>().title;
-  let mut system = use_context::<PlayerState>().system;
-  let mut cover_art = use_context::<PlayerState>().cover;
-  let mut downloadLink = use_context::<RadioState>().downloadLink;
+  // let mut game = use_context::<PlayerState>().game;
+  // let mut track = use_context::<PlayerState>().title;
+  // let mut system = use_context::<PlayerState>().system;
+  // let mut cover_art = use_context::<PlayerState>().cover;
+  // let mut download_link = use_context::<RadioState>().download_link;
+  // let mut listeners = use_context::<PlayerState>().listeners;
+  let mut more = use_context::<MoreInfoState>();
 
   let fetch_info = move || async move {
-    if let Ok(response) = reqwest::get(API_URL)
+    if let Ok(response) = reqwest::get(get_api_url())
       .await
       .unwrap()
       .json::<RadioApi>()
       .await
     {
-      game.set(response.song.game);
-      track.set(response.song.title);
-      system.set(response.song.system);
-      cover_art.set(response.song.cover);
+      player_state.game.set(response.song.game);
+      player_state.title.set(response.song.title);
+      player_state.system.set(response.song.system);
+      player_state.cover.set(response.song.cover);
+      player_state.background.set(response.song.background);
       elapsed.set(response.status.elapsed);
       duration.set(response.status.duration);
-      downloadLink.set(response.song.download_link);
+      radio_state.download_link.set(response.song.download_link);
+      player_state.listeners.set(response.status.listeners);
+      more.more_info.set(response.more_info)
+
     }
   };
 
   // Initial load
   // This if ensures that we don't spam the api
-  if track.peek().as_str() == "Loading info..." {
+  if player_state.title.peek().as_str() == "Loading info..." {
     spawn(fetch_info());
   };
 
@@ -135,14 +142,14 @@ pub fn PlayerContent() -> Element {
   });
 
   rsx! {
-    document::Title { "{track} | BasedRadio" }
+    document::Title { "{player_state.title} | BasedRadio" }
     div {
       class: "stream-meta",
       div {
         class: "player-cover-art",
-        img { id: "current-cover", src: "{cover_art}", alt: "Cover Art", style: "margin: auto; display: block;" }
+        img { id: "current-cover", src: "{player_state.cover}", alt: "Cover Art", style: "margin: auto; display: block;" }
       },
-      PlayerStats { game: game, system: system, track: track  }
+      PlayerStats { game: player_state.game, system: player_state.system, track: player_state.title  }
     },
     div {
       class: "player-meta",
@@ -159,7 +166,8 @@ pub fn PlayerContent() -> Element {
       div {
       class: "content-buttons",
         RadioAudio { },
-        MoreInfoButton { }
+        MoreInfoButton { },
+        SettingsButton { }
       }
     }
   }
@@ -167,7 +175,8 @@ pub fn PlayerContent() -> Element {
 
 #[component]
 pub fn Player() -> Element {
-  let playerState = use_context_provider(|| PlayerState::new());
+  let listeners = use_context::<PlayerState>().listeners;
+
   rsx! {
     div {
       id: "window-player",
@@ -177,6 +186,7 @@ pub fn Player() -> Element {
         title: "BasedRadio",
         id: "based-radio",
         header_icon: true,
+        footer_text: Some(format!("Listeners: {:?}", listeners())),
         PlayerMenu { },
         div {
           id: "player-container",

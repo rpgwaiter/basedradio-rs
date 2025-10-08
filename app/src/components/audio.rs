@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use crate::components::get_stream_mp3;
 
 #[cfg(feature = "web")]
 use js_sys::Promise;
@@ -22,7 +23,6 @@ use stream_download::storage::temp::TempStorageProvider;
 #[cfg(feature = "desktop")]
 use stream_download::{Settings, StreamDownload};
 
-pub static STREAM_MP3: &str = "https://cast.based.radio/vgm.mp3";
 
 #[cfg(feature = "web")]
 pub async fn play_audio() {
@@ -33,7 +33,7 @@ pub async fn play_audio() {
     .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
   {
     if audio.paused() || audio.ready_state() != 4 {
-      audio.set_src(STREAM_MP3);
+      audio.set_src(&get_stream_mp3());
       audio.load();
       audio.play();
     } else {
@@ -46,7 +46,7 @@ pub async fn play_audio() {
 #[cfg(feature = "desktop")]
 pub async fn play_audio() {
   println!("attemting to play audio");
-  let stream = HttpStream::<Client>::create(STREAM_MP3.parse().unwrap())
+  let stream = HttpStream::<Client>::create(get_stream_mp3().parse().unwrap())
     .await
     .unwrap();
 
@@ -99,7 +99,7 @@ pub fn RadioAudio() -> Element {
 
   // url param cache buster int
   fn format_url(num: i8) -> String {
-    return format!("{}?t={:?}", STREAM_MP3, num);
+    return format!("{}?t={:?}", get_stream_mp3(), num);
   }
 
   rsx! {
