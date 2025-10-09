@@ -1,5 +1,6 @@
 use crate::components::{
-  audio::RadioAudio, get_api_url, MoreInfoButton, SettingsButton, MoreInfoState, PlayerState, RadioApi, RadioState, Visualizer, Window
+  MoreInfoButton, MoreInfoState, PlayerState, RadioApi, RadioState, SettingsButton, Visualizer,
+  Window, audio::RadioAudio, get_api_url, updates::UpdatesButton,
 };
 use dioxus::prelude::*;
 
@@ -23,7 +24,6 @@ fn format_time(e: i16) -> String {
 pub fn PlayerMenu() -> Element {
   let mut download_link = use_context::<RadioState>().download_link;
   let mut about_is_visible = use_context::<RadioState>().about_is_visible;
-  let mut updates_is_visible = use_context::<RadioState>().updates_is_visible;
   rsx! {
     div {
       id: "player-menu",
@@ -60,12 +60,7 @@ pub fn PlayerMenu() -> Element {
       div {
         class: "action",
         style: "float: right;",
-        a {
-          onclick: move |event| updates_is_visible.toggle(),
-          id: "updates-show",
-          role: "button",
-          "Updates"
-        }
+        UpdatesButton { }
       }
     }
   }
@@ -98,12 +93,6 @@ pub fn PlayerContent() -> Element {
   let mut radio_state = use_context::<RadioState>();
   let mut elapsed = use_context::<PlayerState>().elapsed;
   let mut duration = use_context::<PlayerState>().duration;
-  // let mut game = use_context::<PlayerState>().game;
-  // let mut track = use_context::<PlayerState>().title;
-  // let mut system = use_context::<PlayerState>().system;
-  // let mut cover_art = use_context::<PlayerState>().cover;
-  // let mut download_link = use_context::<RadioState>().download_link;
-  // let mut listeners = use_context::<PlayerState>().listeners;
   let mut more = use_context::<MoreInfoState>();
 
   let fetch_info = move || async move {
@@ -123,7 +112,6 @@ pub fn PlayerContent() -> Element {
       radio_state.download_link.set(response.song.download_link);
       player_state.listeners.set(response.status.listeners);
       more.more_info.set(response.more_info)
-
     }
   };
 

@@ -17,7 +17,7 @@ pub struct WindowProps {
   children: Element,
   header_icon: bool,
   is_visible: Option<Signal<bool>>,
-  footer_text: Option<String>
+  footer_text: Option<String>,
 }
 
 #[component]

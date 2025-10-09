@@ -1,7 +1,10 @@
 use dioxus::prelude::*;
 
 // #[cfg(feature = "web")]
-use web_sys::{HtmlAudioElement, HtmlCanvasElement, HtmlElement, AudioContext, MediaElementAudioSourceNode, console, window, wasm_bindgen::JsCast};
+use web_sys::{
+  AudioContext, HtmlAudioElement, HtmlCanvasElement, HtmlElement, MediaElementAudioSourceNode,
+  console, wasm_bindgen::JsCast, window,
+};
 
 // Will revisit this later when dioxus fixes feature management in their cli
 // #[cfg(feature = "web")]
@@ -17,7 +20,6 @@ use web_sys::{HtmlAudioElement, HtmlCanvasElement, HtmlElement, AudioContext, Me
 //     .unwrap()
 //     .dyn_into::<HtmlCanvasElement>();
 //     // .and_then(|el| el.dyn_into::<HtmlCanvasElement>().ok());
-  
 
 //   if let Some(audio) = document
 //       .get_element_by_id("main-audio")

@@ -97,8 +97,9 @@ async fn get_icecast_info() -> Result<IcecastStatsRoot, reqwest::Error> {
 
 #[get("/updates")]
 async fn get_updates() -> impl Responder {
-  let update_url =
-    env::var("RADIO_UPDATES_URL").unwrap_or("https://raw.githubusercontent.com/rpgwaiter/basedradio-rs/refs/heads/main/updates.json".into());
+  let update_url = env::var("RADIO_UPDATES_URL").unwrap_or(
+    "https://raw.githubusercontent.com/rpgwaiter/basedradio-rs/refs/heads/main/updates.json".into(),
+  );
 
   let ret = reqwest::get(update_url)
     .await
@@ -150,19 +151,23 @@ async fn get_playing_song() -> impl Responder {
   let file = &current_song.file;
 
   // Deal with titles not being in the metadata
-  let title = current_song.clone().title.unwrap_or(String::from(current_song.file.rsplit_once("/").unwrap().1));
+  let title = current_song
+    .clone()
+    .title
+    .unwrap_or(String::from(current_song.file.rsplit_once("/").unwrap().1));
 
   HttpResponse::Ok().json(ApiResponse {
     song: Song {
       album: current_song.clone().album,
       artist: current_song.clone().artist,
       background: get_cover(&file, "bg"),
-      cover: get_cover(&file, "cover").unwrap_or(format!("{filehost_url}/{}/cover.png", meta.system)),
+      cover: get_cover(&file, "cover")
+        .unwrap_or(format!("{filehost_url}/{}/cover.png", meta.system)),
       file: current_song.clone().file,
       download_link: get_download_link(&file),
       game: meta.game,
       system: meta.system,
-      title: Some(title)
+      title: Some(title),
     },
     status: RadioStatus {
       elapsed: status.elapsed.unwrap().as_secs(),
@@ -175,7 +180,7 @@ async fn get_playing_song() -> impl Responder {
         .listeners()
         .unwrap_or(0),
     },
-    more_info: get_more_info(&file)
+    more_info: get_more_info(&file),
   })
 }
 

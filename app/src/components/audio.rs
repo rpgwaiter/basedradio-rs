@@ -1,5 +1,5 @@
-use dioxus::prelude::*;
 use crate::components::get_stream_mp3;
+use dioxus::prelude::*;
 
 #[cfg(feature = "web")]
 use js_sys::Promise;
@@ -22,7 +22,6 @@ use stream_download::source::{DecodeError, SourceStream};
 use stream_download::storage::temp::TempStorageProvider;
 #[cfg(feature = "desktop")]
 use stream_download::{Settings, StreamDownload};
-
 
 #[cfg(feature = "web")]
 pub async fn play_audio() {

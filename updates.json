@@ -1,5 +1,6 @@
 {
   "updates": [
+    "[10 Oct 2025] Dynamic loading of this update screen",
     "[7 Oct 2025] Added background artwork, improved the ui on mobile",
     "[1 Oct 2025] Rewrote the api in rust, moved back to using icecast",
     "[17 Jul 2025] This rewrite is a very early WIP. Stay tuned"

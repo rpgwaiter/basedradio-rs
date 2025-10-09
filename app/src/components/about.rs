@@ -4,7 +4,7 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn About() -> Element {
-  let mut is_visible = use_context::<RadioState>().about_is_visible;
+  let is_visible = use_context::<RadioState>().about_is_visible;
   rsx! {
     if is_visible() {
       div {

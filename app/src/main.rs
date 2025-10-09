@@ -1,6 +1,7 @@
 mod components;
 use components::{
-  About, UpstreamMoreInfo, MoreInfoState, moreinfo::MoreInfo, Player, PlayerState, RadioState, Updates, SettingsWindow, SettingsState
+  About, MoreInfoState, Player, PlayerState, RadioState, SettingsState, SettingsWindow,
+  UpdatesWindow, UpstreamMoreInfo, moreinfo::MoreInfo,
 };
 use dioxus::prelude::*;
 
@@ -43,15 +44,13 @@ fn Home() -> Element {
   let bg_toggle = use_context::<SettingsState>().use_background;
   let background_img = player_state.background;
 
-
-
   rsx! {
     div {
       id: "main-container",
-      style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"}, 
+      style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"},
       About {},
       Player {},
-      Updates {},
+      UpdatesWindow {},
       MoreInfo {},
       SettingsWindow {}
     }

@@ -65,8 +65,7 @@ pub struct TitleLangs {
   pub ja: Option<String>,
 }
 
-
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct Updates {
-  pub updates: Vec<String>
+  pub updates: Vec<String>,
 }

@@ -1,5 +1,7 @@
 use crate::RadioState;
-use crate::components::{get_api_url, Visualizer, Window, audio::RadioAudio, UpstreamMoreInfo, MoreInfoState};
+use crate::components::{
+  MoreInfoState, UpstreamMoreInfo, Visualizer, Window, audio::RadioAudio, get_api_url,
+};
 use dioxus::prelude::*;
 use std::env;
 
@@ -21,7 +23,7 @@ pub fn MoreInfoButton() -> Element {
 
   rsx! {
     button {
-      onclick: move |event| {
+      onclick: move |_| {
         if (!is_visible()) {
           spawn(get_more_info());
         }
@@ -36,9 +38,8 @@ pub fn MoreInfoButton() -> Element {
 #[component]
 pub fn MoreInfo() -> Element {
   println!("Rendering more info");
-  let mut is_visible = use_context::<RadioState>().more_info_is_visible;
-  let mut more_info = use_context::<MoreInfoState>().more_info;
-  let mut initial_load = Signal::new(false);
+  let is_visible = use_context::<RadioState>().more_info_is_visible;
+  let more_info = use_context::<MoreInfoState>().more_info;
 
   rsx! {
     if is_visible() {
