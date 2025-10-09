@@ -7,8 +7,12 @@ use icecast_stats::IcecastStatsRoot;
 use regex::Regex;
 use std::path::{Path, PathBuf};
 use std::{env, fs}; // TODO: async fs
-use types::{ApiResponse, MetaInfo, MoreInfo, RadioStatus, Song};
+use types::{ApiResponse, MetaInfo, MoreInfo, RadioStatus, Song, Updates};
 use urlencoding::encode;
+
+fn good_encode(s: &str) -> String {
+  encode(s).replace("%2F", "/")
+}
 
 fn get_meta(file: &str) -> MetaInfo {
   let mut sp = file.split("/");
@@ -22,6 +26,12 @@ fn get_meta(file: &str) -> MetaInfo {
   };
 }
 
+fn get_song_parent(file: &str) -> Option<PathBuf> {
+  let music_root = env::var("RADIO_MUSIC_DIR").unwrap_or("/Music".into());
+  let song_full_path: PathBuf = Path::new(&music_root).join(file);
+  song_full_path.parent().map(|p| p.to_path_buf())
+}
+
 fn get_download_link(file: &str) -> String {
   let filehost_url = env::var("RADIO_FILEHOST_URL").unwrap_or("http://localhost:6969".into());
   let encoded = encode(file).into_owned().replace("%2F", "/");
@@ -31,12 +41,11 @@ fn get_download_link(file: &str) -> String {
 // Takes the file path from an mpd status
 fn get_cover(file: &str, target: &str) -> Option<String> {
   let regex = Regex::new(&format!(r"(?i)^{}\.(gif|jpeg|jpg|png|webp)$", target)).unwrap();
-  let music_root = env::var("RADIO_MUSIC_DIR").unwrap_or("/Music".into());
   let filehost_url = env::var("RADIO_FILEHOST_URL").unwrap_or("http://localhost:6969".into());
-  let song_full_path: PathBuf = Path::new(&music_root).join(file);
-  let song_parent = &song_full_path.parent().unwrap();
+  let music_root = env::var("RADIO_MUSIC_DIR").unwrap_or("/Music".into());
 
-  let files = fs::read_dir(song_parent).unwrap();
+  let song_parent = get_song_parent(&file).unwrap();
+  let files = fs::read_dir(&song_parent).unwrap();
 
   for entry in files.flatten() {
     if let Ok(file_name) = entry.file_name().into_string() {
@@ -51,8 +60,7 @@ fn get_cover(file: &str, target: &str) -> Option<String> {
 
         // Maybe we should join paths again for this idk
         let path_str = path.to_str().unwrap();
-
-        let encoded = encode(path_str).into_owned().replace("%2F", "/");
+        let encoded = good_encode(path_str);
 
         return Some(format!("{filehost_url}{encoded}"));
       }
@@ -64,10 +72,7 @@ fn get_cover(file: &str, target: &str) -> Option<String> {
 
 // Takes the file path from an mpd status
 fn get_more_info(file: &str) -> MoreInfo {
-  let music_root = env::var("RADIO_MUSIC_DIR").unwrap_or("/Music".into());
-  let song_full_path: PathBuf = Path::new(&music_root).join(file);
-  let song_parent = song_full_path.parent().unwrap();
-
+  let song_parent = get_song_parent(&file).unwrap();
   let potential_json = song_parent.join("info.json");
 
   if let Ok(raw_file) = fs::read_to_string(potential_json) {
@@ -75,7 +80,6 @@ fn get_more_info(file: &str) -> MoreInfo {
       return info;
     };
   };
-
   MoreInfo::new()
 }
 
@@ -89,6 +93,21 @@ async fn get_icecast_info() -> Result<IcecastStatsRoot, reqwest::Error> {
     .unwrap()
     .json::<IcecastStatsRoot>()
     .await;
+}
+
+#[get("/updates")]
+async fn get_updates() -> impl Responder {
+  let update_url =
+    env::var("RADIO_UPDATES_URL").unwrap_or("https://raw.githubusercontent.com/rpgwaiter/basedradio-rs/refs/heads/main/updates.json".into());
+
+  let ret = reqwest::get(update_url)
+    .await
+    .unwrap()
+    .json::<Updates>()
+    .await
+    .unwrap();
+
+  HttpResponse::Ok().json(ret)
 }
 
 async fn get_mpd() -> Result<MpdClient, async_mpd::Error> {
@@ -156,7 +175,7 @@ async fn get_playing_song() -> impl Responder {
         .listeners()
         .unwrap_or(0),
     },
-    more_info: get_more_info(&file),
+    more_info: get_more_info(&file)
   })
 }
 
@@ -179,6 +198,7 @@ async fn main() -> std::io::Result<()> {
     App::new()
       .service(more_info)
       .service(get_playing_song)
+      .service(get_updates)
       .wrap(Logger::default())
   })
   .bind((radio_host, radio_port))?
