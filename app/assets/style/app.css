@@ -73,10 +73,6 @@ button::first-letter {
   position: absolute;
 }
 
-.player-stats {
-  user-select: text;
-}
-
 .action a::first-letter {
   text-decoration: underline;
 }
@@ -110,8 +106,7 @@ button::first-letter {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  /* height: ; */
-  margin-left: 2%;
+  margin: 3px;
 }
 
 #player {
@@ -219,6 +214,7 @@ button::first-letter {
 }
 
 .player-stats {
+  user-select: text;
   display: flex;
   align-self: stretch;
   align-items: stretch;
@@ -226,16 +222,11 @@ button::first-letter {
   justify-content: center;
   flex: 1;
   flex-grow: 1;
-  height: 112px;
-  width: 112px;
   font-size: small;
   padding-left: 5px;
-  border: 1px solid;
-  border-top-color: #dfdfdf;
-  border-left-color: #dfdfdf;
-  /* border-right-color: gray;
-  border-bottom-color: gray; */
-  box-shadow: 1px 1px 1px 0 inset #000;
+  padding-bottom: 100px;
+  cursor: text;
+  min-height: 14px;
 }
 
 .player-stats>div {

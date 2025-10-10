@@ -70,7 +70,7 @@ pub fn PlayerMenu() -> Element {
 pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<String>) -> Element {
   rsx! {
     div {
-      class: "player-stats",
+      class: "player-stats content",
       div {
         class: "player-game",
         strong { "Game: " }, a { id: "current-game", "{game}" }
