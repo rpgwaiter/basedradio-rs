@@ -2,8 +2,8 @@ use crate::components::windows::{
   AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton,
 };
 use crate::components::{
-  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, Visualizer, WindowTemplate,
-  get_api_url,
+  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
+  WindowTemplate, get_api_url,
 };
 use dioxus::prelude::*;
 
@@ -164,17 +164,17 @@ pub fn PlayerContent() -> Element {
 #[component]
 pub fn Player() -> Element {
   let listeners = use_context::<PlayerState>().listeners;
+  let bounce = use_context::<SettingsState>().bounce;
 
   rsx! {
     div {
-      id: "window-player",
       class: "win98",
-      style: "z-index: 0 !important;",
       WindowTemplate {
         title: "BasedRadio",
         id: "based-radio",
         header_icon: true,
         footer_text: Some(format!("Listeners: {:?}", listeners())),
+        bounce: Some(bounce),
         PlayerMenu { },
         div {
           id: "player-container",

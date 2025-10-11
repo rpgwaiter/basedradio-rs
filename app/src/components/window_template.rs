@@ -5,6 +5,7 @@ use dioxus::{
   prelude::*,
 };
 use std::rc::Rc;
+// use instant::{Instant, Duration};
 
 static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
 static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
@@ -18,6 +19,7 @@ pub struct WindowProps {
   header_icon: bool,
   is_visible: Option<Signal<bool>>,
   footer_text: Option<String>,
+  bounce: Option<Signal<bool>>,
 }
 
 #[allow(non_snake_case)]
@@ -25,11 +27,11 @@ pub struct WindowProps {
 pub fn WindowTemplate(props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
   let mut is_dragging = use_signal(|| false);
-  let mut previous_x = use_signal(|| 0 as f32);
-  let mut previous_y = use_signal(|| 0 as f32);
+  let mut previous_x = use_signal(|| 0 as f64);
+  let mut previous_y = use_signal(|| 0 as f64);
 
-  let mut dim_x = use_signal(|| String::from("50%"));
-  let mut dim_y = use_signal(|| String::from("50%"));
+  let mut dim_x = use_signal(|| 0 as f64);
+  let mut dim_y = use_signal(|| 0 as f64);
 
   let read_dims = move || async move {
     let read = div_element.read();
@@ -37,11 +39,11 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
 
     if let Some(client_rect) = client_rect {
       if let Ok(rect) = client_rect.await {
-        let diff_x = (rect.max_x() as f32 + rect.min_x() as f32) / 2.0;
-        let diff_y = (rect.max_y() as f32 + rect.min_y() as f32) / 2.0;
+        let diff_x = (rect.max_x() + rect.min_x()) / 2.0;
+        let diff_y = (rect.max_y() + rect.min_y()) / 2.0;
 
-        dim_x.set(format!("{:?}", diff_x));
-        dim_y.set(format!("{:?}", diff_y));
+        dim_x.set(diff_x);
+        dim_y.set(diff_y);
       }
     }
   };
@@ -53,24 +55,24 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
       let screen_coords = event.screen_coordinates();
       // set previous to current if new
       if previous_x() == 0.0 {
-        previous_x.set(screen_coords.x as f32)
+        previous_x.set(screen_coords.x)
       }
       if previous_y() == 0.0 {
-        previous_y.set(screen_coords.y as f32)
+        previous_y.set(screen_coords.y)
       }
 
-      let offset_x = previous_x() - screen_coords.x as f32;
-      let offset_y = previous_y() - screen_coords.y as f32;
+      let offset_x = previous_x() - screen_coords.x;
+      let offset_y = previous_y() - screen_coords.y;
 
-      let new_x = (dim_x().replace("%", "").parse::<f32>().unwrap() - offset_x).abs();
-      let new_y = (dim_y().replace("%", "").parse::<f32>().unwrap() - offset_y).abs();
+      let new_x = (dim_x() - offset_x).abs();
+      let new_y = (dim_y() - offset_y).abs();
 
-      dim_x.set(format!("{:?}", new_x));
-      dim_y.set(format!("{:?}", new_y));
+      dim_x.set(new_x);
+      dim_y.set(new_y);
 
       // Finally, update the previous coords to the current pos
-      previous_x.set(screen_coords.x as f32);
-      previous_y.set(screen_coords.y as f32);
+      previous_x.set(screen_coords.x);
+      previous_y.set(screen_coords.y);
     }
   };
 
@@ -79,7 +81,8 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
       id: "{props.id}",
       class: "window",
       onmounted: move |cx| div_element.set(Some(cx.data())),
-      style: "top: {dim_y}px; left: {dim_x}px;",
+      style: if dim_x() > 0.0 {"top: {dim_y}px; left: {dim_x}px;"},
+      // style: format!("transform: translate({}px, {}px);", dim_x(), dim_y()),
       div {
         class: "inner",
         div {

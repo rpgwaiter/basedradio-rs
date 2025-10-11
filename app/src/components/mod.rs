@@ -74,12 +74,14 @@ impl PlayerState {
 #[derive(Clone, Copy)]
 pub struct SettingsState {
   pub use_background: Signal<bool>,
+  pub bounce: Signal<bool>,
 }
 
 impl SettingsState {
   pub fn new() -> Self {
     SettingsState {
       use_background: Signal::new(true),
+      bounce: Signal::new(false),
     }
   }
 }

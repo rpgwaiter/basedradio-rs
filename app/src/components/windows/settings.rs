@@ -7,11 +7,11 @@ use std::env;
 #[component]
 pub fn SettingsButton() -> Element {
   let mut is_visible = use_context::<RadioState>().settings_is_visible;
-  // let mut more = use_context::<MoreInfoState>();
+  let bounce = use_context::<SettingsState>().bounce;
 
   rsx! {
     button {
-      onclick: move |_| is_visible.toggle(),
+      onclick: move |_| if !bounce() { is_visible.toggle() },
       id: "settings-btn",
       "Settings"
     }
@@ -22,9 +22,10 @@ pub fn SettingsButton() -> Element {
 pub fn SettingsWindow() -> Element {
   let is_visible = use_context::<RadioState>().settings_is_visible;
   let mut settings_state = use_context::<SettingsState>();
+  let bounce = use_context::<SettingsState>().bounce;
 
   rsx! {
-    if is_visible() {
+    if is_visible() || bounce() {
       div {
         id: "settings-container",
         class: "win98",
@@ -47,7 +48,19 @@ pub fn SettingsWindow() -> Element {
                 label {
                   for: "background-toggle",
                   {"Background"}
-                }
+                },
+              }
+              fieldset {
+                input {
+                  id: "bounce-toggle",
+                  type: "checkbox",
+                  checked: settings_state.bounce,
+                  onclick: move |_| settings_state.bounce.toggle()
+                },
+                label {
+                  for: "bounce-toggle",
+                  {"Bounce"}
+                },
               }
             }
           }
