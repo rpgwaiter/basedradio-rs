@@ -3,6 +3,8 @@ use components::windows::{AboutWindow, MoreInfoWindow, Player, SettingsWindow, U
 use components::{MoreInfoState, PlayerState, RadioState, SettingsState, UpstreamMoreInfo};
 use dioxus::prelude::*;
 
+static MOUSE_POS: GlobalSignal<(f64, f64)> = Signal::global(|| (0.0, 0.0));
+
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
 enum Route {
@@ -44,6 +46,9 @@ fn Home() -> Element {
     div {
       id: "main-container",
       style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"},
+      onmousemove: move |evt| {
+        *MOUSE_POS.write() = (evt.client_coordinates().x, evt.client_coordinates().y);
+      },
       AboutWindow {},
       Player {},
       UpdatesWindow {},

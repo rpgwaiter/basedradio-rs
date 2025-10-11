@@ -30,6 +30,7 @@ pub fn PictureWindow() -> Element {
           id: "window-picture-viewer",
           header_icon: true,
           is_visible: is_visible,
+          index: 5,
           div {
             class: "inner content",
             h1 {"test"}

@@ -167,14 +167,13 @@ pub fn Player() -> Element {
   let bounce = use_context::<SettingsState>().bounce;
 
   rsx! {
-    div {
-      class: "win98",
       WindowTemplate {
         title: "BasedRadio",
         id: "based-radio",
         header_icon: true,
         footer_text: Some(format!("Listeners: {:?}", listeners())),
         bounce: Some(bounce),
+        index: 0,
         PlayerMenu { },
         div {
           id: "player-container",
@@ -182,6 +181,5 @@ pub fn Player() -> Element {
           PlayerContent { }
         }
       },
-    }
   }
 }

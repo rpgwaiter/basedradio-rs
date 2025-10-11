@@ -26,46 +26,42 @@ pub fn SettingsWindow() -> Element {
 
   rsx! {
     if is_visible() || bounce() {
-      div {
-        id: "settings-container",
-        class: "win98",
-        style: "z-index: 3 !important;",
-        WindowTemplate {
-          title: "Settings",
-          id: "settings-window",
-          header_icon: true,
-          is_visible: is_visible,
+      WindowTemplate {
+        title: "Settings",
+        id: "settings-window",
+        header_icon: true,
+        is_visible: is_visible,
+        index: 3,
+        div {
+          class: "inner content",
           div {
-            class: "inner content",
-            div {
-              fieldset {
-                input {
-                  id: "background-toggle",
-                  type: "checkbox",
-                  checked: settings_state.use_background,
-                  onclick: move |_| settings_state.use_background.toggle()
-                },
-                label {
-                  for: "background-toggle",
-                  {"Background"}
-                },
-              }
-              fieldset {
-                input {
-                  id: "bounce-toggle",
-                  type: "checkbox",
-                  checked: settings_state.bounce,
-                  onclick: move |_| settings_state.bounce.toggle()
-                },
-                label {
-                  for: "bounce-toggle",
-                  {"Bounce"}
-                },
-              }
+            fieldset {
+              input {
+                id: "background-toggle",
+                type: "checkbox",
+                checked: settings_state.use_background,
+                onclick: move |_| settings_state.use_background.toggle()
+              },
+              label {
+                for: "background-toggle",
+                {"Background"}
+              },
+            }
+            fieldset {
+              input {
+                id: "bounce-toggle",
+                type: "checkbox",
+                checked: settings_state.bounce,
+                onclick: move |_| settings_state.bounce.toggle()
+              },
+              label {
+                for: "bounce-toggle",
+                {"Bounce"}
+              },
             }
           }
-        },
-      }
+        }
+      },
     }
   }
 }

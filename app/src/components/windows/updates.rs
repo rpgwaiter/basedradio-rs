@@ -43,25 +43,21 @@ pub fn UpdatesWindow() -> Element {
 
   rsx! {
     if is_visible() {
-      div {
-        id: "container-updates",
-        class: "win98",
-        style: "z-index: 2 !important;",
-        WindowTemplate {
-          title: "Updates",
-          id: "window-updates",
-          header_icon: true,
-          is_visible: is_visible,
-          div {
-            id: "updates",
-            class: "inner content",
-            ul {
-              for update in updates().iter() {
-                li { "{update}" }
-              }
+      WindowTemplate {
+        title: "Updates",
+        id: "window-updates",
+        header_icon: true,
+        is_visible: is_visible,
+        index: 2,
+        div {
+          id: "updates",
+          class: "inner content",
+          ul {
+            for update in updates().iter() {
+              li { "{update}" }
             }
           }
-        },
+        }
       }
     }
   }

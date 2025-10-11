@@ -5,6 +5,8 @@ use dioxus::{
   prelude::*,
 };
 use std::rc::Rc;
+
+use crate::components::RadioState;
 // use instant::{Instant, Duration};
 
 static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
@@ -20,6 +22,7 @@ pub struct WindowProps {
   is_visible: Option<Signal<bool>>,
   footer_text: Option<String>,
   bounce: Option<Signal<bool>>,
+  index: i16,
 }
 
 #[allow(non_snake_case)]
@@ -50,7 +53,9 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
 
   // TODO: don't let the window move out of bounds
   let mouse_move = move |event: Event<MouseData>| async move {
+    println!("mouse moved");
     if event.held_buttons().contains(MouseButton::Primary) && is_dragging() {
+      // if is_dragging() {
       // current mouse pos
       let screen_coords = event.screen_coordinates();
       // set previous to current if new
@@ -78,41 +83,52 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
 
   rsx! {
     div {
-      id: "{props.id}",
-      class: "window",
-      onmounted: move |cx| div_element.set(Some(cx.data())),
-      style: if dim_x() > 0.0 {"top: {dim_y}px; left: {dim_x}px;"},
-      // style: format!("transform: translate({}px, {}px);", dim_x(), dim_y()),
+      class: "win98",
+      style: format!("z-index: {}; height: 100%;", props.index),
+      onmousemove: move |event| mouse_move(event),
       div {
-        class: "inner",
-        div {
-          class: "header",
-          onmousedown: move |_| {
-            is_dragging.set(true);
-            read_dims()
-          },
-          onmouseup: move |_| { previous_x.set(0.0); previous_y.set(0.0); is_dragging.set(false) },
-          onmousemove: move |event| mouse_move(event),
-          onmouseleave: move |event| mouse_move(event),
-          onmouseout: move |event| mouse_move(event),
-          div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover;", ICON_FAVICON.to_string()) },
-          "{props.title}",
-          div {
-            class: "buttons",
-            button {
-              onclick: move |_| { if let Some(mut vis) = props.is_visible { vis.set(false); } },
-              class: "button-minimize",
-              style: format!("background-image: url({});", ICON_CLOSE.to_string())
-            }
-          }
+        id: "{props.id}",
+        class: "window",
+        onmounted: move |cx| {
+          div_element.set(Some(cx.data()));
+          println!("{:?}", cx.data());
+          // cx.
         },
-        {props.children}
-      },
-      div {
-        class: "player-footer",
-        div { if let Some(foot) = props.footer_text { {foot} } else { {"Keep it Based."} } },
-        div { class: "footer-end", style: format!("background: url({}) no-repeat; background-size: cover;", RESIZE_ICON.to_string()) }
+        onmouseleave: move |event| mouse_move(event),
+        onmouseout: move |event| mouse_move(event),
+        style: if dim_x() > 0.0 {"top: {dim_y}px; left: {dim_x}px;"},
+        // style: format!("transform: translate({}px, {}px);", dim_x(), dim_y()),
+        div {
+          class: "inner",
+          div {
+            class: "header",
+            onmousedown: move |_| {
+              is_dragging.set(true);
+              read_dims()
+            },
+            onmouseup: move |_| { previous_x.set(0.0); previous_y.set(0.0); is_dragging.set(false); },
+
+
+            div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover;", ICON_FAVICON.to_string()) },
+            "{props.title}",
+            div {
+              class: "buttons",
+              button {
+                onclick: move |_| { if let Some(mut vis) = props.is_visible { vis.set(false); } },
+                class: "button-minimize",
+                style: format!("background-image: url({});", ICON_CLOSE.to_string())
+              }
+            }
+          },
+          {props.children}
+        },
+        div {
+          class: "player-footer",
+          div { if let Some(foot) = props.footer_text { {foot} } else { {"Keep it Based."} } },
+          div { class: "footer-end", style: format!("background: url({}) no-repeat; background-size: cover;", RESIZE_ICON.to_string()) }
+        }
       }
     }
+
   }
 }

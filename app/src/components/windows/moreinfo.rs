@@ -40,27 +40,22 @@ pub fn MoreInfoWindow() -> Element {
 
   rsx! {
     if is_visible() {
-      div {
-        id: "container-more-info",
-        class: "win98",
-        style: "z-index: 2 !important;",
-        WindowTemplate {
-          title: "More Info",
-          id: "window-more-info",
-          header_icon: true,
-          is_visible: is_visible,
+      WindowTemplate {
+        title: "More Info",
+        id: "window-more-info",
+        header_icon: true,
+        is_visible: is_visible,
+        index: 2,
+        div {
+          id: "more-info-radio",
+          class: "inner content",
+          // TODO: add info here
           div {
-            id: "more-info-radio",
-            class: "inner content",
-            // TODO: add info here
-            div {
-              h2 { style: "text-align: center;", u { "- Fun Fact -" }  },
-              p { "{more_info().notes[0]}" }// TODO: randomize cross-platform
-
-            }
+            h2 { style: "text-align: center;", u { "- Fun Fact -" }  },
+            p { "{more_info().notes[0]}" }// TODO: randomize cross-platform
           }
-        },
-      }
+        }
+      },
     }
   }
 }
