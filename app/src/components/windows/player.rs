@@ -1,6 +1,9 @@
+use crate::components::windows::{
+  AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton,
+};
 use crate::components::{
-  MoreInfoButton, MoreInfoState, PlayerState, RadioApi, RadioState, SettingsButton, Visualizer,
-  Window, audio::RadioAudio, get_api_url, updates::UpdatesButton,
+  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, Visualizer, WindowTemplate,
+  get_api_url,
 };
 use dioxus::prelude::*;
 
@@ -32,19 +35,14 @@ pub fn PlayerMenu() -> Element {
         class: "action",
         a {
           id: "home-button",
-          href: "/",
+          href: "https://github.com/rpgwaiter/basedradio-rs",
           role: "button",
           "Home"
         },
       },
       div {
         class: "action",
-        a {
-          onclick: move |event| about_is_visible.toggle(),
-          id: "about-show",
-          role: "button",
-          "About"
-        }
+        AboutButton {  }
       },
       div {
         class: "action",
@@ -135,6 +133,7 @@ pub fn PlayerContent() -> Element {
       class: "stream-meta",
       div {
         class: "player-cover-art",
+        PictureButton {  }
         img { id: "current-cover", src: "{player_state.cover}", alt: "Cover Art", style: "margin: auto; display: block;" }
       },
       PlayerStats { game: player_state.game, system: player_state.system, track: player_state.title  }
@@ -170,7 +169,7 @@ pub fn Player() -> Element {
       id: "window-player",
       class: "win98",
       style: "z-index: 0 !important;",
-      Window {
+      WindowTemplate {
         title: "BasedRadio",
         id: "based-radio",
         header_icon: true,

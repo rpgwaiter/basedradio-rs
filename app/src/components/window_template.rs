@@ -20,8 +20,9 @@ pub struct WindowProps {
   footer_text: Option<String>,
 }
 
+#[allow(non_snake_case)]
 #[component]
-pub fn Window(props: WindowProps) -> Element {
+pub fn WindowTemplate(props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
   let mut is_dragging = use_signal(|| false);
   let mut previous_x = use_signal(|| 0 as f32);

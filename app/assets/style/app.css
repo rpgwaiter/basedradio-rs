@@ -154,10 +154,13 @@ button::first-letter {
 
 .player-cover-art {
   background: #bfbfbf;
-  height: 100%;
+  height: 112px;
   width: 112px;
-
-  /* border: 1px solid; */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* Centering y-axis */
+  align-items :center; /* Centering x-axis */
 }
 
 .player-cover-art>img {
@@ -165,8 +168,6 @@ button::first-letter {
   max-height: 112px;
   max-width: 112px;
   object-fit: contain;
-  /* display:block;
-  margin:auto; */
 }
 
 .inner {
@@ -198,19 +199,6 @@ button::first-letter {
 .no-gutters {
   margin-right: 0;
   margin-left: 0;
-}
-
-.player-meta-slot {
-  flex-basis: 0;
-  flex-grow: 1;
-  max-width: "100%";
-  flex: 0 0 100%;
-  position: relative;
-  width: 100%;
-}
-
-.player-meta {
-  padding-left: 8px !important;
 }
 
 .player-stats {

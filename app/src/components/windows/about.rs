@@ -1,17 +1,29 @@
 use crate::RadioState;
-use crate::components::{Visualizer, Window, audio::RadioAudio};
+use crate::components::{Visualizer, WindowTemplate};
 use dioxus::prelude::*;
 
 #[component]
-pub fn About() -> Element {
+pub fn AboutButton() -> Element {
+  let mut is_visible = use_context::<RadioState>().about_is_visible;
+
+  rsx! {
+    a {
+      onclick: move |event| is_visible.toggle(),
+      role: "button",
+      "About"
+    }
+  }
+}
+
+#[component]
+pub fn AboutWindow() -> Element {
   let is_visible = use_context::<RadioState>().about_is_visible;
   rsx! {
     if is_visible() {
       div {
-        id: "container-about",
         class: "win98",
         style: "z-index: 4 !important;",
-        Window {
+        WindowTemplate {
           title: "About",
           id: "window-about",
           header_icon: true,

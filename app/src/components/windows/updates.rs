@@ -1,5 +1,5 @@
 use crate::RadioState;
-use crate::components::{Visualizer, Window, audio::RadioAudio, get_api_url};
+use crate::components::{RadioAudio, Visualizer, WindowTemplate, get_api_url};
 use dioxus::prelude::*;
 
 #[derive(serde::Deserialize)]
@@ -47,7 +47,7 @@ pub fn UpdatesWindow() -> Element {
         id: "container-updates",
         class: "win98",
         style: "z-index: 2 !important;",
-        Window {
+        WindowTemplate {
           title: "Updates",
           id: "window-updates",
           header_icon: true,

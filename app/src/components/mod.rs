@@ -9,27 +9,15 @@ pub fn get_api_url() -> String {
   env::var("API_URL").unwrap_or("https://api.based.radio".into())
 }
 
-pub mod player;
-pub use player::Player;
+pub mod windows;
 
-pub mod about;
-pub use about::About;
+mod audio;
+pub use audio::RadioAudio;
 
-pub mod updates;
-pub use updates::UpdatesWindow;
+mod window_template;
+pub use window_template::WindowTemplate;
 
-pub mod moreinfo;
-pub use moreinfo::{MoreInfo, MoreInfoButton};
-
-pub mod settings;
-pub use settings::{SettingsButton, SettingsWindow};
-
-pub mod audio;
-
-pub mod window;
-pub use window::Window;
-
-pub mod visualizer;
+mod visualizer;
 pub use visualizer::Visualizer;
 
 #[derive(serde::Deserialize, Debug)]

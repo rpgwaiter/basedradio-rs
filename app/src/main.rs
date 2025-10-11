@@ -1,11 +1,7 @@
 mod components;
-use components::{
-  About, MoreInfoState, Player, PlayerState, RadioState, SettingsState, SettingsWindow,
-  UpdatesWindow, UpstreamMoreInfo, moreinfo::MoreInfo,
-};
+use components::windows::{AboutWindow, MoreInfoWindow, Player, SettingsWindow, UpdatesWindow};
+use components::{MoreInfoState, PlayerState, RadioState, SettingsState, UpstreamMoreInfo};
 use dioxus::prelude::*;
-
-use crate::components::player::PlayerStats;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -48,10 +44,10 @@ fn Home() -> Element {
     div {
       id: "main-container",
       style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"},
-      About {},
+      AboutWindow {},
       Player {},
       UpdatesWindow {},
-      MoreInfo {},
+      MoreInfoWindow {},
       SettingsWindow {}
     }
   }

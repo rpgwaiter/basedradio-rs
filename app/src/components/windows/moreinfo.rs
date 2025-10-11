@@ -1,7 +1,5 @@
 use crate::RadioState;
-use crate::components::{
-  MoreInfoState, UpstreamMoreInfo, Visualizer, Window, audio::RadioAudio, get_api_url,
-};
+use crate::components::{MoreInfoState, UpstreamMoreInfo, WindowTemplate, get_api_url};
 use dioxus::prelude::*;
 use std::env;
 
@@ -36,8 +34,7 @@ pub fn MoreInfoButton() -> Element {
 }
 
 #[component]
-pub fn MoreInfo() -> Element {
-  println!("Rendering more info");
+pub fn MoreInfoWindow() -> Element {
   let is_visible = use_context::<RadioState>().more_info_is_visible;
   let more_info = use_context::<MoreInfoState>().more_info;
 
@@ -47,7 +44,7 @@ pub fn MoreInfo() -> Element {
         id: "container-more-info",
         class: "win98",
         style: "z-index: 2 !important;",
-        Window {
+        WindowTemplate {
           title: "More Info",
           id: "window-more-info",
           header_icon: true,

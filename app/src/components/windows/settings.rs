@@ -1,4 +1,4 @@
-use crate::components::Window;
+use crate::components::WindowTemplate;
 use crate::{RadioState, SettingsState};
 
 use dioxus::prelude::*;
@@ -29,7 +29,7 @@ pub fn SettingsWindow() -> Element {
         id: "settings-container",
         class: "win98",
         style: "z-index: 3 !important;",
-        Window {
+        WindowTemplate {
           title: "Settings",
           id: "settings-window",
           header_icon: true,
