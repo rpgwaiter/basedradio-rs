@@ -64,6 +64,14 @@ button::first-letter {
   text-decoration: underline;
 }
 
+.player-time-container {
+  text-align: center;
+}
+
+.player-time {
+  font-size: 14px !important;
+}
+
 .player-visualizer {
   width: 89%;
   height: 13%;
@@ -172,7 +180,6 @@ button::first-letter {
 
 .inner {
   position: relative;
-  padding: 2px;
 }
 
 .player-form {
@@ -190,9 +197,7 @@ button::first-letter {
   flex-wrap: wrap;
 }
 
-.player-content {
-  margin: 1px 1px 0;
-  /* border: 1px solid; */
+#player-container {
   padding: 8px !important;
 }
 

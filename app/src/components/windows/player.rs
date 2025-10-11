@@ -36,6 +36,7 @@ pub fn PlayerMenu() -> Element {
         a {
           id: "home-button",
           href: "https://github.com/rpgwaiter/basedradio-rs",
+          target: "_blank",
           role: "button",
           "Home"
         },
