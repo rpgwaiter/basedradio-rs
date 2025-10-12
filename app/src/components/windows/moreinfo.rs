@@ -25,7 +25,7 @@ pub fn MoreInfoButton() -> Element {
       onclick: move |_| {
         let v = is_visible();
         if (!v) { spawn(get_more_info()); };
-        active.set(if v { "window-more-info".to_string() } else { "based-radio".to_string() } );
+        active.set(if !v { "window-more-info".to_string() } else { "based-radio".to_string() } );
         is_visible.toggle()
       },
       id: "more-info-btn",

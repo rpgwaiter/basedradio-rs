@@ -278,7 +278,8 @@ button::first-letter {
 }
 
 .bouncing {
-  animation: moveX 4s linear 0s infinite alternate, moveY 6s linear 0s infinite alternate;
+  animation: moveX 6s linear 0s infinite alternate, moveY 8s linear 0s infinite alternate;
+  z-index: 50 !important
 }
 
 @keyframes moveX {
