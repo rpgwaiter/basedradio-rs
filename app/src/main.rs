@@ -41,6 +41,7 @@ fn Home() -> Element {
   let player_state = use_context_provider(|| PlayerState::new());
 
   let drag_state = radio_state.drag_state;
+  let mut is_dragging = drag_state.is_dragging;
 
   let bg_toggle = use_context::<SettingsState>().use_background;
   let background_img = player_state.background;
@@ -52,7 +53,6 @@ fn Home() -> Element {
   let mut previous_y = drag_state.previous_y;
 
   let mouse_move = move |event: Event<MouseData>| async move {
-    println!("mouse moved");
     if event.held_buttons().contains(MouseButton::Primary) && (drag_state.is_dragging)() {
       // current mouse pos
       let screen_coords = event.screen_coordinates();
@@ -86,6 +86,7 @@ fn Home() -> Element {
       style: "height: 100%; width: 100%; top: 0; left: 0; position: fixed;",
       style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"},
       onmousemove: move |event| mouse_move(event),
+      onmouseup: move |_| is_dragging.set(false),
       AboutWindow {},
       Player {},
       UpdatesWindow {},

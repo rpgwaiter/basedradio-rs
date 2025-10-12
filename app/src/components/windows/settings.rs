@@ -8,10 +8,14 @@ use std::env;
 pub fn SettingsButton() -> Element {
   let mut is_visible = use_context::<RadioState>().settings_is_visible;
   let bounce = use_context::<SettingsState>().bounce;
+  let mut active = use_context::<RadioState>().drag_state.active_window;
 
   rsx! {
     button {
-      onclick: move |_| if !bounce() { is_visible.toggle() },
+      onclick: move |_| {
+        active.set(if !is_visible() { "settings-window".to_string() } else { "based-radio".to_string() } );
+        if !bounce() { is_visible.toggle() }
+      },
       id: "settings-btn",
       "Settings"
     }

@@ -9,8 +9,9 @@ struct Updates {
 
 #[component]
 pub fn UpdatesButton() -> Element {
-  let mut updates_is_visible = use_context::<RadioState>().updates_is_visible;
+  let mut is_visible = use_context::<RadioState>().updates_is_visible;
   let mut updates = use_context::<RadioState>().updates;
+  let mut active = use_context::<RadioState>().drag_state.active_window;
 
   let fetch_info = move || async move {
     if let Ok(response) = reqwest::get(format!("{}/updates", get_api_url()))
@@ -26,7 +27,8 @@ pub fn UpdatesButton() -> Element {
   rsx! {
     a {
       onclick: move |_| {
-        updates_is_visible.toggle();
+        active.set(if !is_visible() { "updates-show".to_string() } else { "based-radio".to_string() } );
+        is_visible.toggle();
         spawn(fetch_info());
       },
       id: "updates-show",

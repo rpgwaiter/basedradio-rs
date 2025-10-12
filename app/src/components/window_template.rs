@@ -31,6 +31,8 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
 
   let mut active_window = use_context::<RadioState>().drag_state.active_window;
 
+  let bouncing = if let Some(b) = props.bounce { b() } else { false };
+
   let is_active = active_window() == props.id;
   let window_index = if is_active { 100 } else { props.index };
   let bg_index = if is_active { 1 } else { 0 };
@@ -63,18 +65,18 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
   rsx! {
     div {
       id: "{props.id}",
-      class: "window",
+      class: if bouncing {"window bouncing" } else { "window" },
       onmounted: move |cx| div_element.set(Some(cx.data())),
       onmousedown: move |_| active_window.set(props.id.clone()),
+      onmouseup: move |_| is_dragging.set(false),
       onmousemove: move |_| {
         if is_active && is_dragging() {
-          info!("setting shit");
           dim_x_local.set(format!("{}px;", dim_x()));
           dim_y_local.set(format!("{}px;", dim_y()));
         }
       },
       style: "z-index: {window_index};",
-      style: if dim_x() > 0.0 && is_active {"top: {dim_y}px; left: {dim_x}px;"} else {"top: {dim_y_local}; left: {dim_x_local};"},
+      style: if dim_x() > 0.0 && is_active && is_dragging() {"top: {dim_y}px; left: {dim_x}px;"} else {"top: {dim_y_local}; left: {dim_x_local};"},
       div {
         class: "inner",
         div {
@@ -84,9 +86,9 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
             read_dims()
           },
           onmouseup: move |_| {
+            is_dragging.set(false);
             previous_x.set(0.0);
             previous_y.set(0.0);
-            is_dragging.set(false);
             dim_x_local.set(format!("{}px;", dim_x()));
             dim_y_local.set(format!("{}px;", dim_y()));
           },

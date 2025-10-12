@@ -7,6 +7,7 @@ use std::env;
 pub fn MoreInfoButton() -> Element {
   let mut is_visible = use_context::<RadioState>().more_info_is_visible;
   let mut more = use_context::<MoreInfoState>();
+  let mut active = use_context::<RadioState>().drag_state.active_window;
 
   let get_more_info = move || async move {
     if let Ok(response) = reqwest::get(format!("{}/more-info", get_api_url()))
@@ -22,9 +23,9 @@ pub fn MoreInfoButton() -> Element {
   rsx! {
     button {
       onclick: move |_| {
-        if (!is_visible()) {
-          spawn(get_more_info());
-        }
+        let v = is_visible();
+        if (!v) { spawn(get_more_info()); };
+        active.set(if v { "window-more-info".to_string() } else { "based-radio".to_string() } );
         is_visible.toggle()
       },
       id: "more-info-btn",

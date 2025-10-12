@@ -5,10 +5,14 @@ use dioxus::prelude::*;
 #[component]
 pub fn AboutButton() -> Element {
   let mut is_visible = use_context::<RadioState>().about_is_visible;
+  let mut active = use_context::<RadioState>().drag_state.active_window;
 
   rsx! {
     a {
-      onclick: move |event| is_visible.toggle(),
+      onclick: move |event| {
+        active.set(if !is_visible() { "window-about".to_string() } else { "based-radio".to_string() } );
+        is_visible.toggle()
+      },
       role: "button",
       "About"
     }
