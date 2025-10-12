@@ -5,9 +5,7 @@ use dioxus::{
   prelude::*,
 };
 use std::rc::Rc;
-
-use crate::components::RadioState;
-// use instant::{Instant, Duration};
+use crate::components::{RadioAudio, RadioState};
 
 static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
 static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
@@ -29,12 +27,23 @@ pub struct WindowProps {
 #[component]
 pub fn WindowTemplate(props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
-  let mut is_dragging = use_signal(|| false);
-  let mut previous_x = use_signal(|| 0 as f64);
-  let mut previous_y = use_signal(|| 0 as f64);
+  let mut is_dragging = use_context::<RadioState>().drag_state.is_dragging;
 
-  let mut dim_x = use_signal(|| 0 as f64);
-  let mut dim_y = use_signal(|| 0 as f64);
+  let mut active_window = use_context::<RadioState>().drag_state.active_window;
+
+  let is_active = active_window() == props.id;
+  let window_index = if is_active { 100 } else { props.index };
+  let bg_index = if is_active { 1 } else { 0 };
+
+  let drag_state = use_context::<RadioState>().drag_state;
+  let mut dim_x = drag_state.dim_x;
+  let mut dim_y = drag_state.dim_y;
+
+  let mut dim_x_local = use_signal(|| String::from("50%"));
+  let mut dim_y_local = use_signal(|| String::from("50%"));
+
+  let mut previous_x = drag_state.previous_x;
+  let mut previous_y = drag_state.previous_y;
 
   let read_dims = move || async move {
     let read = div_element.read();
@@ -51,84 +60,54 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
     }
   };
 
-  // TODO: don't let the window move out of bounds
-  let mouse_move = move |event: Event<MouseData>| async move {
-    println!("mouse moved");
-    if event.held_buttons().contains(MouseButton::Primary) && is_dragging() {
-      // if is_dragging() {
-      // current mouse pos
-      let screen_coords = event.screen_coordinates();
-      // set previous to current if new
-      if previous_x() == 0.0 {
-        previous_x.set(screen_coords.x)
-      }
-      if previous_y() == 0.0 {
-        previous_y.set(screen_coords.y)
-      }
-
-      let offset_x = previous_x() - screen_coords.x;
-      let offset_y = previous_y() - screen_coords.y;
-
-      let new_x = (dim_x() - offset_x).abs();
-      let new_y = (dim_y() - offset_y).abs();
-
-      dim_x.set(new_x);
-      dim_y.set(new_y);
-
-      // Finally, update the previous coords to the current pos
-      previous_x.set(screen_coords.x);
-      previous_y.set(screen_coords.y);
-    }
-  };
-
   rsx! {
     div {
-      class: "win98",
-      style: format!("z-index: {}; height: 100%;", props.index),
-      onmousemove: move |event| mouse_move(event),
-      div {
-        id: "{props.id}",
-        class: "window",
-        onmounted: move |cx| {
-          div_element.set(Some(cx.data()));
-          println!("{:?}", cx.data());
-          // cx.
-        },
-        onmouseleave: move |event| mouse_move(event),
-        onmouseout: move |event| mouse_move(event),
-        style: if dim_x() > 0.0 {"top: {dim_y}px; left: {dim_x}px;"},
-        // style: format!("transform: translate({}px, {}px);", dim_x(), dim_y()),
-        div {
-          class: "inner",
-          div {
-            class: "header",
-            onmousedown: move |_| {
-              is_dragging.set(true);
-              read_dims()
-            },
-            onmouseup: move |_| { previous_x.set(0.0); previous_y.set(0.0); is_dragging.set(false); },
-
-
-            div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover;", ICON_FAVICON.to_string()) },
-            "{props.title}",
-            div {
-              class: "buttons",
-              button {
-                onclick: move |_| { if let Some(mut vis) = props.is_visible { vis.set(false); } },
-                class: "button-minimize",
-                style: format!("background-image: url({});", ICON_CLOSE.to_string())
-              }
-            }
-          },
-          {props.children}
-        },
-        div {
-          class: "player-footer",
-          div { if let Some(foot) = props.footer_text { {foot} } else { {"Keep it Based."} } },
-          div { class: "footer-end", style: format!("background: url({}) no-repeat; background-size: cover;", RESIZE_ICON.to_string()) }
+      id: "{props.id}",
+      class: "window",
+      onmounted: move |cx| div_element.set(Some(cx.data())),
+      onmousedown: move |_| active_window.set(props.id.clone()),
+      onmousemove: move |_| {
+        if is_active && is_dragging() {
+          info!("setting shit");
+          dim_x_local.set(format!("{}px;", dim_x()));
+          dim_y_local.set(format!("{}px;", dim_y()));
         }
+      },
+      style: "z-index: {window_index};",
+      style: if dim_x() > 0.0 && is_active {"top: {dim_y}px; left: {dim_x}px;"} else {"top: {dim_y_local}; left: {dim_x_local};"},
+      div {
+        class: "inner",
+        div {
+          class: "header",
+          onmousedown: move |_| {
+            is_dragging.set(true);
+            read_dims()
+          },
+          onmouseup: move |_| {
+            previous_x.set(0.0);
+            previous_y.set(0.0);
+            is_dragging.set(false);
+            dim_x_local.set(format!("{}px;", dim_x()));
+            dim_y_local.set(format!("{}px;", dim_y()));
+          },
+          div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover;", ICON_FAVICON.to_string()) },
+          "{props.title}",
+          div {
+            class: "buttons",
+            button {
+              onclick: move |_| { if let Some(mut vis) = props.is_visible { vis.set(false); } },
+              class: "button-minimize",
+              style: format!("background-image: url({});", ICON_CLOSE.to_string())
+            }
+          }
+        },
+        {props.children}
+      },
+      div {
+        class: "player-footer",
+        div { if let Some(foot) = props.footer_text { {foot} } else { {"Keep it Based."} } },
+        div { class: "footer-end", style: format!("background: url({}) no-repeat; background-size: cover;", RESIZE_ICON.to_string()) }
       }
     }
-
   }
 }

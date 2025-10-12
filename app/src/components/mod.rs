@@ -1,4 +1,4 @@
-use dioxus::prelude::Signal;
+use dioxus::prelude::*;
 use std::env;
 
 pub fn get_stream_mp3() -> String {
@@ -86,15 +86,38 @@ impl SettingsState {
   }
 }
 
+#[derive(Clone, Copy)]
+pub struct DragState {
+    pub active_window: Signal<String>,
+    pub is_dragging: Signal<bool>,
+    pub dim_x: Signal<f64>,
+    pub dim_y: Signal<f64>,
+    pub previous_x: Signal<f64>,
+    pub previous_y: Signal<f64>,
+}
+impl DragState {
+  pub fn new() -> Self {
+    DragState {
+      active_window: Signal::new(String::from("based-radio")),
+      is_dragging: Signal::new(false),
+      dim_x: Signal::new(0 as f64),
+      dim_y: Signal::new(0 as f64),
+      previous_x: Signal::new(0 as f64),
+      previous_y: Signal::new(0 as f64)
+    }
+  }
+}
+
 // TODO: add basically all state here
 #[derive(Clone, Copy)]
 pub struct RadioState {
-  about_is_visible: Signal<bool>,
-  settings_is_visible: Signal<bool>,
-  updates_is_visible: Signal<bool>,
-  more_info_is_visible: Signal<bool>,
-  download_link: Signal<String>,
-  updates: Signal<Vec<String>>,
+  pub about_is_visible: Signal<bool>,
+  pub settings_is_visible: Signal<bool>,
+  pub updates_is_visible: Signal<bool>,
+  pub more_info_is_visible: Signal<bool>,
+  pub download_link: Signal<String>,
+  pub updates: Signal<Vec<String>>,
+  pub drag_state: DragState
 }
 
 impl RadioState {
@@ -104,8 +127,9 @@ impl RadioState {
       settings_is_visible: Signal::new(false),
       updates_is_visible: Signal::new(false),
       more_info_is_visible: Signal::new(false),
-      download_link: Signal::new("/".to_string()),
+      download_link: Signal::new(String::from("/")),
       updates: Signal::new(vec![String::from("Loading updates...")]),
+      drag_state: DragState::new()
     }
   }
 }

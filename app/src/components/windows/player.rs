@@ -173,7 +173,7 @@ pub fn Player() -> Element {
         header_icon: true,
         footer_text: Some(format!("Listeners: {:?}", listeners())),
         bounce: Some(bounce),
-        index: 0,
+        index: 1,
         PlayerMenu { },
         div {
           id: "player-container",

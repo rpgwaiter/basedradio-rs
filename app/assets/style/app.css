@@ -277,9 +277,9 @@ button::first-letter {
   height: 26px;
 }
 
-#based-radio {
+/* #based-radio {
   z-index: 0 !important;
-}
+} */
 
 /* #based-radio {
   animation: moveX 3s linear infinite alternate, moveY 3s linear infinite alternate;

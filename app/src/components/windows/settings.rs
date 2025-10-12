@@ -31,7 +31,7 @@ pub fn SettingsWindow() -> Element {
         id: "settings-window",
         header_icon: true,
         is_visible: is_visible,
-        index: 3,
+        index: 10,
         div {
           class: "inner content",
           div {

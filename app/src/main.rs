@@ -2,8 +2,9 @@ mod components;
 use components::windows::{AboutWindow, MoreInfoWindow, Player, SettingsWindow, UpdatesWindow};
 use components::{MoreInfoState, PlayerState, RadioState, SettingsState, UpstreamMoreInfo};
 use dioxus::prelude::*;
+use dioxus::html::input_data::MouseButton;
 
-static MOUSE_POS: GlobalSignal<(f64, f64)> = Signal::global(|| (0.0, 0.0));
+use crate::components::RadioAudio;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -34,21 +35,57 @@ fn App() -> Element {
 /// Home page
 #[component]
 fn Home() -> Element {
-  use_context_provider(|| RadioState::new());
+  let mut radio_state = use_context_provider(|| RadioState::new());
   use_context_provider(|| MoreInfoState::new());
   use_context_provider(|| SettingsState::new());
   let player_state = use_context_provider(|| PlayerState::new());
 
+  let drag_state = radio_state.drag_state;
+
   let bg_toggle = use_context::<SettingsState>().use_background;
   let background_img = player_state.background;
+
+  let mut dim_x = drag_state.dim_x;
+  let mut dim_y = drag_state.dim_y;
+
+  let mut previous_x = drag_state.previous_x;
+  let mut previous_y = drag_state.previous_y;
+
+  let mouse_move = move |event: Event<MouseData>| async move {
+    println!("mouse moved");
+    if event.held_buttons().contains(MouseButton::Primary) && (drag_state.is_dragging)() {
+      // current mouse pos
+      let screen_coords = event.screen_coordinates();
+      // set previous to current if new
+      if previous_x() == 0.0 {
+        previous_x.set(screen_coords.x)
+      }
+      if previous_y() == 0.0 {
+        previous_y.set(screen_coords.y)
+      }
+
+      let offset_x = previous_x() - screen_coords.x;
+      let offset_y = previous_y() - screen_coords.y;
+
+      let new_x = (dim_x() - offset_x).abs();
+      let new_y = (dim_y() - offset_y).abs();
+
+      dim_x.set(new_x);
+      dim_y.set(new_y);
+
+      // Finally, update the previous coords to the current pos
+      previous_x.set(screen_coords.x);
+      previous_y.set(screen_coords.y);
+    }
+  };
 
   rsx! {
     div {
       id: "main-container",
+      class: "win98",
+      style: "height: 100%; width: 100%; top: 0; left: 0; position: fixed;",
       style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"},
-      onmousemove: move |evt| {
-        *MOUSE_POS.write() = (evt.client_coordinates().x, evt.client_coordinates().y);
-      },
+      onmousemove: move |event| mouse_move(event),
       AboutWindow {},
       Player {},
       UpdatesWindow {},
