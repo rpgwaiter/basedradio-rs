@@ -4,30 +4,45 @@
   --page-bg: #008080;
   --header-color-left: rgb(0, 0, 128);
   --header-color-right: #1084d0;
+  --window-bg: #bfbfbf;
   /* linear-gradient(90deg, navy, #1084d0); */
 }
 
-@media all and (max-width: 568px) {
-  body {
-    width: 90% !important;
-  }
-
-  .window {
-    max-width: 100% !important;
-  }
-
-  #based-radio {
-    top: 20%;
-  }
-
-  #main-container {
-    background-image: none !important;
-  }
-
-  #settings-btn {
-    display: none !important;
-  }
+.taskbar {
+  height: 30px;
+  width: 100%;
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  background-color: var(--window-bg);
+  border: 1px solid;
+  border-top-color: #dfdfdf;
+  border-left-color: #dfdfdf;
+  border-right-color: gray;
+  border-bottom-color: gray;
+  box-shadow: 1px 1px 0 0 #000;
+  display: flex;
+  flex-wrap: nowrap;
 }
+
+.taskbar-item {
+  display: flex;
+  flex-wrap: nowrap;
+  font-size: 10pt !important;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+}
+
+.active-task {
+  box-shadow: inset 1px 1px 0 0 #000 !important;
+  border-top-color: gray !important;
+  border-left-color: gray !important;
+  border-right-color: #dfdfdf !important;
+  border-bottom-color: #dfdfdf !important;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAACXBIWXMAAAsTAAALEwEAmpwYAAAF0WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIwLTEyLTA4VDE1OjMyOjA5KzExOjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIwLTEyLTA4VDE1OjMyOjA5KzExOjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMC0xMi0wOFQxNTozMjowOSsxMTowMCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDplNjVhYWI3Yi0zMGJiLWNiNDUtYmY0OS1mNzFjNjBkMjJmZGMiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo5ZDZjZjFiNi03NzJiLTA1NDMtYTM5Yy03Y2EzYjJmM2UzNzYiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDoxMTRjMjg1OC0yYjc3LTM2NGUtYmIzZC0zODY1ODg5NmU0NmIiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIiBwaG90b3Nob3A6Q29sb3JNb2RlPSIzIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDoxMTRjMjg1OC0yYjc3LTM2NGUtYmIzZC0zODY1ODg5NmU0NmIiIHN0RXZ0OndoZW49IjIwMjAtMTItMDhUMTU6MzI6MDkrMTE6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZTY1YWFiN2ItMzBiYi1jYjQ1LWJmNDktZjcxYzYwZDIyZmRjIiBzdEV2dDp3aGVuPSIyMDIwLTEyLTA4VDE1OjMyOjA5KzExOjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPC9yZGY6U2VxPiA8L3htcE1NOkhpc3Rvcnk+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+tcRUTQAAABRJREFUCB1jOHDgwP///xmAGMgCAElkCnv8jfX4AAAAAElFTkSuQmCC) !important;
+}
+
 
 /* .window {
   width: auto;
@@ -85,10 +100,13 @@ button::first-letter {
   text-decoration: underline;
 }
 
-.player-footer {
+.window-footer {
   flex: auto;
   display: flex;
-  padding-left: 1%;
+  padding: 0 0 0 1% !important;
+  margin: 2px !important;
+  justify-content: center;
+  align-items: center;
 }
 
 .window {
@@ -105,9 +123,9 @@ button::first-letter {
 
 .footer-end {
   margin-left: auto;
-  padding-top: -20px;
+  /* padding-top: -20px;
   height: 20px;
-  width: 25px;
+  width: 25px; */
 }
 
 .stream-meta {
@@ -290,4 +308,28 @@ button::first-letter {
 @keyframes moveY {
   from { top: 150px; }
   to { top: calc(100vh - 200px); } /* 100px = element height */
+}
+
+
+/* Mobile-specific styling */
+@media all and (max-width: 568px) {
+  body {
+    width: 90% !important;
+  }
+
+  .window {
+    max-width: 100% !important;
+  }
+
+  #based-radio {
+    top: 20%;
+  }
+
+  #main-container {
+    background-image: none !important;
+  }
+
+  #settings-btn {
+    display: none !important;
+  }
 }

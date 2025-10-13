@@ -6,6 +6,8 @@ use components::{MoreInfoState, PlayerState, RadioState, SettingsState, Upstream
 use dioxus::html::input_data::MouseButton;
 use dioxus::prelude::*;
 
+use crate::components::Taskbar;
+
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
 enum Route {
@@ -92,9 +94,8 @@ fn Home() -> Element {
       UpdatesWindow {},
       MoreInfoWindow {},
       SettingsWindow {},
-      // for p in picture_windows.iter() {
-      //   PictureWindow { p }
-      // }
+      PictureWindow {},
+      Taskbar {}
     }
   }
 }

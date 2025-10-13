@@ -1,69 +1,47 @@
+// TODO: make this a more genreal image viewer
+// not sure we'll ever need that, but it would be cool
 use dioxus::prelude::*;
 
-use crate::RadioState;
-use crate::components::{Visualizer, WindowTemplate};
+use crate::PlayerState;
+use crate::components::{RadioState, Visualizer, WindowTemplate};
 use dioxus::prelude::*;
-use uuid::Uuid;
 
-#[derive(PartialEq, Props, Clone)]
-pub struct PictureProps {
-  pub image: String,
-  pub id: Uuid,
-  // is_visible: Option<Signal<bool>>
-}
+#[component]
+pub fn PictureButton() -> Element {
+  let mut radio_state = use_context::<RadioState>();
+  let cover = use_context::<PlayerState>().cover;
 
-impl PictureProps {
-  pub fn new(image: String) -> Self {
-    PictureProps {
-      image: image,
-      id: Uuid::new_v4(),
-      // is_visible: Signal::new(false)
+  rsx! {
+    img {
+      id: "current-cover",
+      src: "{cover}",
+      alt: "Cover Art",
+      style: "margin: auto; display: block;",
+      onclick: move |_| {
+        if !(radio_state.picture_is_visible)() {}
+        (radio_state.picture_is_visible).toggle()
+      }
     }
   }
 }
 
 #[component]
-pub fn PictureButton(props: PictureProps) -> Element {
-  let mut is_visible = Signal::new(false);
-
-  let i = props.image;
-
-  // let window_props = PictureProps::new(props.image);
-
-  rsx! {
-    img {
-      id: "current-cover",
-      src: "{i.clone()}",
-      alt: "Cover Art",
-      style: "margin: auto; display: block;",
-      onclick: move |_| is_visible.toggle()
-    },
-    // if is_visible() {
-    //   PictureWindow { image: i.clone() }
-    // }
-  }
-}
-
-#[component]
-pub fn PictureWindow(props: PictureProps) -> Element {
+pub fn PictureWindow() -> Element {
   let is_visible = Signal::new(false);
 
   rsx! {
-    // if is_visible() {
-    div {
-      class: "win98",
-      style: "z-index: 5 !important;",
+    if is_visible() {
       WindowTemplate {
         title: "Picture Viewer",
         id: "window-picture-viewer",
         header_icon: true,
         is_visible: is_visible,
-        index: 5,
+        index: 6,
         div {
           class: "inner content",
           h1 {"test"}
         }
-      },
+      }
     }
   }
 }

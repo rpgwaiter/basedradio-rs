@@ -1,14 +1,14 @@
-use crate::components::{RadioAudio, RadioState};
+use crate::components::{RadioAudio, RadioState, TaskbarItemProps, ICON_FAVICON};
 use dioxus::html::input_data::MouseButton;
 use dioxus::logger::tracing::info;
 use dioxus::{
   html::geometry::euclid::{Point2D, Rect, Vector2D},
   prelude::*,
 };
+use core::task;
 use std::rc::Rc;
 
 static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
-static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
 static RESIZE_ICON: Asset = asset!("/assets/ui/resize.png");
 
 #[derive(PartialEq, Props, Clone)]
@@ -27,6 +27,9 @@ pub struct WindowProps {
 #[component]
 pub fn WindowTemplate(props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
+  let taskbar_props = TaskbarItemProps { id: props.id.clone(), title: props.title.clone(), icon: None };
+
+  // TODO: update linter script to not do this
   let bouncing = if let Some(b) = props.bounce {
     b()
   } else {
@@ -34,6 +37,7 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
   };
 
   let radio_state = use_context::<RadioState>();
+  let mut taskbar_items = radio_state.taskbar_items;
   let drag_state = radio_state.drag_state;
 
   let mut is_dragging = drag_state.is_dragging;
@@ -70,7 +74,10 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
     div {
       id: "{props.id}",
       class: if bouncing {"window bouncing" } else { "window" },
-      onmounted: move |cx| div_element.set(Some(cx.data())),
+      onmounted: move |cx| {
+        div_element.set(Some(cx.data()));
+        taskbar_items.push(taskbar_props.clone());
+      },
       onmousedown: move |_| active_window.set(props.id.clone()),
       onmouseup: move |_| is_dragging.set(false),
       onmousemove: move |_| {
@@ -101,7 +108,11 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
           div {
             class: "buttons",
             button {
-              onclick: move |_| { if let Some(mut vis) = props.is_visible { vis.set(false); } },
+              onclick: move |_| {
+                if let Some(mut vis) = props.is_visible {
+                  vis.set(false);
+                }
+              },
               class: "button-minimize",
               style: format!("background-image: url({});", ICON_CLOSE.to_string())
             }
@@ -110,9 +121,9 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
         {props.children}
       },
       div {
-        class: "player-footer",
+        class: "status-bar",
+        style: format!("background: url({});", RESIZE_ICON.to_string()),
         div { if let Some(foot) = props.footer_text { {foot} } else { {"Keep it Based."} } },
-        div { class: "footer-end", style: format!("background: url({}) no-repeat; background-size: cover;", RESIZE_ICON.to_string()) }
       }
     }
   }

@@ -33,11 +33,9 @@ pub fn AboutWindow() -> Element {
         div {
           id: "about-radio",
           class: "inner content",
-          h3 {
-            "BasedRadio is an internet radio station playing classic and obscure music from the pre-32bit era. Heavily inspired by ",
-            a { href: "https://plaza.one", target: "_blank", rel: "noopener noreferrer", "plaza.one" },
-            ", all of the code for this site is custom (and written in rust)."
-          },
+          h3 { "BasedRadio is an internet radio station playing classic and obscure music from the pre-32bit era." },
+          br {},
+          h4 { "All of the code for this site is custom (and written in rust using the Dioxus framework)." },
           br {},
           p { "If you're interested: ", a { href: "https://github.com/rpgwaiter/basedradio-rs", target: "_blank", rel: "noopener noreferrer", "source code" } }
           br {},

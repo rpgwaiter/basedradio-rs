@@ -2,26 +2,13 @@ use crate::components::windows::{
   AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton,
 };
 use crate::components::{
-  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
-  WindowTemplate, get_api_url,
+  add_zeros, format_time, get_api_url, MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, TaskbarItemProps, Visualizer, WindowTemplate
 };
 use dioxus::prelude::*;
 
 use dioxus_sdk::utils::timing::use_interval;
 use std::time::Duration;
 
-// TODO: move to a lib
-fn add_zeros(e: i16, t: usize) -> String {
-  let s = e.to_string();
-  format!("{:0>width$}", s, width = t)
-}
-
-fn format_time(e: i16) -> String {
-  let e = e % 3600; // seconds within the hour
-  let min = add_zeros(e / 60, 2);
-  let sec = add_zeros(e % 60, 2);
-  format!("{}:{}", min, sec)
-}
 
 #[component]
 pub fn PlayerMenu() -> Element {
@@ -164,8 +151,10 @@ pub fn PlayerContent() -> Element {
 
 #[component]
 pub fn Player() -> Element {
-  let player_state = use_context::<PlayerState>();
+  let mut player_state = use_context::<PlayerState>();
   let bounce = use_context::<SettingsState>().bounce;
+
+  let mut taskbar_items = use_context::<RadioState>().taskbar_items;
 
   rsx! {
       WindowTemplate {

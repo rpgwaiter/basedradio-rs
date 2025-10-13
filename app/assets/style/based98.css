@@ -169,6 +169,9 @@ background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy5
   border-bottom-color: #fff;
   margin: 1px;
   position: relative;
+  background-repeat: no-repeat !important;
+  background-position: right bottom !important;
+  background-size: 12px 16px !important;
 }
 
 .win98 .window .status-bar .status-bar-icon {
