@@ -1,10 +1,10 @@
 mod components;
-use components::windows::{AboutWindow, MoreInfoWindow, Player, SettingsWindow, UpdatesWindow};
+use components::windows::{
+  AboutWindow, MoreInfoWindow, PictureWindow, Player, SettingsWindow, UpdatesWindow,
+};
 use components::{MoreInfoState, PlayerState, RadioState, SettingsState, UpstreamMoreInfo};
-use dioxus::prelude::*;
 use dioxus::html::input_data::MouseButton;
-
-use crate::components::RadioAudio;
+use dioxus::prelude::*;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -53,7 +53,7 @@ fn Home() -> Element {
   let mut previous_y = drag_state.previous_y;
 
   let mouse_move = move |event: Event<MouseData>| async move {
-    if event.held_buttons().contains(MouseButton::Primary) && (drag_state.is_dragging)() {
+    if event.held_buttons().contains(MouseButton::Primary) && is_dragging() {
       // current mouse pos
       let screen_coords = event.screen_coordinates();
       // set previous to current if new
@@ -84,14 +84,17 @@ fn Home() -> Element {
       id: "main-container",
       class: "win98",
       style: "height: 100%; width: 100%; top: 0; left: 0; position: fixed;",
-      style: if (bg_toggle() && background_img().is_some()) {"background-image: url({background_img().unwrap()});"},
+      style: if bg_toggle() && background_img().is_some() {"background-image: url({background_img().unwrap()});"},
       onmousemove: move |event| mouse_move(event),
       onmouseup: move |_| is_dragging.set(false),
       AboutWindow {},
       Player {},
       UpdatesWindow {},
       MoreInfoWindow {},
-      SettingsWindow {}
+      SettingsWindow {},
+      // for p in picture_windows.iter() {
+      //   PictureWindow { p }
+      // }
     }
   }
 }

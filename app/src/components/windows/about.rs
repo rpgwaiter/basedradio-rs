@@ -9,7 +9,7 @@ pub fn AboutButton() -> Element {
 
   rsx! {
     a {
-      onclick: move |event| {
+      onclick: move |_| {
         active.set(if !is_visible() { "window-about".to_string() } else { "based-radio".to_string() } );
         is_visible.toggle()
       },

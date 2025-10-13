@@ -25,8 +25,8 @@ fn format_time(e: i16) -> String {
 
 #[component]
 pub fn PlayerMenu() -> Element {
-  let mut download_link = use_context::<RadioState>().download_link;
-  let mut about_is_visible = use_context::<RadioState>().about_is_visible;
+  let download_link = use_context::<RadioState>().download_link;
+
   rsx! {
     div {
       id: "player-menu",
@@ -90,8 +90,8 @@ pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<S
 pub fn PlayerContent() -> Element {
   let mut player_state = use_context::<PlayerState>();
   let mut radio_state = use_context::<RadioState>();
-  let mut elapsed = use_context::<PlayerState>().elapsed;
-  let mut duration = use_context::<PlayerState>().duration;
+  let mut elapsed = player_state.elapsed;
+  let mut duration = player_state.duration;
   let mut more = use_context::<MoreInfoState>();
 
   let fetch_info = move || async move {
@@ -110,6 +110,7 @@ pub fn PlayerContent() -> Element {
       duration.set(response.status.duration);
       radio_state.download_link.set(response.song.download_link);
       player_state.listeners.set(response.status.listeners);
+      player_state.total_songs.set(response.status.total_songs);
       more.more_info.set(response.more_info)
     }
   };
@@ -134,7 +135,7 @@ pub fn PlayerContent() -> Element {
       class: "stream-meta",
       div {
         class: "player-cover-art",
-        PictureButton {  }
+        // PictureButton { image: player_state.cover }
         img { id: "current-cover", src: "{player_state.cover}", alt: "Cover Art", style: "margin: auto; display: block;" }
       },
       PlayerStats { game: player_state.game, system: player_state.system, track: player_state.title  }
@@ -163,7 +164,7 @@ pub fn PlayerContent() -> Element {
 
 #[component]
 pub fn Player() -> Element {
-  let listeners = use_context::<PlayerState>().listeners;
+  let player_state = use_context::<PlayerState>();
   let bounce = use_context::<SettingsState>().bounce;
 
   rsx! {
@@ -171,7 +172,7 @@ pub fn Player() -> Element {
         title: "BasedRadio",
         id: "based-radio",
         header_icon: true,
-        footer_text: Some(format!("Listeners: {:?}", listeners())),
+        footer_text: Some(format!("Listeners: {:?} | Total Songs: {:?}", (player_state.listeners)(), (player_state.total_songs)())),
         bounce: Some(bounce),
         index: 1,
         PlayerMenu { },

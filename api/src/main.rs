@@ -172,6 +172,7 @@ async fn get_playing_song() -> impl Responder {
     status: RadioStatus {
       elapsed: status.elapsed.unwrap().as_secs(),
       duration: status.duration.unwrap().as_secs(),
+      total_songs: status.playlistlength,
       listeners: icecast_info // TODO: map over an iter
         .icestats
         .sources_vec()

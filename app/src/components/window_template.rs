@@ -1,3 +1,4 @@
+use crate::components::{RadioAudio, RadioState};
 use dioxus::html::input_data::MouseButton;
 use dioxus::logger::tracing::info;
 use dioxus::{
@@ -5,7 +6,6 @@ use dioxus::{
   prelude::*,
 };
 use std::rc::Rc;
-use crate::components::{RadioAudio, RadioState};
 
 static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
 static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
@@ -27,17 +27,21 @@ pub struct WindowProps {
 #[component]
 pub fn WindowTemplate(props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
-  let mut is_dragging = use_context::<RadioState>().drag_state.is_dragging;
+  let bouncing = if let Some(b) = props.bounce {
+    b()
+  } else {
+    false
+  };
 
-  let mut active_window = use_context::<RadioState>().drag_state.active_window;
+  let radio_state = use_context::<RadioState>();
+  let drag_state = radio_state.drag_state;
 
-  let bouncing = if let Some(b) = props.bounce { b() } else { false };
+  let mut is_dragging = drag_state.is_dragging;
+  let mut active_window = drag_state.active_window;
 
   let is_active = active_window() == props.id;
   let window_index = if is_active { 100 } else { props.index };
-  let bg_index = if is_active { 1 } else { 0 };
 
-  let drag_state = use_context::<RadioState>().drag_state;
   let mut dim_x = drag_state.dim_x;
   let mut dim_y = drag_state.dim_y;
 

@@ -27,7 +27,7 @@ pub fn UpdatesButton() -> Element {
   rsx! {
     a {
       onclick: move |_| {
-        active.set(if !is_visible() { "updates-show".to_string() } else { "based-radio".to_string() } );
+        active.set(if !is_visible() { "window-updates".to_string() } else { "based-radio".to_string() } );
         is_visible.toggle();
         spawn(fetch_info());
       },

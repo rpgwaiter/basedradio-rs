@@ -1,3 +1,4 @@
+use crate::components::windows::PictureProps;
 use dioxus::prelude::*;
 use std::env;
 
@@ -30,11 +31,13 @@ pub struct Song {
   download_link: String,
 }
 
+// TODO: fix these data types
 #[derive(serde::Deserialize, Debug)]
 pub struct Status {
   elapsed: i16,
   duration: i16,
   listeners: i16,
+  total_songs: u32,
 }
 
 #[derive(serde::Deserialize)]
@@ -54,6 +57,7 @@ pub struct PlayerState {
   pub cover: Signal<String>,
   pub background: Signal<Option<String>>,
   pub listeners: Signal<i16>,
+  pub total_songs: Signal<u32>,
 }
 
 impl PlayerState {
@@ -67,6 +71,7 @@ impl PlayerState {
       cover: Signal::new("".to_string()),
       background: Signal::new(None as Option<String>),
       listeners: Signal::new(0 as i16),
+      total_songs: Signal::new(0 as u32),
     }
   }
 }
@@ -88,12 +93,12 @@ impl SettingsState {
 
 #[derive(Clone, Copy)]
 pub struct DragState {
-    pub active_window: Signal<String>,
-    pub is_dragging: Signal<bool>,
-    pub dim_x: Signal<f64>,
-    pub dim_y: Signal<f64>,
-    pub previous_x: Signal<f64>,
-    pub previous_y: Signal<f64>,
+  pub active_window: Signal<String>,
+  pub is_dragging: Signal<bool>,
+  pub dim_x: Signal<f64>,
+  pub dim_y: Signal<f64>,
+  pub previous_x: Signal<f64>,
+  pub previous_y: Signal<f64>,
 }
 impl DragState {
   pub fn new() -> Self {
@@ -103,7 +108,7 @@ impl DragState {
       dim_x: Signal::new(0 as f64),
       dim_y: Signal::new(0 as f64),
       previous_x: Signal::new(0 as f64),
-      previous_y: Signal::new(0 as f64)
+      previous_y: Signal::new(0 as f64),
     }
   }
 }
@@ -117,7 +122,7 @@ pub struct RadioState {
   pub more_info_is_visible: Signal<bool>,
   pub download_link: Signal<String>,
   pub updates: Signal<Vec<String>>,
-  pub drag_state: DragState
+  pub drag_state: DragState,
 }
 
 impl RadioState {
@@ -129,7 +134,7 @@ impl RadioState {
       more_info_is_visible: Signal::new(false),
       download_link: Signal::new(String::from("/")),
       updates: Signal::new(vec![String::from("Loading updates...")]),
-      drag_state: DragState::new()
+      drag_state: DragState::new(),
     }
   }
 }

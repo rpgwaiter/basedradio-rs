@@ -24,7 +24,7 @@ pub async fn visualize() {
     // .dyn_into::<HtmlCanvasElement>();
     .and_then(|el| el.dyn_into::<HtmlCanvasElement>().ok());
 
-  let canvasContext = canvas.context("2d");
+  let canvas_context = canvas.context("2d");
 
   if let Some(audio) = document
     .get_element_by_id("main-audio")

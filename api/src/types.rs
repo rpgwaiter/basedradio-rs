@@ -25,6 +25,7 @@ pub struct RadioStatus {
   pub elapsed: u64,
   pub duration: u64,
   pub listeners: u32,
+  pub total_songs: u32,
 }
 
 // Probably could be named better
