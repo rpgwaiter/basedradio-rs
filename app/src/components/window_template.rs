@@ -76,7 +76,8 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
       class: if bouncing {"window bouncing" } else { "window" },
       onmounted: move |cx| {
         div_element.set(Some(cx.data()));
-        taskbar_items.push(taskbar_props.clone());
+        if !taskbar_items().contains(&taskbar_props) { taskbar_items.push(taskbar_props.clone()); };
+        
       },
       onmousedown: move |_| active_window.set(props.id.clone()),
       onmouseup: move |_| is_dragging.set(false),
