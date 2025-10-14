@@ -15,7 +15,6 @@ pub use visualizer::Visualizer;
 mod taskbar;
 pub use taskbar::{Taskbar, TaskbarItemProps};
 
-
 pub fn get_stream_mp3() -> String {
   env::var("STREAM_MP3").unwrap_or("https://cast.based.radio/vgm.mp3".into())
 }
@@ -25,7 +24,6 @@ pub fn get_api_url() -> String {
 }
 
 pub static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
-
 
 // TODO: move to a lib
 pub fn add_zeros(e: i16, t: usize) -> String {
@@ -39,7 +37,6 @@ pub fn format_time(e: i16) -> String {
   let sec = add_zeros(e % 60, 2);
   format!("{}:{}", min, sec)
 }
-
 
 #[derive(serde::Deserialize, Debug)]
 pub struct Song {
@@ -92,7 +89,6 @@ impl PlayerState {
       background: Signal::new(None as Option<String>),
       listeners: Signal::new(0 as i16),
       total_songs: Signal::new(0 as u32),
-      
     }
   }
 }
@@ -145,8 +141,7 @@ pub struct RadioState {
   pub download_link: Signal<String>,
   pub updates: Signal<Vec<String>>,
   pub drag_state: DragState,
-  pub taskbar_items: Signal<Vec<TaskbarItemProps>>
-  
+  pub taskbar_items: Signal<Vec<TaskbarItemProps>>,
 }
 
 impl RadioState {
@@ -160,7 +155,7 @@ impl RadioState {
       download_link: Signal::new(String::from("/")),
       updates: Signal::new(vec![String::from("Loading updates...")]),
       drag_state: DragState::new(),
-      taskbar_items: Signal::new(vec![] as Vec<TaskbarItemProps>)
+      taskbar_items: Signal::new(vec![] as Vec<TaskbarItemProps>),
     }
   }
 }

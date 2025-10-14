@@ -24,7 +24,8 @@ web-sys = { version = "0.3.81", optional = true, features = [
     "AnalyserNode",
     "BaseAudioContext",
     "MediaElementAudioSourceNode",
-    "AudioDestinationNode"
+    "AudioDestinationNode",
+    "CanvasRenderingContext2d"
 ] }
 
 rodio = { version = "0.20.1", optional = true }

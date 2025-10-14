@@ -1,12 +1,12 @@
 use dioxus::prelude::*;
 
-use crate::components::{DragState, RadioState, ICON_FAVICON};
+use crate::components::{DragState, ICON_FAVICON, RadioState};
 
 #[derive(PartialEq, Props, Clone)]
 pub struct TaskbarItemProps {
   pub title: String,
   pub id: String,
-  pub icon: Option<String>
+  pub icon: Option<String>,
 }
 
 #[component]
