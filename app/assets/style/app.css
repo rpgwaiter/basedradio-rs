@@ -23,6 +23,7 @@
   box-shadow: 1px 1px 0 0 #000;
   display: flex;
   flex-wrap: nowrap;
+  z-index: 1000;
 }
 
 .taskbar-item {
@@ -111,14 +112,19 @@ button::first-letter {
 
 .window {
   position: fixed;
-  left: 50%;
+  /* left: 50%; */
   /* relative to nearest positioned ancestor or body element */
-  top: 50%;
+  /* top: 50%; */
   transform: translate(-50%, -50%);
   image-rendering: auto;
   max-width: 497px;
-  width: auto;
+  /* min-width: 250px; */
+  /* width: fit-content; */
   user-select: none;
+}
+
+.window * {
+  flex-shrink: 0;
 }
 
 .footer-end {
