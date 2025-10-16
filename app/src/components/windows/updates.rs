@@ -9,7 +9,7 @@ struct Updates {
 
 #[component]
 pub fn UpdatesButton() -> Element {
-  let mut is_visible = use_context::<RadioState>().updates_is_visible;
+  let mut is_visible = use_context::<RadioState>().visibility.updates;
   let mut updates = use_context::<RadioState>().updates;
   let mut active = use_context::<RadioState>().drag_state.active_window;
 
@@ -40,7 +40,7 @@ pub fn UpdatesButton() -> Element {
 
 #[component]
 pub fn UpdatesWindow() -> Element {
-  let is_visible = use_context::<RadioState>().updates_is_visible;
+  let mut is_visible = use_context::<RadioState>().visibility.updates;
   let updates = use_context::<RadioState>().updates;
 
   rsx! {

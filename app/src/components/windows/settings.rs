@@ -6,7 +6,7 @@ use std::env;
 
 #[component]
 pub fn SettingsButton() -> Element {
-  let mut is_visible = use_context::<RadioState>().settings_is_visible;
+  let mut is_visible = use_context::<RadioState>().visibility.settings;
   let bounce = use_context::<SettingsState>().bounce;
   let mut active = use_context::<RadioState>().drag_state.active_window;
 
@@ -24,7 +24,7 @@ pub fn SettingsButton() -> Element {
 
 #[component]
 pub fn SettingsWindow() -> Element {
-  let is_visible = use_context::<RadioState>().settings_is_visible;
+  let mut is_visible = use_context::<RadioState>().visibility.settings;
   let mut settings_state = use_context::<SettingsState>();
   let bounce = use_context::<SettingsState>().bounce;
 

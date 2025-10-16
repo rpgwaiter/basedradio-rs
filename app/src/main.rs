@@ -1,4 +1,6 @@
 mod components;
+use core::task;
+
 use components::windows::{
   AboutWindow, MoreInfoWindow, PictureWindow, Player, SettingsWindow, UpdatesWindow,
 };
@@ -41,6 +43,7 @@ fn Home() -> Element {
   use_context_provider(|| MoreInfoState::new());
   use_context_provider(|| SettingsState::new());
   let player_state = use_context_provider(|| PlayerState::new());
+  let mut taskbar_items = radio_state.taskbar_items;
 
   let drag_state = radio_state.drag_state;
   let mut is_dragging = drag_state.is_dragging;
@@ -82,6 +85,7 @@ fn Home() -> Element {
   };
 
   rsx! {
+    document::Title { "{player_state.title} | BasedRadio" },
     div {
       id: "main-container",
       class: "win98",
@@ -89,13 +93,16 @@ fn Home() -> Element {
       style: if bg_toggle() && background_img().is_some() {"background-image: url({background_img().unwrap()});"},
       onmousemove: move |event| mouse_move(event),
       onmouseup: move |_| is_dragging.set(false),
-      AboutWindow {},
-      Player {},
-      UpdatesWindow {},
-      MoreInfoWindow {},
-      SettingsWindow {},
-      PictureWindow {},
-      Taskbar {}
+      // AboutWindow {},
+      // Player {},
+      // UpdatesWindow {},
+      // MoreInfoWindow {},
+      // SettingsWindow {},
+      // PictureWindow {},
+      Taskbar {},
+      for item in taskbar_items.iter().map(|e| e.el.clone()) {
+        {item}
+      }
     }
   }
 }

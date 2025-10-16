@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 use std::env;
+use crate::components::windows::Player;
 
 pub mod windows;
 
@@ -130,32 +131,45 @@ impl DragState {
   }
 }
 
+#[derive(Clone, Copy)]
+pub struct Visibility {
+  pub about: Signal<bool>,
+  pub settings: Signal<bool>,
+  pub updates: Signal<bool>,
+  pub more_info: Signal<bool>,
+  pub picture: Signal<bool>,
+}
+
+impl Visibility {
+  pub fn new() -> Self {
+    Visibility {
+      about: Signal::new(false),
+    settings: Signal::new(false),
+    updates: Signal::new(false),
+    more_info: Signal::new(false),
+     picture: Signal::new(false),
+    }
+  }
+}
+
 // TODO: add basically all state here
 #[derive(Clone, Copy)]
 pub struct RadioState {
-  pub about_is_visible: Signal<bool>,
-  pub settings_is_visible: Signal<bool>,
-  pub updates_is_visible: Signal<bool>,
-  pub more_info_is_visible: Signal<bool>,
-  pub picture_is_visible: Signal<bool>,
   pub download_link: Signal<String>,
   pub updates: Signal<Vec<String>>,
   pub drag_state: DragState,
   pub taskbar_items: Signal<Vec<TaskbarItemProps>>,
+  pub visibility: Visibility
 }
 
 impl RadioState {
   pub fn new() -> Self {
     RadioState {
-      about_is_visible: Signal::new(false),
-      settings_is_visible: Signal::new(false),
-      updates_is_visible: Signal::new(false),
-      more_info_is_visible: Signal::new(false),
-      picture_is_visible: Signal::new(false),
       download_link: Signal::new(String::from("/")),
       updates: Signal::new(vec![String::from("Loading updates...")]),
       drag_state: DragState::new(),
-      taskbar_items: Signal::new(vec![] as Vec<TaskbarItemProps>),
+      taskbar_items: Signal::new(vec![TaskbarItemProps { id: "based-radio".to_string(), title: "BasedRadio".to_string(), icon: None, is_visible: Signal::new(true), el: rsx!{ Player { } } }] as Vec<TaskbarItemProps>),
+      visibility: Visibility::new()
     }
   }
 }

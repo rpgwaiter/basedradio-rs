@@ -2,13 +2,13 @@ use crate::components::windows::{
   AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton,
 };
 use crate::components::{
-  add_zeros, format_time, get_api_url, MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, TaskbarItemProps, Visualizer, WindowTemplate
+  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, TaskbarItemProps,
+  Visualizer, WindowTemplate, add_zeros, format_time, get_api_url,
 };
 use dioxus::prelude::*;
 
 use dioxus_sdk::utils::timing::use_interval;
 use std::time::Duration;
-
 
 #[component]
 pub fn PlayerMenu() -> Element {
@@ -117,13 +117,12 @@ pub fn PlayerContent() -> Element {
   });
 
   rsx! {
-    document::Title { "{player_state.title} | BasedRadio" }
     div {
       class: "stream-meta",
       div {
         class: "player-cover-art",
-        // PictureButton { image: player_state.cover }
-        img { id: "current-cover", src: "{player_state.cover}", alt: "Cover Art", style: "margin: auto; display: block;" }
+        PictureButton { }
+        // img { id: "current-cover", src: "{player_state.cover}", alt: "Cover Art", style: "margin: auto; display: block;" }
       },
       PlayerStats { game: player_state.game, system: player_state.system, track: player_state.title  }
     },
@@ -164,6 +163,7 @@ pub fn Player() -> Element {
         footer_text: Some(format!("Listeners: {:?} | Total Songs: {:?}", (player_state.listeners)(), (player_state.total_songs)())),
         bounce: Some(bounce),
         index: 1,
+        is_visible: Signal::new(true),
         PlayerMenu { },
         div {
           id: "player-container",

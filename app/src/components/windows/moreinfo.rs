@@ -5,7 +5,7 @@ use std::env;
 
 #[component]
 pub fn MoreInfoButton() -> Element {
-  let mut is_visible = use_context::<RadioState>().more_info_is_visible;
+  let mut is_visible = use_context::<RadioState>().visibility.more_info;
   let mut more = use_context::<MoreInfoState>();
   let mut active = use_context::<RadioState>().drag_state.active_window;
 
@@ -36,27 +36,24 @@ pub fn MoreInfoButton() -> Element {
 
 #[component]
 pub fn MoreInfoWindow() -> Element {
-  let is_visible = use_context::<RadioState>().more_info_is_visible;
   let more_info = use_context::<MoreInfoState>().more_info;
 
   rsx! {
-    if is_visible() {
-      WindowTemplate {
-        title: "More Info",
-        id: "window-more-info",
-        header_icon: true,
-        is_visible: is_visible,
-        index: 2,
+    WindowTemplate {
+      title: "More Info",
+      id: "window-more-info",
+      header_icon: true,
+      is_visible: use_context::<RadioState>().visibility.more_info,
+      index: 2,
+      div {
+        id: "more-info-radio",
+        class: "inner content",
+        // TODO: add info here
         div {
-          id: "more-info-radio",
-          class: "inner content",
-          // TODO: add info here
-          div {
-            h2 { style: "text-align: center;", u { "- Fun Fact -" }  },
-            p { "{more_info().notes[0]}" }// TODO: randomize cross-platform
-          }
+          h2 { style: "text-align: center;", u { "- Fun Fact -" }  },
+          p { "{more_info().notes[0]}" }// TODO: randomize cross-platform
         }
-      },
+      }
     }
   }
 }
