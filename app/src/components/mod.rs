@@ -167,11 +167,7 @@ impl RadioState {
       download_link: Signal::new(String::from("/")),
       updates: Signal::new(vec![String::from("Loading updates...")]),
       drag_state: DragState::new(),
-      open_windows: Signal::new(vec![OpenWindow {
-        id: "based-radio".to_string(),
-        window: rsx! { Player {  } },
-        taskbar_item: rsx! { TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: Signal::new(true) }},
-      }]),
+      open_windows: Signal::new(vec![]),
     }
   }
 }

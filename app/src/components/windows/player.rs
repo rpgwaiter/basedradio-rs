@@ -1,5 +1,5 @@
 use crate::components::windows::{
-  AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton,
+  AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton, WindowParentProps,
 };
 use crate::components::{
   MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
@@ -149,7 +149,7 @@ pub fn PlayerContent() -> Element {
 }
 
 #[component]
-pub fn Player() -> Element {
+pub fn Player(props: WindowParentProps) -> Element {
   let player_state = use_context::<PlayerState>();
   let bounce = use_context::<SettingsState>().bounce;
 
@@ -161,7 +161,7 @@ pub fn Player() -> Element {
       footer_text: Some(format!("Listeners: {:?} | Total Songs: {:?}", (player_state.listeners)(), (player_state.total_songs)())),
       bounce: Some(bounce),
       index: 1,
-      is_visible: Signal::new(true),
+      is_visible: props.is_visible,
       PlayerMenu { },
       div {
         id: "player-container",

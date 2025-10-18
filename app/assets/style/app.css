@@ -126,8 +126,6 @@ button::first-letter {
   transform: translate(-50%, -50%);
   image-rendering: auto;
   max-width: 497px;
-  /* min-width: 250px; */
-  /* width: fit-content; */
   user-select: none;
 }
 

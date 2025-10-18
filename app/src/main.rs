@@ -1,6 +1,7 @@
 mod components;
 
-use components::{MoreInfoState, PlayerState, RadioState, SettingsState, Taskbar};
+use components::{MoreInfoState, PlayerState, RadioState, SettingsState, Taskbar, TaskbarItem, OpenWindow};
+use components::windows::Player;
 use dioxus::html::input_data::MouseButton;
 use dioxus::prelude::*;
 
@@ -38,6 +39,16 @@ fn Home() -> Element {
   use_context_provider(|| SettingsState::new());
   let player_state = use_context_provider(|| PlayerState::new());
   let mut open_windows = radio_state.open_windows;
+  let player_is_visible = Signal::new(true);
+    
+  // Initial load of player window
+  use_effect(move || if open_windows.iter().find(|item| item.id == "based-radio" ).is_none() {
+    open_windows.push(OpenWindow {
+      id: "based-radio".to_string(),
+      window: rsx! { Player { is_visible: player_is_visible } },
+      taskbar_item: rsx! { TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: player_is_visible }},
+    })
+  });
 
   let drag_state = radio_state.drag_state;
   let mut is_dragging = drag_state.is_dragging;
@@ -87,14 +98,8 @@ fn Home() -> Element {
       style: if bg_toggle() && background_img().is_some() {"background-image: url({background_img().unwrap()});"},
       onmousemove: move |event| mouse_move(event),
       onmouseup: move |_| is_dragging.set(false),
-      // AboutWindow {},
-      // Player {},
-      // UpdatesWindow {},
-      // MoreInfoWindow {},
-      // SettingsWindow {},
-      // PictureWindow {},
       Taskbar {},
-      for item in open_windows.iter() { //.map(|e| e.clone()) {
+      for item in open_windows.iter() {
         {item.window.clone()}
       }
     }
