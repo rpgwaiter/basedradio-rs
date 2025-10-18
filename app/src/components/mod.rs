@@ -1,6 +1,6 @@
+use crate::components::windows::Player;
 use dioxus::prelude::*;
 use std::env;
-use crate::components::windows::Player;
 
 pub mod windows;
 
@@ -144,10 +144,10 @@ impl Visibility {
   pub fn new() -> Self {
     Visibility {
       about: Signal::new(false),
-    settings: Signal::new(false),
-    updates: Signal::new(false),
-    more_info: Signal::new(false),
-     picture: Signal::new(false),
+      settings: Signal::new(false),
+      updates: Signal::new(false),
+      more_info: Signal::new(false),
+      picture: Signal::new(false),
     }
   }
 }
@@ -158,7 +158,7 @@ pub struct RadioState {
   pub download_link: Signal<String>,
   pub updates: Signal<Vec<String>>,
   pub drag_state: DragState,
-  pub open_windows: Signal<Vec<OpenWindow>>
+  pub open_windows: Signal<Vec<OpenWindow>>,
 }
 
 impl RadioState {
@@ -167,11 +167,11 @@ impl RadioState {
       download_link: Signal::new(String::from("/")),
       updates: Signal::new(vec![String::from("Loading updates...")]),
       drag_state: DragState::new(),
-      open_windows: Signal::new(vec![ OpenWindow{
+      open_windows: Signal::new(vec![OpenWindow {
         id: "based-radio".to_string(),
-        window: rsx!{ Player {  } },
-        taskbar_item: rsx!{ TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: Signal::new(true) }}
-      }])
+        window: rsx! { Player {  } },
+        taskbar_item: rsx! { TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: Signal::new(true) }},
+      }]),
     }
   }
 }

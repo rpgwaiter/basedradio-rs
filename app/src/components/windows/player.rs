@@ -2,8 +2,8 @@ use crate::components::windows::{
   AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton,
 };
 use crate::components::{
-  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState,
-  Visualizer, WindowTemplate, format_time, get_api_url,
+  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
+  WindowTemplate, format_time, get_api_url,
 };
 use dioxus::prelude::*;
 

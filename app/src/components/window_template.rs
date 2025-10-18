@@ -1,9 +1,6 @@
 use crate::components::{ICON_FAVICON, RadioState};
 // use dioxus::logger::tracing::info;
-use dioxus::{
-  warnings::Warning,
-  prelude::*,
-};
+use dioxus::{prelude::*, warnings::Warning};
 use std::rc::Rc;
 
 static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
@@ -19,7 +16,7 @@ pub struct WindowProps {
   bounce: Option<Signal<bool>>,
   index: i16,
   extra_style: Option<String>,
-  is_visible: Signal<bool>
+  is_visible: Signal<bool>,
 }
 
 #[allow(non_snake_case)]

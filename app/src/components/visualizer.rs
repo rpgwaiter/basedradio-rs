@@ -8,8 +8,8 @@ use std::rc::Rc;
 use web_sys::wasm_bindgen::{JsCast, JsValue, closure::Closure};
 #[cfg(feature = "web")]
 use web_sys::{
-  AudioContext, CanvasRenderingContext2d, HtmlAudioElement,
-  HtmlCanvasElement, MediaElementAudioSourceNode, window,
+  AudioContext, CanvasRenderingContext2d, HtmlAudioElement, HtmlCanvasElement,
+  MediaElementAudioSourceNode, window,
 };
 
 // #[cfg(feature = "web")]
@@ -95,7 +95,6 @@ pub fn visualize() {
       .expect("error registering next animation frame in the visualizer for some reason");
   }
 }
-
 
 #[cfg(feature = "web")]
 pub fn Visualizer() -> Element {

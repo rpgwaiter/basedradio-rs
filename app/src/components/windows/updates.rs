@@ -1,6 +1,6 @@
-use crate::components::windows::WindowParentProps;
 use crate::RadioState;
-use crate::components::{WindowTemplate, TaskbarItem, OpenWindow, get_api_url};
+use crate::components::windows::WindowParentProps;
+use crate::components::{OpenWindow, TaskbarItem, WindowTemplate, get_api_url};
 use dioxus::prelude::*;
 
 #[derive(serde::Deserialize)]
@@ -81,6 +81,6 @@ pub fn UpdatesWindow(props: WindowParentProps) -> Element {
         }
       }
     }
-    
+
   }
 }

@@ -3,7 +3,9 @@
 use dioxus::prelude::*;
 
 use crate::PlayerState;
-use crate::components::{RadioState, WindowTemplate, TaskbarItem, OpenWindow, windows::WindowParentProps};
+use crate::components::{
+  OpenWindow, RadioState, TaskbarItem, WindowTemplate, windows::WindowParentProps,
+};
 
 #[component]
 pub fn PictureButton() -> Element {

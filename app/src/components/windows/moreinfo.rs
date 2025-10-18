@@ -1,6 +1,8 @@
-use crate::components::windows::WindowParentProps;
 use crate::RadioState;
-use crate::components::{MoreInfoState, UpstreamMoreInfo, WindowTemplate, TaskbarItem, OpenWindow, get_api_url};
+use crate::components::windows::WindowParentProps;
+use crate::components::{
+  MoreInfoState, OpenWindow, TaskbarItem, UpstreamMoreInfo, WindowTemplate, get_api_url,
+};
 use dioxus::prelude::*;
 
 #[component]

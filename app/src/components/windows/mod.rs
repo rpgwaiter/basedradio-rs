@@ -9,7 +9,7 @@ mod updates;
 
 #[derive(PartialEq, Props, Clone)]
 pub struct WindowParentProps {
-  pub is_visible: Signal<bool>
+  pub is_visible: Signal<bool>,
 }
 
 pub use player::Player;
