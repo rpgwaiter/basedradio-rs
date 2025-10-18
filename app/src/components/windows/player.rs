@@ -3,7 +3,7 @@ use crate::components::windows::{
 };
 use crate::components::{
   MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
-  WindowTemplate, format_time, get_api_url,
+  WindowTemplate, VolumeSlider, format_time, get_api_url,
 };
 use dioxus::dioxus_core::ElementId;
 use dioxus::prelude::*;
@@ -11,6 +11,7 @@ use dioxus::prelude::*;
 use dioxus_sdk::utils::timing::use_interval;
 use std::time::Duration;
 
+// Top menu bar of the player
 #[component]
 pub fn PlayerMenu() -> Element {
   let download_link = use_context::<RadioState>().download_link;
@@ -53,6 +54,7 @@ pub fn PlayerMenu() -> Element {
   }
 }
 
+// The info about the current song
 #[component]
 pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<String>) -> Element {
   rsx! {
@@ -74,6 +76,8 @@ pub fn PlayerStats(system: Signal<String>, track: Signal<String>, game: Signal<S
   }
 }
 
+// Holds most of the content and other elements,
+// also in charge of pulling from the api
 #[component]
 pub fn PlayerContent() -> Element {
   let mut player_state = use_context::<PlayerState>();
@@ -149,27 +153,7 @@ pub fn PlayerContent() -> Element {
   }
 }
 
-#[component]
-pub fn VolumeSlider() -> Element {
-  let mut volume = use_context::<PlayerState>().volume;
-  rsx! {
-    div {
-      input {
-        type: "range",
-        min: "0",
-        max: "100",
-        value: "{volume}",
-        class: "slider",
-        id: "player-volume",
-        oninput: move |evt| {
-          if let Ok(v) = evt.value().parse::<u8>() {
-            volume.set(v);
-          }
-        },
-      }
-    }
-  }
-}
+
 
 #[component]
 pub fn Player(props: WindowParentProps) -> Element {

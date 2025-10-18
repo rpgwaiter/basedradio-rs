@@ -5,7 +5,7 @@ use std::env;
 pub mod windows;
 
 mod audio;
-pub use audio::RadioAudio;
+pub use audio::{RadioAudio, VolumeSlider};
 
 mod window_template;
 pub use window_template::WindowTemplate;

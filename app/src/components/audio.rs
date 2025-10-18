@@ -90,6 +90,32 @@ pub async fn get_audio_stream() {
 }
 
 #[component]
+pub fn VolumeSlider() -> Element {
+  let mut volume = use_context::<PlayerState>().volume;
+  rsx! {
+    div {
+      input {
+        type: "range",
+        min: "0",
+        max: "100",
+        value: "{volume}",
+        class: "slider",
+        id: "player-volume",
+        oninput: move |e| {
+          if let Ok(v) = e.value().parse::<u8>() {
+            volume.set(v);
+          }
+        },
+      },
+      div {
+        class: "volume-icon"
+      }
+    }
+  }
+}
+
+// The play button and audio element
+#[component]
 pub fn RadioAudio() -> Element {
   let mut play_button_text = use_signal(|| "Play");
   let mut audio_num = use_signal(|| 0 as i8);
