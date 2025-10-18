@@ -227,6 +227,10 @@ button::first-letter {
   flex-wrap: wrap;
 }
 
+.content-buttons * {
+  height: 24px;
+}
+
 #player-container {
   padding: 8px !important;
 }
@@ -281,9 +285,11 @@ button::first-letter {
   margin: 0;
 }
 
-.player-volume {
-  height: 26px;
+#player-volume {
+  height: 16px;
 }
+
+
 
 .player-volume-icon {
   width: 11px;

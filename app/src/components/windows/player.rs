@@ -5,6 +5,7 @@ use crate::components::{
   MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
   WindowTemplate, format_time, get_api_url,
 };
+use dioxus::dioxus_core::ElementId;
 use dioxus::prelude::*;
 
 use dioxus_sdk::utils::timing::use_interval;
@@ -122,7 +123,6 @@ pub fn PlayerContent() -> Element {
       div {
         class: "player-cover-art",
         PictureButton { }
-        // img { id: "current-cover", src: "{player_state.cover}", alt: "Cover Art", style: "margin: auto; display: block;" }
       },
       PlayerStats { game: player_state.game, system: player_state.system, track: player_state.title  }
     },
@@ -142,7 +142,30 @@ pub fn PlayerContent() -> Element {
       class: "content-buttons",
         RadioAudio { },
         MoreInfoButton { },
-        SettingsButton { }
+        SettingsButton { },
+        VolumeSlider { }
+      }
+    }
+  }
+}
+
+#[component]
+pub fn VolumeSlider() -> Element {
+  let mut volume = use_context::<PlayerState>().volume;
+  rsx! {
+    div {
+      input {
+        type: "range",
+        min: "0",
+        max: "100",
+        value: "{volume}",
+        class: "slider",
+        id: "player-volume",
+        oninput: move |evt| {
+          if let Ok(v) = evt.value().parse::<u8>() {
+            volume.set(v);
+          }
+        },
       }
     }
   }

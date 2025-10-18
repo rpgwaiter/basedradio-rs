@@ -76,6 +76,7 @@ pub struct PlayerState {
   pub background: Signal<Option<String>>,
   pub listeners: Signal<i16>,
   pub total_songs: Signal<u32>,
+  pub volume: Signal<u8>
 }
 
 impl PlayerState {
@@ -90,6 +91,7 @@ impl PlayerState {
       background: Signal::new(None as Option<String>),
       listeners: Signal::new(0 as i16),
       total_songs: Signal::new(0 as u32),
+      volume: Signal::new(80 as u8),
     }
   }
 }
@@ -131,26 +133,6 @@ impl DragState {
   }
 }
 
-#[derive(Clone, Copy)]
-pub struct Visibility {
-  pub about: Signal<bool>,
-  pub settings: Signal<bool>,
-  pub updates: Signal<bool>,
-  pub more_info: Signal<bool>,
-  pub picture: Signal<bool>,
-}
-
-impl Visibility {
-  pub fn new() -> Self {
-    Visibility {
-      about: Signal::new(false),
-      settings: Signal::new(false),
-      updates: Signal::new(false),
-      more_info: Signal::new(false),
-      picture: Signal::new(false),
-    }
-  }
-}
 
 // TODO: add basically all state here
 #[derive(Clone, Copy)]

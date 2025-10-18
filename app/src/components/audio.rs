@@ -1,5 +1,6 @@
-use crate::components::get_stream_mp3;
+use crate::components::{get_stream_mp3, PlayerState};
 use dioxus::prelude::*;
+use dioxus::logger::tracing::info;
 
 #[cfg(feature = "web")]
 use web_sys::wasm_bindgen::JsCast;
@@ -94,13 +95,29 @@ pub fn RadioAudio() -> Element {
   let mut audio_num = use_signal(|| 0 as i8);
   let mut audio_url = use_signal(|| format_url(audio_num()));
 
+  // TODO: volume for desktop
+  #[cfg(feature = "web")]
+  {
+    let document = window().unwrap().document().unwrap();
+
+    use_effect(move || {
+      let mut player_volume = use_context::<PlayerState>().volume;
+      let converted_vol = player_volume() as f64 / 100.0;
+      if let Some(audio) = document
+        .get_element_by_id("main-audio")
+        .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
+      {
+        audio.set_volume(converted_vol);
+      }
+    });
+  }
+
   // url param cache buster int
   fn format_url(num: i8) -> String {
     return format!("{}?t={:?}", get_stream_mp3(), num);
   }
 
   rsx! {
-
     div {
       audio {
         id: "main-audio",
