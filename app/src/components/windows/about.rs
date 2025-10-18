@@ -1,37 +1,39 @@
+use crate::components::windows::WindowParentProps;
 use crate::RadioState;
-use crate::components::{Visualizer, WindowTemplate, TaskbarItemProps};
+use crate::components::{OpenWindow, TaskbarItem, WindowTemplate};
 use dioxus::prelude::*;
-
-// If this is the direction i end up going in, i should move this to a different file
-#[derive(PartialEq, Props, Clone)]
-struct GenericWindowProps {
-  is_visible: Signal<bool>
-}
 
 #[component]
 pub fn AboutButton() -> Element {
-  let mut is_visible = use_signal(|| true);
   let mut active = use_context::<RadioState>().drag_state.active_window;
+  let mut open_windows = use_context::<RadioState>().open_windows;
+  let mut is_visible = Signal::new(true);
 
-  let mut taskbar_items = use_context::<RadioState>().taskbar_items;
+  let id = Signal::new("window-about".to_string());
 
   rsx! {
     a {
       onclick: move |_| {
-        if taskbar_items
+        if open_windows
           .iter()
-          .find(|item| item.id == "window-about" ).is_none() {
-            taskbar_items.push(TaskbarItemProps {
-              id: "window-about".to_string(),
-              title: "About".to_string(),
-              is_visible: is_visible,
-              icon: None,
-              el: rsx! { AboutWindow { is_visible: is_visible } }
+          .find(|item| item.id == id() ).is_none() {
+            open_windows.push(OpenWindow {
+              id: id(),
+              taskbar_item: rsx! {
+                TaskbarItem {
+                  id: id(),
+                  title: "About".to_string(),
+                  is_visible: is_visible,
+                  icon: None,
+                }
+              },
+              window: rsx! { AboutWindow { is_visible: is_visible } }
             });
+            active.set(id());
           } else {
             is_visible.toggle();
+            active.set(if is_visible() { id() } else { "based-radio".to_string() } );
           };
-        active.set(if is_visible() { "window-about".to_string() } else { "based-radio".to_string() } );
       },
       role: "button",
       "About"
@@ -40,9 +42,7 @@ pub fn AboutButton() -> Element {
 }
 
 #[component]
-pub fn AboutWindow(props: GenericWindowProps) -> Element {
-  let mut taskbar_items = use_context::<RadioState>().taskbar_items;
-
+pub fn AboutWindow(props: WindowParentProps) -> Element {
   rsx! {
     WindowTemplate {
       title: "About",

@@ -2,8 +2,8 @@ use crate::components::windows::{
   AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton,
 };
 use crate::components::{
-  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, TaskbarItemProps,
-  Visualizer, WindowTemplate, add_zeros, format_time, get_api_url,
+  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState,
+  Visualizer, WindowTemplate, format_time, get_api_url,
 };
 use dioxus::prelude::*;
 
@@ -150,26 +150,24 @@ pub fn PlayerContent() -> Element {
 
 #[component]
 pub fn Player() -> Element {
-  let mut player_state = use_context::<PlayerState>();
+  let player_state = use_context::<PlayerState>();
   let bounce = use_context::<SettingsState>().bounce;
 
-  let mut taskbar_items = use_context::<RadioState>().taskbar_items;
-
   rsx! {
-      WindowTemplate {
-        title: "BasedRadio",
-        id: "based-radio",
-        header_icon: true,
-        footer_text: Some(format!("Listeners: {:?} | Total Songs: {:?}", (player_state.listeners)(), (player_state.total_songs)())),
-        bounce: Some(bounce),
-        index: 1,
-        is_visible: Signal::new(true),
-        PlayerMenu { },
-        div {
-          id: "player-container",
-          class: "minimizable content",
-          PlayerContent { }
-        }
-      },
+    WindowTemplate {
+      title: "BasedRadio",
+      id: "based-radio",
+      header_icon: true,
+      footer_text: Some(format!("Listeners: {:?} | Total Songs: {:?}", (player_state.listeners)(), (player_state.total_songs)())),
+      bounce: Some(bounce),
+      index: 1,
+      is_visible: Signal::new(true),
+      PlayerMenu { },
+      div {
+        id: "player-container",
+        class: "minimizable content",
+        PlayerContent { }
+      }
+    },
   }
 }

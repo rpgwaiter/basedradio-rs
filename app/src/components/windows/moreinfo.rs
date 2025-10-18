@@ -1,13 +1,16 @@
+use crate::components::windows::WindowParentProps;
 use crate::RadioState;
-use crate::components::{MoreInfoState, UpstreamMoreInfo, WindowTemplate, get_api_url};
+use crate::components::{MoreInfoState, UpstreamMoreInfo, WindowTemplate, TaskbarItem, OpenWindow, get_api_url};
 use dioxus::prelude::*;
-use std::env;
 
 #[component]
 pub fn MoreInfoButton() -> Element {
-  let mut is_visible = use_context::<RadioState>().visibility.more_info;
+  let mut is_visible = Signal::new(true);
   let mut more = use_context::<MoreInfoState>();
   let mut active = use_context::<RadioState>().drag_state.active_window;
+  let mut open_windows = use_context::<RadioState>().open_windows;
+
+  let id = Signal::new("window-more-info".to_string());
 
   let get_more_info = move || async move {
     if let Ok(response) = reqwest::get(format!("{}/more-info", get_api_url()))
@@ -23,10 +26,27 @@ pub fn MoreInfoButton() -> Element {
   rsx! {
     button {
       onclick: move |_| {
-        let v = is_visible();
-        if (!v) { spawn(get_more_info()); };
-        active.set(if !v { "window-more-info".to_string() } else { "based-radio".to_string() } );
-        is_visible.toggle()
+        if open_windows
+          .iter()
+          .find(|item| item.id == id() ).is_none() {
+            open_windows.push(OpenWindow {
+              id: id(),
+              taskbar_item: rsx! {
+                TaskbarItem {
+                  id: id(),
+                  title: "More Info".to_string(),
+                  is_visible: is_visible,
+                  icon: None,
+                }
+              },
+              window: rsx! { MoreInfoWindow { is_visible: is_visible } }
+            });
+            active.set(id());
+          } else {
+            is_visible.toggle();
+            active.set(if is_visible() { id() } else { "based-radio".to_string() } );
+          };
+        spawn(get_more_info());
       },
       id: "more-info-btn",
       "More Info"
@@ -35,7 +55,7 @@ pub fn MoreInfoButton() -> Element {
 }
 
 #[component]
-pub fn MoreInfoWindow() -> Element {
+pub fn MoreInfoWindow(props: WindowParentProps) -> Element {
   let more_info = use_context::<MoreInfoState>().more_info;
 
   rsx! {
@@ -43,7 +63,8 @@ pub fn MoreInfoWindow() -> Element {
       title: "More Info",
       id: "window-more-info",
       header_icon: true,
-      is_visible: use_context::<RadioState>().visibility.more_info,
+      // is_visible: use_context::<RadioState>().visibility.more_info,
+      is_visible: props.is_visible,
       index: 2,
       div {
         id: "more-info-radio",

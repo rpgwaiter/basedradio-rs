@@ -1,20 +1,41 @@
-use crate::components::WindowTemplate;
+use crate::components::windows::WindowParentProps;
+use crate::components::{OpenWindow, TaskbarItem, WindowTemplate};
 use crate::{RadioState, SettingsState};
 
 use dioxus::prelude::*;
-use std::env;
 
 #[component]
 pub fn SettingsButton() -> Element {
-  let mut is_visible = use_context::<RadioState>().visibility.settings;
+  // let mut is_visible = use_context::<RadioState>().visibility.settings;
+  let mut is_visible = Signal::new(true);
   let bounce = use_context::<SettingsState>().bounce;
   let mut active = use_context::<RadioState>().drag_state.active_window;
+  let id = Signal::new("settings-window".to_string());
+  let mut open_windows = use_context::<RadioState>().open_windows;
 
   rsx! {
     button {
       onclick: move |_| {
-        active.set(if !is_visible() { "settings-window".to_string() } else { "based-radio".to_string() } );
-        if !bounce() { is_visible.toggle() }
+        if open_windows
+          .iter()
+          .find(|item| item.id == id() ).is_none() {
+            open_windows.push(OpenWindow {
+              id: id(),
+              taskbar_item: rsx! {
+                TaskbarItem {
+                  id: id(),
+                  title: "Settings".to_string(),
+                  is_visible: is_visible,
+                  icon: None,
+                }
+              },
+              window: rsx! { SettingsWindow { is_visible: is_visible } }
+            });
+            active.set(id());
+          } else {
+            if !bounce() { is_visible.toggle() }
+            active.set(if is_visible() { id() } else { "based-radio".to_string() } );
+          };
       },
       id: "settings-btn",
       "Settings"
@@ -23,18 +44,17 @@ pub fn SettingsButton() -> Element {
 }
 
 #[component]
-pub fn SettingsWindow() -> Element {
-  let mut is_visible = use_context::<RadioState>().visibility.settings;
+pub fn SettingsWindow(props: WindowParentProps) -> Element {
   let mut settings_state = use_context::<SettingsState>();
   let bounce = use_context::<SettingsState>().bounce;
 
   rsx! {
-    if is_visible() || bounce() {
+    // if (props.is_visible() || bounce() {
       WindowTemplate {
         title: "Settings",
         id: "settings-window",
         header_icon: true,
-        is_visible: is_visible,
+        is_visible: props.is_visible,
         index: 10,
         div {
           class: "inner content",
@@ -66,6 +86,6 @@ pub fn SettingsWindow() -> Element {
           }
         }
       },
-    }
+    // }
   }
 }

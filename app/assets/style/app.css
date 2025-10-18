@@ -35,6 +35,14 @@
   align-items: center;
 }
 
+.taskbar-icon {
+  background-size: cover !important;
+  height: 18px !important;
+  width: 18px !important;
+  margin-left: 2px !important;
+  margin-right: 2px !important;
+}
+
 .active-task {
   box-shadow: inset 1px 1px 0 0 #000 !important;
   border-top-color: gray !important;

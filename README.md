@@ -14,6 +14,9 @@ dx serve --platform=web --addr=0.0.0.0 --port=8787 --features=web
 dx serve --platform=desktop --features=desktop
 ```
 
+<img width="2561" height="1308" alt="newcap" src="https://github.com/user-attachments/assets/d42728b4-e344-439a-8280-e8d22cd6ddf4" />
+
+
 
 ### TODO:
 
@@ -25,13 +28,13 @@ dx serve --platform=desktop --features=desktop
 
 #### kinda soon
 - [ ] updated readme
-- [ ] show current song count
+- [x] show current song count
 - [ ] add A LOT more songs. We used to have over 400 songs before a data storage failure many years ago
 - [x] .json with info on each game/system/song(?)
 - [x] per-game backgrounds
 - [x] settings panel for backgrounds, other stuff
-- [-] fix the hacky window dragging
-- [ ] opus streams (currently only mp3)
+- [x] fix the hacky window dragging
+- [x] opus streams (currently only mp3)
 - [ ] visualizer like current based.radio has. Easy in web (due to existing code), very tricky for desktop
 
 #### someday
@@ -43,4 +46,4 @@ dx serve --platform=desktop --features=desktop
 - [ ] different playlists for events, livecasting, etc
 - [ ] login system
 - [ ] voting w/ weights (would require replacement of mpd playlist management)
-- [-] option to bounce the player window around the screen like those old dvd menus
+- [x] option to bounce the player window around the screen like those old dvd menus

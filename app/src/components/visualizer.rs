@@ -5,13 +5,11 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 #[cfg(feature = "web")]
-use js_sys::Promise;
-// #[cfg(feature = "web")]
 use web_sys::wasm_bindgen::{JsCast, JsValue, closure::Closure};
 #[cfg(feature = "web")]
 use web_sys::{
-  AudioContext, AudioDestinationNode, CanvasRenderingContext2d, HtmlAudioElement,
-  HtmlCanvasElement, HtmlElement, MediaElementAudioSourceNode, console, window,
+  AudioContext, CanvasRenderingContext2d, HtmlAudioElement,
+  HtmlCanvasElement, MediaElementAudioSourceNode, window,
 };
 
 // #[cfg(feature = "web")]
@@ -30,7 +28,7 @@ pub fn visualize() {
     .and_then(|el| el.dyn_into::<HtmlCanvasElement>().ok())
     .unwrap();
 
-  let mut canvas_context = canvas
+  let canvas_context = canvas
     .get_context("2d")
     .unwrap()
     .unwrap() // 2 unwraps???
@@ -60,12 +58,12 @@ pub fn visualize() {
       analyzer.get_byte_frequency_data(&mut audio_data_array);
 
       // How big the bars are
-      let SIZE = 15 as usize;
+      let size = 15 as usize;
 
       // TODO: check state of visualizer toggle
       let width_int: i64 = width.round() as i64;
-      if (audio_data_array.len() > 0) {
-        for x in (0..width_int).step_by(SIZE as usize) {
+      if audio_data_array.len() > 0 {
+        for x in (0..width_int).step_by(size as usize) {
           let ndx = ((x * num_points) / width_int) | 0;
           let audio_value = (audio_data_array[ndx as usize] / 255) as f64;
           let color = if audio_value > 0.45 {
@@ -76,7 +74,7 @@ pub fn visualize() {
           canvas_context.set_fill_style(&JsValue::from_str(color));
           let bar_height = (height - audio_value * height).ceil();
           if audio_value > 0.05 {
-            canvas_context.fill_rect(x as f64, bar_height, SIZE as f64, height)
+            canvas_context.fill_rect(x as f64, bar_height, size as f64, height)
           }
         }
       }
@@ -97,6 +95,7 @@ pub fn visualize() {
       .expect("error registering next animation frame in the visualizer for some reason");
   }
 }
+
 
 #[cfg(feature = "web")]
 pub fn Visualizer() -> Element {

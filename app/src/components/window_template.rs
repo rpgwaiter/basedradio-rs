@@ -1,9 +1,7 @@
-use crate::components::{ICON_FAVICON, RadioAudio, RadioState, TaskbarItemProps, taskbar};
-use core::task;
-use dioxus::html::input_data::MouseButton;
-use dioxus::logger::tracing::info;
+use crate::components::{ICON_FAVICON, RadioState};
+// use dioxus::logger::tracing::info;
 use dioxus::{
-  html::geometry::euclid::{Point2D, Rect, Vector2D},
+  warnings::Warning,
   prelude::*,
 };
 use std::rc::Rc;
@@ -21,31 +19,16 @@ pub struct WindowProps {
   bounce: Option<Signal<bool>>,
   index: i16,
   extra_style: Option<String>,
-  is_visible: Signal<bool>,
+  is_visible: Signal<bool>
 }
 
 #[allow(non_snake_case)]
 #[component]
 pub fn WindowTemplate(props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
-
-  let mut size_style = use_signal(|| "".to_string());
-
-  use_effect(move || {
-    size_style.set("transform: none !important;".to_string());
-  });
-
-  // gross hack to allow use of props in multiple functions
-  // let mut sig_taskbar_props = Signal::new(TaskbarItemProps {
-  //   id: props.id.clone(),
-  //   title: props.title.clone(),
-  //   icon: None,
-  //   is_visible: Signal::new(true) // should never be used
-  // });
+  let mut is_visible = warnings::copy_value_hoisted::allow(|| props.is_visible);
 
   let id_clone = Signal::new(props.id);
-
-  let mut is_visible = props.is_visible;
 
   // TODO: update linter script to not do this
   let bouncing = if let Some(b) = props.bounce {
@@ -55,7 +38,6 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
   };
 
   let radio_state = use_context::<RadioState>();
-  let mut taskbar_items = radio_state.taskbar_items;
   let drag_state = radio_state.drag_state;
 
   let mut is_dragging = drag_state.is_dragging;
@@ -92,10 +74,7 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
     div {
       id: "{id_clone}",
       class: if bouncing { "window bouncing" } else { "window" },
-      onmounted: move |cx| {
-        div_element.set(Some(cx.data()));
-        // if taskbar_items.iter().find(|item| item.id == sig_taskbar_props().id ).is_none() { taskbar_items.push(TaskbarItemProps { id: props.id.clone(), title: props.title.clone(), is_visible: is_visible, icon: None }); };
-      },
+      onmounted: move |cx| div_element.set(Some(cx.data())),
       onmousedown: move |_| active_window.set(id_clone()),
       onmouseup: move |_| is_dragging.set(false),
       onmousemove: move |_| {
@@ -104,7 +83,7 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
           dim_y_local.set(format!("{}px", dim_y()));
         }
       },
-      style: if is_visible() {
+      style: if warnings::copy_value_hoisted::allow(|| is_visible()) {
           "display: auto;"
       } else {
           "display: none;"
@@ -134,9 +113,7 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
           div {
             class: "buttons",
             button {
-              onclick: move |_| {
-                is_visible.set(false);
-              },
+              onclick: move |_| warnings::copy_value_hoisted::allow(|| is_visible.set(false)),
               class: "button-minimize",
               style: format!("background-image: url({});", ICON_CLOSE.to_string())
             }

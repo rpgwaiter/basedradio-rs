@@ -14,7 +14,7 @@ mod visualizer;
 pub use visualizer::Visualizer;
 
 mod taskbar;
-pub use taskbar::{Taskbar, TaskbarItemProps};
+pub use taskbar::{Taskbar, TaskbarItem, TaskbarItemProps};
 
 pub fn get_stream_mp3() -> String {
   env::var("STREAM_MP3").unwrap_or("https://cast.based.radio/vgm.mp3".into())
@@ -158,8 +158,7 @@ pub struct RadioState {
   pub download_link: Signal<String>,
   pub updates: Signal<Vec<String>>,
   pub drag_state: DragState,
-  pub taskbar_items: Signal<Vec<TaskbarItemProps>>,
-  pub visibility: Visibility
+  pub open_windows: Signal<Vec<OpenWindow>>
 }
 
 impl RadioState {
@@ -168,8 +167,11 @@ impl RadioState {
       download_link: Signal::new(String::from("/")),
       updates: Signal::new(vec![String::from("Loading updates...")]),
       drag_state: DragState::new(),
-      taskbar_items: Signal::new(vec![TaskbarItemProps { id: "based-radio".to_string(), title: "BasedRadio".to_string(), icon: None, is_visible: Signal::new(true), el: rsx!{ Player { } } }] as Vec<TaskbarItemProps>),
-      visibility: Visibility::new()
+      open_windows: Signal::new(vec![ OpenWindow{
+        id: "based-radio".to_string(),
+        window: rsx!{ Player {  } },
+        taskbar_item: rsx!{ TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: Signal::new(true) }}
+      }])
     }
   }
 }
@@ -216,4 +218,11 @@ pub struct InfoSites {
 pub struct TitleLangs {
   pub en: Option<String>,
   pub ja: Option<String>,
+}
+
+#[derive(Clone)]
+pub struct OpenWindow {
+  pub id: String,
+  pub taskbar_item: Element,
+  pub window: Element,
 }

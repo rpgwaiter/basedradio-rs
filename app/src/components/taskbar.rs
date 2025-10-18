@@ -1,6 +1,6 @@
-use dioxus::prelude::*;
+use dioxus::{prelude::*, warnings::Warning};
 
-use crate::components::{DragState, ICON_FAVICON, RadioState};
+use crate::components::{ICON_FAVICON, RadioState};
 
 #[derive(PartialEq, Props, Clone)]
 pub struct TaskbarItemProps {
@@ -8,7 +8,6 @@ pub struct TaskbarItemProps {
   pub id: String,
   pub icon: Option<String>,
   pub is_visible: Signal<bool>,
-  pub el: Element
 }
 
 #[component]
@@ -21,11 +20,11 @@ pub fn TaskbarItem(props: TaskbarItemProps) -> Element {
     button {
       class: if is_active { "taskbar-item active-task" } else { "taskbar-item" },
       onclick: move |_| {
-        is_visible.toggle();
+        warnings::copy_value_hoisted::allow(|| is_visible.toggle());
         active_window.set( if is_active { "based-radio".to_string() } else { props.id.clone() });
       }, // TODO: set last window
       // TODO: move most of this style to css
-      div { class: "icon", style: format!("background: url({}) no-repeat; background-size: cover; height: 18px; width: 18px; margin-left: 2px !important; margin-right: 2px !important;", props.icon.unwrap_or(ICON_FAVICON.to_string())) },
+      div { class: "taskbar-icon icon", style: format!("background: url({}) no-repeat; ", props.icon.unwrap_or(ICON_FAVICON.to_string())) },
       "{props.title}"
     }
   }
@@ -33,13 +32,13 @@ pub fn TaskbarItem(props: TaskbarItemProps) -> Element {
 
 #[component]
 pub fn Taskbar() -> Element {
-  let mut items = use_context::<RadioState>().taskbar_items;
+  let items = use_context::<RadioState>().open_windows;
 
   rsx! {
     div {
       class: "taskbar",
-      for item in items.iter() {
-        TaskbarItem { title: item.title.clone(), id: item.id.clone(), is_visible: item.is_visible, el: item.el.clone() }
+      for item in items.iter().map(|e| e.taskbar_item.clone()) {
+        {item}
       }
     }
   }

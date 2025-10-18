@@ -2,11 +2,9 @@ use crate::components::get_stream_mp3;
 use dioxus::prelude::*;
 
 #[cfg(feature = "web")]
-use js_sys::Promise;
-#[cfg(feature = "web")]
 use web_sys::wasm_bindgen::JsCast;
 #[cfg(feature = "web")]
-use web_sys::{HtmlAudioElement, HtmlCanvasElement, HtmlElement, console, window};
+use web_sys::{HtmlAudioElement, window};
 
 #[cfg(feature = "desktop")]
 use rodio::{Decoder, OutputStream, Sink};

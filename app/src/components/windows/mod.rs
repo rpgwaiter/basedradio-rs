@@ -1,9 +1,16 @@
+use dioxus::prelude::*;
+
 mod about;
 mod moreinfo;
 mod picture_viewer;
 mod player;
 mod settings;
 mod updates;
+
+#[derive(PartialEq, Props, Clone)]
+pub struct WindowParentProps {
+  pub is_visible: Signal<bool>
+}
 
 pub use player::Player;
 

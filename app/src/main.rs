@@ -1,14 +1,8 @@
 mod components;
-use core::task;
 
-use components::windows::{
-  AboutWindow, MoreInfoWindow, PictureWindow, Player, SettingsWindow, UpdatesWindow,
-};
-use components::{MoreInfoState, PlayerState, RadioState, SettingsState, UpstreamMoreInfo};
+use components::{MoreInfoState, PlayerState, RadioState, SettingsState, Taskbar};
 use dioxus::html::input_data::MouseButton;
 use dioxus::prelude::*;
-
-use crate::components::Taskbar;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -39,11 +33,11 @@ fn App() -> Element {
 /// Home page
 #[component]
 fn Home() -> Element {
-  let mut radio_state = use_context_provider(|| RadioState::new());
+  let radio_state = use_context_provider(|| RadioState::new());
   use_context_provider(|| MoreInfoState::new());
   use_context_provider(|| SettingsState::new());
   let player_state = use_context_provider(|| PlayerState::new());
-  let mut taskbar_items = radio_state.taskbar_items;
+  let mut open_windows = radio_state.open_windows;
 
   let drag_state = radio_state.drag_state;
   let mut is_dragging = drag_state.is_dragging;
@@ -100,8 +94,8 @@ fn Home() -> Element {
       // SettingsWindow {},
       // PictureWindow {},
       Taskbar {},
-      for item in taskbar_items.iter().map(|e| e.el.clone()) {
-        {item}
+      for item in open_windows.iter() { //.map(|e| e.clone()) {
+        {item.window.clone()}
       }
     }
   }
