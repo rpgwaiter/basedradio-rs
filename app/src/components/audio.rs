@@ -1,4 +1,4 @@
-use crate::components::{get_stream_mp3, PlayerState};
+use crate::components::{get_stream_mp3, get_stream_opus, PlayerState};
 use dioxus::prelude::*;
 use dioxus::logger::tracing::info;
 
@@ -30,8 +30,13 @@ pub async fn play_audio() {
     .get_element_by_id("main-audio")
     .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
   {
+    
     if audio.paused() {
-      audio.set_src(&get_stream_mp3());
+      if audio.can_play_type("audio/ogg; codecs=opus") == "probably" {
+        audio.set_src(get_stream_opus().as_str());
+      } else {
+        audio.set_src(get_stream_mp3().as_str());
+      }
       audio.load();
       audio.play();
     } else {

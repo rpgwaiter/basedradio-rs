@@ -20,6 +20,11 @@ pub fn get_stream_mp3() -> String {
   env::var("STREAM_MP3").unwrap_or("https://cast.based.radio/vgm.mp3".into())
 }
 
+pub fn get_stream_opus() -> String {
+  env::var("STREAM_OPUS").unwrap_or("https://cast.based.radio/vgm.ogg".into())
+}
+
+
 pub fn get_api_url() -> String {
   env::var("API_URL").unwrap_or("https://api.based.radio".into())
 }
