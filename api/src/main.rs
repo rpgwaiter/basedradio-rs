@@ -173,13 +173,12 @@ async fn get_playing_song() -> impl Responder {
       elapsed: status.elapsed.unwrap().as_secs(),
       duration: status.duration.unwrap().as_secs(),
       total_songs: status.playlistlength,
-      listeners: icecast_info // TODO: map over an iter
+      listeners: icecast_info
         .icestats
         .sources_vec()
-        .pop()
-        .unwrap()
-        .listeners()
-        .unwrap_or(0),
+        .iter()
+        .map(|s| s.listeners().unwrap_or(0))
+        .sum()
     },
     more_info: get_more_info(&file),
   })
