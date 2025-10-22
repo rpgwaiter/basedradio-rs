@@ -12,7 +12,8 @@ pub fn AboutButton() -> Element {
   let id = Signal::new("window-about".to_string());
 
   rsx! {
-    a {
+    button {
+      class: "button-about",
       onclick: move |_| {
         if open_windows
           .iter()
@@ -35,8 +36,8 @@ pub fn AboutButton() -> Element {
             active.set(if is_visible() { id() } else { "based-radio".to_string() } );
           };
       },
-      role: "button",
-      "About"
+      // role: "button",
+      // "?"
     }
   }
 }
@@ -45,7 +46,7 @@ pub fn AboutButton() -> Element {
 pub fn AboutWindow(props: WindowParentProps) -> Element {
   rsx! {
     WindowTemplate {
-      title: "About",
+      title: "About BasedRadio",
       id: "window-about",
       header_icon: true,
       is_visible: props.is_visible,

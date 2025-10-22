@@ -1,9 +1,8 @@
-use crate::components::{ICON_FAVICON, RadioState};
+use crate::components::{windows::AboutButton, RadioState, ICON_FAVICON};
 // use dioxus::logger::tracing::info;
 use dioxus::{prelude::*, warnings::Warning};
 use std::rc::Rc;
 
-static ICON_CLOSE: Asset = asset!("/assets/ui/element2.png");
 static RESIZE_ICON: Asset = asset!("/assets/ui/resize.png");
 
 #[derive(PartialEq, Props, Clone)]
@@ -17,6 +16,15 @@ pub struct WindowProps {
   index: i16,
   extra_style: Option<String>,
   is_visible: Signal<bool>,
+  extra_menu_btn: Option<Element>,
+}
+
+fn close_window(id: &str) {
+  let mut open_windows = use_context::<RadioState>().open_windows;
+
+  if let Some(inx) = open_windows.iter().position(|item| item.id == id) {
+    open_windows.remove(inx);
+  }
 }
 
 #[allow(non_snake_case)]
@@ -25,7 +33,7 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
   let mut is_visible = warnings::copy_value_hoisted::allow(|| props.is_visible);
 
-  let id_clone = Signal::new(props.id);
+  let id_clone = Signal::new(props.id.clone());
 
   // TODO: update linter script to not do this
   let bouncing = if let Some(b) = props.bounce {
@@ -109,12 +117,22 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
           "{props.title}",
           div {
             class: "buttons",
+            style: "flexbox",
+            if &props.id == "based-radio" {
+              AboutButton {  }
+            },
             button {
               onclick: move |_| warnings::copy_value_hoisted::allow(|| is_visible.set(false)),
               class: "button-minimize",
               aria_label: "minimize-window",
-              style: format!("background-image: url({});", ICON_CLOSE.to_string())
-            }
+            },
+            if &props.id != "based-radio" {
+              button {
+                onclick: move |_| close_window(&props.id),
+                class: "button-close",
+                aria_label: "close-window",
+              }
+            } else { } // For whatever reason this only appears with this empty else
           }
         },
         {props.children}

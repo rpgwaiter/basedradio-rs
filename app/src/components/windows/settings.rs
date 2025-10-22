@@ -54,7 +54,7 @@ pub fn SettingsButton() -> Element {
           };
       },
       id: "settings-btn",
-      "Settings"
+      "Settings..."
     }
   }
 }

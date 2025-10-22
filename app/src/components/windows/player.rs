@@ -30,10 +30,10 @@ pub fn PlayerMenu() -> Element {
           "Home"
         },
       },
-      div {
-        class: "action",
-        AboutButton {  }
-      },
+      // div {
+      //   class: "action",
+      //   AboutButton {  }
+      // },
       div {
         class: "action",
         a {
@@ -169,6 +169,7 @@ pub fn Player(props: WindowParentProps) -> Element {
       bounce: Some(bounce),
       index: 1,
       is_visible: props.is_visible,
+      extra_menu_btn: Some(rsx!{ AboutButton {} }),
       PlayerMenu { },
       div {
         id: "player-container",
