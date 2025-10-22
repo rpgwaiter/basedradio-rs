@@ -1,4 +1,4 @@
-Rewrite of based-radio in rust, WIP
+24/7 video game music radio, now in rust!
 
 ## Deps
 - rust toolchain (cargo)
