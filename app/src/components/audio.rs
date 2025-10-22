@@ -86,13 +86,35 @@ pub async fn get_audio_stream() {
   let document = window().unwrap().document().unwrap();
 
   // If we have a valid audio obj
-  //     if let Some(audio) = document
-  //         .get_element_by_id("main-audio")
-  //         .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
-  //     {
-  //         audio
-  //     }
+  // if let Some(audio) = document
+  //   .get_element_by_id("main-audio")
+  //   .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
+  // {
+  //   audio
+  // }
 }
+
+
+// Used for click sounds and stuff
+#[cfg(feature = "web")]
+pub fn play_sound_effect(soundelement: &str) {
+  let document = window().unwrap().document().unwrap();
+
+  // If we have a valid audio obj
+  if let Some(audio) = document
+    .get_element_by_id(soundelement)
+    .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
+  {
+    audio.play();
+  }
+}
+
+// TODO:
+#[cfg(feature = "desktop")]
+pub fn play_sound_effect(sound: &str) {
+
+}
+
 
 #[component]
 pub fn VolumeSlider() -> Element {

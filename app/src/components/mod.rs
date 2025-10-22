@@ -5,7 +5,7 @@ use std::env;
 pub mod windows;
 
 mod audio;
-pub use audio::{RadioAudio, VolumeSlider};
+pub use audio::{RadioAudio, VolumeSlider, play_sound_effect};
 
 mod window_template;
 pub use window_template::WindowTemplate;
@@ -15,6 +15,8 @@ pub use visualizer::Visualizer;
 
 mod taskbar;
 pub use taskbar::{Taskbar, TaskbarItem, TaskbarItemProps};
+
+pub use windows::SettingsState;
 
 pub fn get_stream_mp3() -> String {
   env::var("STREAM_MP3").unwrap_or("https://cast.based.radio/vgm.mp3".into())
@@ -97,21 +99,6 @@ impl PlayerState {
       listeners: Signal::new(0 as i16),
       total_songs: Signal::new(0 as u32),
       volume: Signal::new(80 as u8),
-    }
-  }
-}
-
-#[derive(Clone, Copy)]
-pub struct SettingsState {
-  pub use_background: Signal<bool>,
-  pub bounce: Signal<bool>,
-}
-
-impl SettingsState {
-  pub fn new() -> Self {
-    SettingsState {
-      use_background: Signal::new(true),
-      bounce: Signal::new(false),
     }
   }
 }

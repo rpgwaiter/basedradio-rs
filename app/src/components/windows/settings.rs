@@ -1,8 +1,24 @@
 use crate::components::windows::WindowParentProps;
-use crate::components::{OpenWindow, TaskbarItem, WindowTemplate};
-use crate::{RadioState, SettingsState};
+use crate::components::{OpenWindow, TaskbarItem, WindowTemplate, RadioState};
 
 use dioxus::prelude::*;
+
+#[derive(Clone, Copy)]
+pub struct SettingsState {
+  pub use_background: Signal<bool>,
+  pub bounce: Signal<bool>,
+  pub mouse_sounds: Signal<bool>,
+}
+
+impl SettingsState {
+  pub fn new() -> Self {
+    SettingsState {
+      use_background: Signal::new(true),
+      bounce: Signal::new(false),
+      mouse_sounds: Signal::new(true),
+    }
+  }
+}
 
 #[component]
 pub fn SettingsButton() -> Element {
@@ -81,6 +97,18 @@ pub fn SettingsWindow(props: WindowParentProps) -> Element {
               label {
                 for: "bounce-toggle",
                 {"Bounce"}
+              },
+            },
+            fieldset {
+              input {
+                id: "mouse-sounds-toggle",
+                type: "checkbox",
+                checked: settings_state.mouse_sounds,
+                onclick: move |_| settings_state.mouse_sounds.toggle()
+              },
+              label {
+                for: "mouse-sounds-toggle",
+                {"Mouse sounds"}
               },
             }
           }

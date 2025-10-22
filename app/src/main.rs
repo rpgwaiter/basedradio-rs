@@ -5,6 +5,8 @@ use components::windows::Player;
 use dioxus::html::input_data::MouseButton;
 use dioxus::prelude::*;
 
+use crate::components::play_sound_effect;
+
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
 enum Route {
@@ -34,9 +36,12 @@ fn App() -> Element {
 /// Home page
 #[component]
 fn Home() -> Element {
+  let mouseupsound = asset!("/assets/sounds/mousedown.mp3");
+  let mousedownsound = asset!("/assets/sounds/mouseup.mp3");
+
   let radio_state = use_context_provider(|| RadioState::new());
   use_context_provider(|| MoreInfoState::new());
-  use_context_provider(|| SettingsState::new());
+  let settings_state = use_context_provider(|| SettingsState::new());
   let player_state = use_context_provider(|| PlayerState::new());
   let mut open_windows = radio_state.open_windows;
   let player_is_visible = Signal::new(true);
@@ -53,7 +58,6 @@ fn Home() -> Element {
   let drag_state = radio_state.drag_state;
   let mut is_dragging = drag_state.is_dragging;
 
-  let bg_toggle = use_context::<SettingsState>().use_background;
   let background_img = player_state.background;
 
   let mut dim_x = drag_state.dim_x;
@@ -96,9 +100,17 @@ fn Home() -> Element {
       id: "main-container",
       class: "win98",
       style: "height: 100%; width: 100%; top: 0; left: 0; position: fixed;",
-      style: if bg_toggle() && background_img().is_some() {"background-image: url({background_img().unwrap()});"},
+      style: if (settings_state.use_background)() && background_img().is_some() {"background-image: url({background_img().unwrap()});"},
       onmousemove: move |event| mouse_move(event),
-      onmouseup: move |_| is_dragging.set(false),
+      onmouseup: move |_| {
+        is_dragging.set(false);
+        if (settings_state.mouse_sounds)() {
+          play_sound_effect("mouseup-audio");
+        }
+      },
+      onmousedown: move |_| if (settings_state.mouse_sounds)() { play_sound_effect("mousedown-audio"); },
+      audio { id: "mousedown-audio", src: mousedownsound },
+      audio { id: "mouseup-audio", src: mouseupsound },
       Taskbar {},
       for item in open_windows.iter() {
         {item.window.clone()}
