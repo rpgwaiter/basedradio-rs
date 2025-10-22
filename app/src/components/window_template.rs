@@ -112,6 +112,7 @@ pub fn WindowTemplate(props: WindowProps) -> Element {
             button {
               onclick: move |_| warnings::copy_value_hoisted::allow(|| is_visible.set(false)),
               class: "button-minimize",
+              aria_label: "minimize-window",
               style: format!("background-image: url({});", ICON_CLOSE.to_string())
             }
           }
