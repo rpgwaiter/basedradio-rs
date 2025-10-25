@@ -63,7 +63,7 @@ jobs:
 
       - name: Build Dioxus Desktop app
         working-directory: ./app
-        run: NO_STRIP=true dx bundle --verbose --platform=desktop --features=desktop --release
+        run: NO_STRIP=true dx bundle --verbose --trace --platform=desktop --features=desktop --release
 
       # - name: Upload build artifacts
       #   uses: actions/upload-artifact@v4
