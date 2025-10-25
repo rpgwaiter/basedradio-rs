@@ -56,11 +56,14 @@ jobs:
             pkg-config \
             libsoup-3.0-dev \
             libwebkit2gtk-4.1-dev \
-            libayatana-appindicator3-dev
+            libayatana-appindicator3-dev \
+            libgdk-pixbuf-2.0-dev \
+            libcairo2-dev \
+            libpango1.0-dev
 
       - name: Build Dioxus Desktop app
         working-directory: ./app
-        run: NO_STRIP=true dx bundle --platform=desktop --features=desktop --release --verbose
+        run: NO_STRIP=true dx bundle --verbose --platform=desktop --features=desktop --release
 
       # - name: Upload build artifacts
       #   uses: actions/upload-artifact@v4
