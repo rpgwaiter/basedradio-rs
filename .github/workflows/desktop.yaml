@@ -37,8 +37,11 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
+      - name: Install binstall
+        run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+
       - name: Install dx
-        run: cargo install dioxus-cli --locked
+        run: cargo binstall dioxus-cli
 
       - name: Install platform deps
         if: runner.os == 'Linux'
