@@ -12,7 +12,7 @@ use web_sys::{
   MediaElementAudioSourceNode, window,
 };
 
-// #[cfg(feature = "web")]
+#[cfg(feature = "web")]
 pub fn visualize() {
   let document = window().unwrap().document().unwrap();
 

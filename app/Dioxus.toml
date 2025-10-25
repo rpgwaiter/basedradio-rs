@@ -1,9 +1,14 @@
 [application]
+name = "basedradio-app"
+
+[bundle]
+identifier = "radio.based.desktop"
+publisher = "Rpgwaiter"
+icon = ["assets/icons/favicon-32x32521f.png"]
 
 [web.app]
-
-# HTML title tag content
-title = "basedradio-rs"
+# HTML title tag content (overwritten by code)
+title = "BasedRadio"
 
 # include `assets` in web platform
 [web.resource]
@@ -19,3 +24,4 @@ script = []
 # Javascript code file
 # serve: [dev-server] only
 script = []
+
