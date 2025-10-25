@@ -38,7 +38,9 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: Install dx
-        run: cargo install dioxus-cli
+        run: |
+          cargo install cargo-binstall
+          cargo binstall dioxus-cli
 
       - name: Install platform deps
         if: runner.os == 'Linux'
