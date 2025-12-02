@@ -1,5 +1,8 @@
 24/7 video game music radio, now in rust!
 
+> [!IMPORTANT]  
+> No AI/LLM tools were used in the creation of this codebase. Contributions written by LLMs will be harshly rejected.
+
 ## Deps
 - rust toolchain (cargo)
 - dx (`cargo install dioxus-cli`)
