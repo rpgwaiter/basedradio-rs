@@ -60,13 +60,14 @@ jobs:
             librsvg2-dev \
             libsoup-3.0-dev \
             libssl-dev \
+            xdg-desktop-portal-kde \
             libwebkit2gtk-4.1-dev \
             libxdo-dev \
             pkg-config 
 
       - name: Build Dioxus Desktop app
         working-directory: ./app
-        run: NO_STRIP=true dx bundle --verbose --trace --platform=desktop --features=desktop --release --no-default-features
+        run: NO_STRIP=true dx bundle --verbose --trace --platform=desktop --features=desktop --no-default-features
 
       # - name: Upload build artifacts
       #   uses: actions/upload-artifact@v4
