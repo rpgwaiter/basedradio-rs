@@ -48,22 +48,16 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt install -y libwebkit2gtk-4.1-dev \
             build-essential \
-            libatk1.0-dev \
-            libayatana-appindicator3-dev \
-            libcairo2-dev \
-            libgdk-pixbuf-2.0-dev \
-            libgtk-3-dev \
-            libjavascriptcoregtk-4.1-dev \
-            libpango1.0-dev \
-            librsvg2-dev \
-            libsoup-3.0-dev \
-            libssl-dev \
-            ubuntu-desktop task-gnome-desktop \
-            libwebkit2gtk-4.1-dev \
+            curl \
+            wget \
+            file \
             libxdo-dev \
-            pkg-config 
+            libssl-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            lld
 
       - name: Build Dioxus Desktop app
         working-directory: ./app
