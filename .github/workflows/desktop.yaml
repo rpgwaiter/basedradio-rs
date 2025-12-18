@@ -61,6 +61,8 @@ jobs:
             libsoup-3.0-dev \
             libssl-dev \
             xdg-desktop-portal-kde \
+            xdg-desktop-portal-gtk \
+            xdg-desktop-portal-gnome \
             libwebkit2gtk-4.1-dev \
             libxdo-dev \
             pkg-config 
