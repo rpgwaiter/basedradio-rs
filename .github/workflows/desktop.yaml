@@ -57,6 +57,7 @@ jobs:
             libssl-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev \
+            libgtk-3-dev \
             lld
 
       - name: Build Dioxus Desktop app
