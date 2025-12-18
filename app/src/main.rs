@@ -95,7 +95,7 @@ fn Home() -> Element {
 
   rsx! {
     document::Title { "{player_state.title} | BasedRadio" },
-    document::Script { src: asset!("./assets/wasm-check.js") }
+    document::Script { src: asset!("/assets/wasm-check.js") }
     div {
       id: "main-container",
       class: "win98",

@@ -154,7 +154,7 @@ pub fn RadioAudio() -> Element {
     let document = window().unwrap().document().unwrap();
 
     use_effect(move || {
-      let mut player_volume = use_context::<PlayerState>().volume;
+      let player_volume = use_context::<PlayerState>().volume;
       let converted_vol = player_volume() as f64 / 100.0;
       if let Some(audio) = document
         .get_element_by_id("main-audio")

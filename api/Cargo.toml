@@ -2,6 +2,7 @@
 name = "api"
 version = "0.1.0"
 edition = "2024"
+authors = ["rpgwaiter <rpgwaiter@based.zone>"]
 
 [dependencies]
 actix-web = "4.11.0"

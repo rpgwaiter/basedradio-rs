@@ -5,10 +5,9 @@ use crate::components::{
   MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
   WindowTemplate, VolumeSlider, format_time, get_api_url,
 };
-use dioxus::dioxus_core::ElementId;
-use dioxus::prelude::*;
 
-use dioxus_sdk::utils::timing::use_interval;
+use dioxus::prelude::*;
+use dioxus_sdk::time::use_interval;
 use std::time::Duration;
 
 // Top menu bar of the player
@@ -114,7 +113,7 @@ pub fn PlayerContent() -> Element {
   };
 
   // TODO: this spams connections if the api is dead
-  use_interval(Duration::from_secs(1), move || {
+  use_interval(Duration::from_secs(1), move |_| {
     if elapsed() >= duration() {
       spawn(fetch_info());
     };
