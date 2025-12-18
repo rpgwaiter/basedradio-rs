@@ -47,8 +47,8 @@ jobs:
       - name: Install platform deps
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          apt-get update
+          apt-get install -y \
             build-essential \
             libatk1.0-dev \
             libayatana-appindicator3-dev \
@@ -60,9 +60,7 @@ jobs:
             librsvg2-dev \
             libsoup-3.0-dev \
             libssl-dev \
-            xdg-desktop-portal-kde \
-            xdg-desktop-portal-gtk \
-            xdg-desktop-portal-gnome \
+            ubuntu-desktop task-gnome-desktop \
             libwebkit2gtk-4.1-dev \
             libxdo-dev \
             pkg-config 
