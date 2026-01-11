@@ -1,5 +1,5 @@
 use crate::components::windows::WindowParentProps;
-use crate::components::{OpenWindow, TaskbarItem, WindowTemplate, RadioState};
+use crate::components::{OpenWindow, RadioState, TaskbarItem, WindowTemplate};
 
 use dioxus::prelude::*;
 
@@ -69,7 +69,7 @@ pub fn SettingsWindow(props: WindowParentProps) -> Element {
       WindowTemplate {
         title: "Settings",
         id: "settings-window",
-        header_icon: true,
+        // header_icon: , TODO:
         is_visible: props.is_visible,
         index: 10,
         div {

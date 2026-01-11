@@ -2,8 +2,8 @@ use crate::components::windows::{
   AboutButton, MoreInfoButton, PictureButton, SettingsButton, UpdatesButton, WindowParentProps,
 };
 use crate::components::{
-  MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState, Visualizer,
-  WindowTemplate, VolumeSlider, format_time, get_api_url,
+  ICON_FAVICON, MoreInfoState, PlayerState, RadioApi, RadioAudio, RadioState, SettingsState,
+  Visualizer, VolumeSlider, WindowTemplate, format_time, get_api_url,
 };
 
 use dioxus::prelude::*;
@@ -29,10 +29,6 @@ pub fn PlayerMenu() -> Element {
           "Home"
         },
       },
-      // div {
-      //   class: "action",
-      //   AboutButton {  }
-      // },
       div {
         class: "action",
         a {
@@ -152,8 +148,6 @@ pub fn PlayerContent() -> Element {
   }
 }
 
-
-
 #[component]
 pub fn Player(props: WindowParentProps) -> Element {
   let player_state = use_context::<PlayerState>();
@@ -163,12 +157,12 @@ pub fn Player(props: WindowParentProps) -> Element {
     WindowTemplate {
       title: "BasedRadio",
       id: "based-radio",
-      header_icon: true,
-      footer_text: Some(format!("Listeners: {:?} | Total Songs: {:?}", (player_state.listeners)(), (player_state.total_songs)())),
-      bounce: Some(bounce),
+      header_icon: ICON_FAVICON,
+      footer_text: format!("Listeners: {:?} | Total Songs: {:?}", (player_state.listeners)(), (player_state.total_songs)()),
+      bounce: bounce,
       index: 1,
       is_visible: props.is_visible,
-      extra_menu_btn: Some(rsx!{ AboutButton {} }),
+      extra_menu_btn: rsx!{ AboutButton {} },
       PlayerMenu { },
       div {
         id: "player-container",

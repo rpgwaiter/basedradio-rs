@@ -178,7 +178,7 @@ async fn get_playing_song() -> impl Responder {
         .sources_vec()
         .iter()
         .map(|s| s.listeners().unwrap_or(0))
-        .sum()
+        .sum(),
     },
     more_info: get_more_info(&file),
   })

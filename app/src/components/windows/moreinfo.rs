@@ -1,7 +1,8 @@
 use crate::RadioState;
 use crate::components::windows::WindowParentProps;
 use crate::components::{
-  MoreInfoState, OpenWindow, TaskbarItem, UpstreamMoreInfo, WindowTemplate, get_api_url,
+  ICON_FAVICON, MoreInfoState, OpenWindow, TaskbarItem, UpstreamMoreInfo, WindowTemplate,
+  get_api_url,
 };
 use dioxus::prelude::*;
 
@@ -64,7 +65,7 @@ pub fn MoreInfoWindow(props: WindowParentProps) -> Element {
     WindowTemplate {
       title: "More Info",
       id: "window-more-info",
-      header_icon: true,
+      header_icon: ICON_FAVICON,
       // is_visible: use_context::<RadioState>().visibility.more_info,
       is_visible: props.is_visible,
       index: 2,

@@ -1,6 +1,6 @@
 use crate::RadioState;
 use crate::components::windows::WindowParentProps;
-use crate::components::{OpenWindow, TaskbarItem, WindowTemplate, get_api_url};
+use crate::components::{ICON_FAVICON, OpenWindow, TaskbarItem, WindowTemplate, get_api_url};
 use dioxus::prelude::*;
 
 #[derive(serde::Deserialize)]
@@ -68,7 +68,7 @@ pub fn UpdatesWindow(props: WindowParentProps) -> Element {
     WindowTemplate {
       title: "Updates",
       id: "window-updates",
-      header_icon: true,
+      header_icon: ICON_FAVICON,
       is_visible: props.is_visible,
       index: 2,
       div {

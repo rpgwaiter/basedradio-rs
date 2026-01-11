@@ -1,6 +1,6 @@
 use crate::RadioState;
 use crate::components::windows::WindowParentProps;
-use crate::components::{OpenWindow, TaskbarItem, WindowTemplate};
+use crate::components::{ICON_FAVICON, OpenWindow, TaskbarItem, WindowTemplate};
 use dioxus::prelude::*;
 
 #[component]
@@ -48,7 +48,7 @@ pub fn AboutWindow(props: WindowParentProps) -> Element {
     WindowTemplate {
       title: "About BasedRadio",
       id: "window-about",
-      header_icon: true,
+      header_icon: ICON_FAVICON,
       is_visible: props.is_visible,
       index: 4,
       div {

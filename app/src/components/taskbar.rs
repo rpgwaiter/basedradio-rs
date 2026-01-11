@@ -23,7 +23,6 @@ pub fn TaskbarItem(props: TaskbarItemProps) -> Element {
         warnings::copy_value_hoisted::allow(|| is_visible.toggle());
         active_window.set( if is_active { "based-radio".to_string() } else { props.id.clone() });
       }, // TODO: set last window
-      // TODO: move most of this style to css
       div { class: "taskbar-icon icon", style: format!("background: url({}) no-repeat; ", props.icon.unwrap_or(ICON_FAVICON.to_string())) },
       "{props.title}"
     }

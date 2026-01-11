@@ -1,12 +1,15 @@
 // The idea is that new update stuff can be added to the api in a cerdtain format,
 // And the window will display whatever it says
 
-use crate::components::{windows::WindowParentProps, TaskbarItem, WindowTemplate, Taskbar, OpenWindow, RadioState, ICON_WARNING};
+use crate::components::{
+  ICON_WARNING, OpenWindow, RadioState, Taskbar, TaskbarItem, WindowTemplate,
+  windows::WindowParentProps,
+};
 use dioxus::prelude::*;
 
 #[derive(PartialEq, Props, Clone)]
 struct NewsWindowProps {
-  is_visible: Signal<bool>
+  is_visible: Signal<bool>,
 }
 
 // eventually this will pull from an api but for now this is fine
@@ -14,19 +17,20 @@ pub fn news_loader(mut vis: Signal<bool>) {
   let mut already_spawned = Signal::new(false);
   let mut open_windows = use_context::<RadioState>().open_windows;
 
-  use_effect(move || if open_windows.iter().find(|item| item.id == "news" ).is_none() && !already_spawned() {
-    already_spawned.set(true);
-    open_windows.push(OpenWindow {
+  use_effect(move || {
+    if open_windows.iter().find(|item| item.id == "news").is_none() && !already_spawned() {
+      already_spawned.set(true);
+      open_windows.push(OpenWindow {
       id: "news".to_string(),
       window: rsx! { NewsWindow { is_visible: vis } },
       taskbar_item: rsx! { TaskbarItem { id: "news", icon: None, title: "News", is_visible: vis }},
     })
+    }
   });
 }
 
 #[component]
 pub fn NewsWindow(props: NewsWindowProps) -> Element {
-
   rsx! {
     WindowTemplate {
       title: String::from("I need your help!"),
@@ -49,7 +53,7 @@ pub fn NewsWindow(props: NewsWindowProps) -> Element {
           br {},
           br {},
           strong {"Or send me an email: ", a { href: "mailto:bugs@based.radio", "bugs@based.radio" } }
-          
+
         }
       }
     }

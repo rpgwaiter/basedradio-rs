@@ -1,7 +1,9 @@
 mod components;
 
-use components::{MoreInfoState, PlayerState, RadioState, SettingsState, Taskbar, TaskbarItem, OpenWindow};
 use components::windows::Player;
+use components::{
+  MoreInfoState, OpenWindow, PlayerState, RadioState, SettingsState, Taskbar, TaskbarItem,
+};
 use dioxus::html::input_data::MouseButton;
 use dioxus::prelude::*;
 
@@ -46,19 +48,25 @@ fn Home() -> Element {
   let player_state = use_context_provider(|| PlayerState::new());
   let mut open_windows = radio_state.open_windows;
   let player_is_visible = Signal::new(true);
-  
+
   // set this to false to disable the news window
   let news_is_visible = Signal::new(true);
-    
+
   // Initial load of player window
-  use_effect(move || if open_windows.iter().find(|item| item.id == "based-radio" ).is_none() {
-    open_windows.push(OpenWindow {
+  use_effect(move || {
+    if open_windows
+      .iter()
+      .find(|item| item.id == "based-radio")
+      .is_none()
+    {
+      open_windows.push(OpenWindow {
       id: "based-radio".to_string(),
       window: rsx! { Player { is_visible: player_is_visible } },
       taskbar_item: rsx! { TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: player_is_visible }},
     })
+    }
   });
-  
+
   // load news
   use_effect(move || news_loader(news_is_visible));
 

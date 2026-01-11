@@ -56,7 +56,7 @@ pub fn PictureWindow(props: WindowParentProps) -> Element {
     WindowTemplate {
       title: "ImgView",
       id: "window-imgview",
-      header_icon: false,
+      // header_icon: false, // TODO:
       is_visible: props.is_visible,
       index: 6,
       extra_style: "max-height: 50% !important; max-width: 50% !important;",

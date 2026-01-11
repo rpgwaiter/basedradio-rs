@@ -1,6 +1,6 @@
-use crate::components::{get_stream_mp3, get_stream_opus, PlayerState};
-use dioxus::prelude::*;
+use crate::components::{PlayerState, get_stream_mp3, get_stream_opus};
 use dioxus::logger::tracing::info;
+use dioxus::prelude::*;
 
 #[cfg(feature = "web")]
 use web_sys::wasm_bindgen::JsCast;
@@ -30,7 +30,6 @@ pub async fn play_audio() {
     .get_element_by_id("main-audio")
     .and_then(|el| el.dyn_into::<HtmlAudioElement>().ok())
   {
-    
     if audio.paused() {
       if audio.can_play_type("audio/ogg; codecs=opus") == "probably" {
         audio.set_src(get_stream_opus().as_str());
@@ -94,7 +93,6 @@ pub async fn get_audio_stream() {
   // }
 }
 
-
 // Used for click sounds and stuff
 #[cfg(feature = "web")]
 pub fn play_sound_effect(soundelement: &str) {
@@ -111,10 +109,7 @@ pub fn play_sound_effect(soundelement: &str) {
 
 // TODO:
 #[cfg(feature = "desktop")]
-pub fn play_sound_effect(sound: &str) {
-
-}
-
+pub fn play_sound_effect(sound: &str) {}
 
 #[component]
 pub fn VolumeSlider() -> Element {

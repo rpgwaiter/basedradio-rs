@@ -26,7 +26,6 @@ pub fn get_stream_opus() -> String {
   env::var("STREAM_OPUS").unwrap_or("https://cast.based.radio/vgm.ogg".into())
 }
 
-
 pub fn get_api_url() -> String {
   env::var("API_URL").unwrap_or("https://api.based.radio".into())
 }
@@ -84,7 +83,7 @@ pub struct PlayerState {
   pub background: Signal<Option<String>>,
   pub listeners: Signal<i16>,
   pub total_songs: Signal<u32>,
-  pub volume: Signal<u8>
+  pub volume: Signal<u8>,
 }
 
 impl PlayerState {
@@ -125,7 +124,6 @@ impl DragState {
     }
   }
 }
-
 
 // TODO: add basically all state here
 #[derive(Clone, Copy)]
