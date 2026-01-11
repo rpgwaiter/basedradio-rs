@@ -32,6 +32,7 @@ pub fn get_api_url() -> String {
 }
 
 pub static ICON_FAVICON: Asset = asset!("/assets/icons/favicon-32x32.png");
+pub static ICON_WARNING: Asset = asset!("/assets/icons/warning.png");
 
 // TODO: move to a lib
 pub fn add_zeros(e: i16, t: usize) -> String {

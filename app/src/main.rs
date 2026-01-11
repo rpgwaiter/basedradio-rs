@@ -6,6 +6,7 @@ use dioxus::html::input_data::MouseButton;
 use dioxus::prelude::*;
 
 use crate::components::play_sound_effect;
+use crate::components::windows::news_loader;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -45,6 +46,9 @@ fn Home() -> Element {
   let player_state = use_context_provider(|| PlayerState::new());
   let mut open_windows = radio_state.open_windows;
   let player_is_visible = Signal::new(true);
+  
+  // set this to false to disable the news window
+  let news_is_visible = Signal::new(true);
     
   // Initial load of player window
   use_effect(move || if open_windows.iter().find(|item| item.id == "based-radio" ).is_none() {
@@ -54,6 +58,9 @@ fn Home() -> Element {
       taskbar_item: rsx! { TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: player_is_visible }},
     })
   });
+  
+  // load news
+  use_effect(move || news_loader(news_is_visible));
 
   let drag_state = radio_state.drag_state;
   let mut is_dragging = drag_state.is_dragging;
