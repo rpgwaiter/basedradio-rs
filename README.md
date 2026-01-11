@@ -28,6 +28,7 @@ dx serve --platform=desktop --features=desktop
 - [x] actual image links instead of base64
 - [x] updates window
 - [ ] ci for web and desktop w/ releases
+- [ ] save user settings in local storage or cookies
 
 #### kinda soon
 - [ ] updated readme
