@@ -38,13 +38,13 @@ pub fn NewsWindow(props: NewsWindowProps) -> Element {
       header_icon: ICON_WARNING,
       index: 100,
       is_visible: props.is_visible,
-      x_offset: -20,
+      // x_offset: -20,
       y_offset: -30,
       div {
         class: "inner content",
         div {
           style: "padding: 2px; font-size: 12px;",
-          p {"Do you have issues with playback in your browser? Please report an issue on our Github! Include your browser version and OS. I'm unable to replicate but playback seems broken on some setups."},
+          p {"Do you have issues with playback in your browser? Please let me know! Include your browser version and OS. I'm unable to replicate but playback seems broken on some setups."},
           br {},
           strong {
             "Report broken playback on our ",
