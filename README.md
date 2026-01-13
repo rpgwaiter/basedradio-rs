@@ -4,26 +4,37 @@
 > No AI/LLM tools were used in the creation of this codebase. Contributions written by LLMs will be harshly rejected.
 
 ## Deps
+
 - rust toolchain (cargo)
 - dx (`cargo install dioxus-cli`)
 
 ## Dev for web
+
 ```sh
 dx serve --platform=web --addr=0.0.0.0 --port=8787 --features=web
 ```
 
 ### Dev for Desktop
+
 ```sh
 dx serve --platform=desktop --features=desktop
 ```
 
 <img width="2561" height="1308" alt="newcap" src="https://github.com/user-attachments/assets/d42728b4-e344-439a-8280-e8d22cd6ddf4" />
 
+### Docker
 
+If you don't want to install anyhting locally, you can use the [official dioxusdocker container](https://hub.docker.com/r/lewimbes/dioxus):
+
+```sh
+# web
+docker run -it -u $(id -u):$(id -g) -e CARGO_HOME=/tmp/cargo -e HOME=/tmp -v ./app:/workspace -w /workspace ghcr.io/lewimbes/dioxus-docker:latest dx build --release --platform web
+```
 
 ### TODO:
 
 #### soon (tm)
+
 - [ ] resizable windows
 - [x] actual image links instead of base64
 - [x] updates window
@@ -31,6 +42,7 @@ dx serve --platform=desktop --features=desktop
 - [ ] save user settings in local storage or cookies
 
 #### kinda soon
+
 - [ ] updated readme
 - [x] show current song count
 - [x] add A LOT more songs. We used to have over 400 songs before a data storage failure many years ago
@@ -42,6 +54,7 @@ dx serve --platform=desktop --features=desktop
 - [ ] visualizer like current based.radio has. Easy in web (due to existing code), very tricky for desktop
 
 #### someday
+
 - [x] rewrite the python api in rust
 - [ ] auto updater for desktop
 - [x] nix package

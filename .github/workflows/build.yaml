@@ -1,0 +1,37 @@
+name: Build
+
+on: push
+
+jobs:
+  # TODO: this could probly be done in a matrix, too, but it's good to test the initial idea with hardcoded stuff
+  # also, you can reuse the checkout, outside of matrix, so it it might build a lil faster to do it all in 1
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Web
+        run: docker run -it -u $(id -u):$(id -g) -e CARGO_HOME=/tmp/cargo -e HOME=/tmp -v ./app:/workspace -w /workspace ghcr.io/lewimbes/dioxus-docker:latest dx build --release --platform web
+      - name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web
+          path: app/target/dx/basedradio-rs/release/web/public
+      # TODO: figure out deps for mac/linux/windows and make a custom docker for it
+
+  # if you tag, it will create a release and attach artifacts to it
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
+    needs: [build]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
