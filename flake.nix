@@ -6,7 +6,7 @@
   };
 
   outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} rec {
       systems = import inputs.systems;
       perSystem = {
         pkgs,
@@ -20,12 +20,15 @@
     // {
       nixosModules.radio-api = import ./api/module.nix;
       overlays.default = final: prev: {
-        inherit
-          (self.outputs.packages.x86_64-linux)
-          basedradio-app
-          basedradio-api
-          ;
+        basedradio-api = final.callPackage ./api {};
+        basedradio-app = final.callPackage ./app {};
       };
+      # overlays.basedradio-app = final: prev: {
+      #   inherit
+      #     # (outputs.packages.x86_64-linux)
+      #     basedradio-app
+      #     ;
+      # };
       # nixosModules.basedradio-app = import ./app/module.nix;
     };
 }
