@@ -16,8 +16,16 @@
         packages.basedradio-api = pkgs.callPackage ./api {};
         packages.basedradio-app = pkgs.callPackage ./app {};
       };
-    } // { 
+    }
+    // {
       nixosModules.radio-api = import ./api/module.nix;
+      overlays.default = final: prev: {
+        inherit
+          (self.outputs.packages.x86_64-linux)
+          basedradio-app
+          basedradio-api
+          ;
+      };
       # nixosModules.basedradio-app = import ./app/module.nix;
     };
 }
