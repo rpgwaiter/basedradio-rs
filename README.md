@@ -33,7 +33,7 @@ dx serve --platform=desktop --features=desktop
 #### kinda soon
 - [ ] updated readme
 - [x] show current song count
-- [ ] add A LOT more songs. We used to have over 400 songs before a data storage failure many years ago
+- [x] add A LOT more songs. We used to have over 400 songs before a data storage failure many years ago
 - [x] .json with info on each game/system/song(?)
 - [x] per-game backgrounds
 - [x] settings panel for backgrounds, other stuff
