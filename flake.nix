@@ -23,12 +23,5 @@
         basedradio-api = final.callPackage ./api {};
         basedradio-app = final.callPackage ./app {};
       };
-      # overlays.basedradio-app = final: prev: {
-      #   inherit
-      #     # (outputs.packages.x86_64-linux)
-      #     basedradio-app
-      #     ;
-      # };
-      # nixosModules.basedradio-app = import ./app/module.nix;
     };
 }

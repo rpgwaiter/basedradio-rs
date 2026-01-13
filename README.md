@@ -44,7 +44,7 @@ dx serve --platform=desktop --features=desktop
 #### someday
 - [x] rewrite the python api in rust
 - [ ] auto updater for desktop
-- [ ] nix package (requires a lot of work, or maybe I'm just missing something)
+- [x] nix package
 - [x] listener count (will require an mpd replacement or something really hacky)
 - [ ] discord bot
 - [ ] different playlists for events, livecasting, etc
