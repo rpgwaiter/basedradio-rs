@@ -1,4 +1,9 @@
-{pkgs, lib, ...}: let
+{
+  pkgs,
+  lib,
+  ...
+}: 
+let
   rust-toolchain = pkgs.symlinkJoin {
     name = "rust-toolchain";
     paths = with pkgs; [
@@ -12,14 +17,13 @@
       cargo-insta
       cargo-machete
       cargo-edit
-      wasm-bindgen-cli_0_2_100
+      wasm-bindgen-cli_0_2_106
     ];
   };
 in
   pkgs.stdenv.mkDerivation rec {
     pname = "basedradio-app";
     version = "0.0.1";
-
     src = lib.cleanSource ./.;
 
     cargoDeps = pkgs.rustPlatform.importCargoLock {
@@ -29,24 +33,25 @@ in
     cargohook = pkgs.rustPlatform.cargoSetupHook;
 
     buildInputs = with pkgs; [
-      dioxus-cli
-      cargo
       at-spi2-atk
       atkmm
+      binaryen
       cairo
+      cargo
+      dioxus-cli
       gdk-pixbuf
       glib
       gtk3
       harfbuzz
       librsvg
       libsoup_3
-      pango
-      webkitgtk_4_1
-      openssl
-      wasm-bindgen-cli_0_2_100
       lld_20
-      dioxus-cli
-      # cargohook
+      nodejs
+      openssl
+      pango
+      rustc
+      wasm-bindgen-cli_0_2_106
+      webkitgtk_4_1
     ];
 
     nativeBuildInputs = [
@@ -56,11 +61,17 @@ in
 
     buildPhase = ''
       ls -Alh .
-      dx build --platform=web --features=web --release --fullstack=false
+      export PATH=${pkgs.wasm-bindgen-cli_0_2_106}/bin:$PATH
+      wasm-bindgen --version
+      dx --version
+      dx --help
+      dx doctor
+      dx build --platform=web --features=web --release
     '';
 
     installPhase = ''
-      mkdir $out/share
+      mkdir -p $out/share
+      ls -Alh
       mv ./target/dx/basedradio-rs/release/web/public $out/share/
     '';
   }

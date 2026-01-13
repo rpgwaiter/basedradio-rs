@@ -1,4 +1,8 @@
-{pkgs, lib, ...}: let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   manifest = (pkgs.lib.importTOML ./Cargo.toml).package;
 in
   pkgs.rustPlatform.buildRustPackage rec {
@@ -6,6 +10,6 @@ in
     version = manifest.version;
     cargoLock.lockFile = ./Cargo.lock;
     src = lib.cleanSource ./.;
-    nativeBuildInputs = [ pkgs.pkg-config ];
-    buildInputs = [ pkgs.openssl ];
+    nativeBuildInputs = [pkgs.pkg-config];
+    buildInputs = [pkgs.openssl];
   }

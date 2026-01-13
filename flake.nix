@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     systems.url = "github:nix-systems/default";
   };
@@ -14,6 +14,7 @@
         ...
       }: {
         packages.basedradio-api = pkgs.callPackage ./api {};
+        packages.basedradio-app = pkgs.callPackage ./app {};
       };
     } // { 
       nixosModules.radio-api = import ./api/module.nix;
