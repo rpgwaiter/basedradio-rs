@@ -42,18 +42,12 @@ pkgs.stdenv.mkDerivation rec {
   ];
 
   buildPhase = ''
-    ls -Alh .
     export PATH=${pkgs.wasm-bindgen-cli_0_2_106}/bin:$PATH
-    wasm-bindgen --version
-    dx --version
-    dx --help
-    dx doctor
     dx build --platform=web --features=web --release
   '';
 
   installPhase = ''
     mkdir -p $out/share
-    ls -Alh
     mv ./target/dx/basedradio-rs/release/web/public $out/share/
   '';
 }
