@@ -8,11 +8,19 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    container: 
+      image: ghcr.io/lewimbes/dioxus-docker:latest
+      volumes:
+        - app:/workspace
+      env:
+        CARGO_HOME: /tmp/cargo
+        HOME: /tmp
+        
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Web
-        run: docker run -it -u $(id -u):$(id -g) -e CARGO_HOME=/tmp/cargo -e HOME=/tmp -v ./app:/workspace -w /workspace ghcr.io/lewimbes/dioxus-docker:latest dx build --release --platform web
+        run: cd /workspace && dx build --release --platform web
       - name: Upload web artifact
         uses: actions/upload-artifact@v4
         with:
