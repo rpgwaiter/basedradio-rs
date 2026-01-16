@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Web
-        run: cd /workspace && dx build --release --platform web
+        run: cd /workspace && ls -Alh && dx build --release --platform web
       - name: Upload web artifact
         uses: actions/upload-artifact@v4
         with:
