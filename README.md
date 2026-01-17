@@ -20,11 +20,11 @@ dx serve --platform=web --addr=0.0.0.0 --port=8787 --features=web
 dx serve --platform=desktop --features=desktop
 ```
 
-<img width="2561" height="1308" alt="newcap" src="https://github.com/user-attachments/assets/d42728b4-e344-439a-8280-e8d22cd6ddf4" />
+<img width="2561" height="1308" alt="Screenshot of BasedRadio" src="https://github.com/user-attachments/assets/d42728b4-e344-439a-8280-e8d22cd6ddf4" />
 
 ### Docker
 
-If you don't want to install anyhting locally, you can use the [official dioxusdocker container](https://hub.docker.com/r/lewimbes/dioxus):
+If you don't want to install anything locally, you can use the [official dioxus docker container](https://hub.docker.com/r/lewimbes/dioxus):
 
 ```sh
 # web
@@ -40,6 +40,7 @@ docker run -it -u $(id -u):$(id -g) -e CARGO_HOME=/tmp/cargo -e HOME=/tmp -v ./a
 - [x] updates window
 - [ ] ci for web and desktop w/ releases
 - [ ] save user settings in local storage or cookies
+- [ ] figure out what software license I wanna use
 
 #### kinda soon
 
