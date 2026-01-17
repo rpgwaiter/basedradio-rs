@@ -1,6 +1,5 @@
 use crate::components::{ICON_FAVICON, RadioState, windows::AboutButton};
-// use dioxus::logger::tracing::info;
-use dioxus::{html::geometry::PixelsRect, prelude::*, warnings::Warning};
+use dioxus::{CapturedError, html::geometry::PixelsRect, prelude::*, warnings::Warning};
 use std::rc::Rc;
 
 static RESIZE_ICON: Asset = asset!("/assets/ui/resize.png");
@@ -32,34 +31,39 @@ fn close_window(id: &str) {
 
 // Ran when the user grabs a corner of a window
 // TODO:
-// async fn resize_window(
-//   event: Event<MouseData>,
-//   element: Signal<Option<Rc<MountedData>>>,
-// ) -> Option<(f64, f64)> {
-//   let read = element.read();
-//   let client_rect = read.as_ref().map(|el| el.get_client_rect());
+async fn resize_window(
+  event: Event<MouseData>,
+  element: Signal<Option<Rc<MountedData>>>,
+) -> Result<(f64, f64), CapturedError> {
+  let read = element.read();
+  let client_rect = read.as_ref().map(|el| el.get_client_rect());
 
-//   let (dx, dy) = {
-//     let coords = event.data.client_coordinates();
-//     (coords.x as f64, coords.y as f64)
-//   };
+  let (dx, dy) = {
+    let coords = event.data.element_coordinates();
+    (coords.x as f64, coords.y as f64)
+  };
+  
+  // info!("dx: {:#?}, dy: {:#?}", dx, dy);
 
-//   if let Some(client_rect) = client_rect {
-//     if let Ok(rect) = client_rect.await {
-//       return Some((
-//         (rect.size.width + dx).max(50.0),
-//         (rect.size.height + dy).max(50.0),
-//       ));
-//     }
-//   }
-//   return None;
-// }
+  if let Some(client_rect) = client_rect {
+    if let Ok(rect) = client_rect.await {
+      let w = rect.size.width / 2.0;
+      let h = rect.size.height / 2.0;
+      return Ok((
+        (w + dx).max(50.0),
+        (h + dy).max(50.0),
+      ));
+    }
+  }
+  return Ok((0 as f64, 0 as f64))
+}
 
 #[allow(non_snake_case)]
 #[component]
 pub fn WindowTemplate(mut props: WindowProps) -> Element {
   let mut div_element = use_signal(|| None as Option<Rc<MountedData>>);
   let mut is_visible = warnings::copy_value_hoisted::allow(|| props.is_visible);
+  let mut is_resizing = use_signal(|| false);
 
   let vis_css = use_memo(move || {
     if warnings::copy_value_hoisted::allow(|| is_visible()) {
@@ -132,6 +136,8 @@ pub fn WindowTemplate(mut props: WindowProps) -> Element {
       style: if let Some(ref extra) = props.extra_style { "{extra}" },
       style: "{vis_css}; z-index: {window_index};",
       style: if dim_x() > 0.0 && is_active && is_dragging() {"top: {dim_y}px; left: {dim_x}px;"} else {"top: {dim_y_local}; left: {dim_x_local};"},
+      height: window_height(),
+      width: window_width(),
       div {
         class: "inner",
         div {
@@ -178,7 +184,19 @@ pub fn WindowTemplate(mut props: WindowProps) -> Element {
       div {
         class: "status-bar",
         style: format!("background: url({});", RESIZE_ICON.to_string()),
-        // onmousedown: move |event| resize_window(event, div_element),
+        onmousedown: move |_| is_resizing.set(true),
+        onmouseup: move |_| is_resizing.set(false),
+        onmousemove: move |event| {
+          if is_resizing() {
+            spawn(async move {
+              if let Ok((w, h)) = resize_window(event, div_element).await {
+                window_height.set(Some(h));
+                window_width.set(Some(w));
+                info!("height: {:#?}, width: {:#?}", h, w);
+              }
+            });
+            }
+        },
         div { { props.footer_text.unwrap_or(String::from("Keep it Based.")) } }
       }
     }
