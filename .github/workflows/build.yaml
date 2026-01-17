@@ -6,6 +6,7 @@ jobs:
   # TODO: this could probly be done in a matrix, too, but it's good to test the initial idea with hardcoded stuff
   # also, you can reuse the checkout, outside of matrix, so it it might build a lil faster to do it all in 1
   build:
+    if: github.ref_type == 'tag'
     name: Build
     runs-on: ubuntu-latest
     container: 
