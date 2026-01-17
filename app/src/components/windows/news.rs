@@ -23,7 +23,7 @@ pub fn news_loader(mut vis: Signal<bool>) {
       open_windows.push(OpenWindow {
       id: "news".to_string(),
       window: rsx! { NewsWindow { is_visible: vis } },
-      taskbar_item: rsx! { TaskbarItem { id: "news", icon: None, title: "News", is_visible: vis }},
+      taskbar_item: rsx! { TaskbarItem { id: "news", icon: ICON_WARNING, title: "News", is_visible: vis }},
     })
     }
   });

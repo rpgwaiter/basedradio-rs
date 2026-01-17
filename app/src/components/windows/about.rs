@@ -24,8 +24,7 @@ pub fn AboutButton() -> Element {
                 TaskbarItem {
                   id: id(),
                   title: "About".to_string(),
-                  is_visible: is_visible,
-                  icon: None,
+                  is_visible: is_visible
                 }
               },
               window: rsx! { AboutWindow { is_visible: is_visible } }

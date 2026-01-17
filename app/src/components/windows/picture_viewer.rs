@@ -32,8 +32,7 @@ pub fn PictureButton() -> Element {
                 TaskbarItem {
                   id: id(),
                   title: "ImgView".to_string(),
-                  is_visible: is_visible,
-                  icon: None,
+                  is_visible: is_visible
                 }
               },
               window: rsx! { PictureWindow { is_visible: is_visible } }

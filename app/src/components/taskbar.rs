@@ -1,12 +1,12 @@
 use dioxus::{prelude::*, warnings::Warning};
 
-use crate::components::{ICON_FAVICON, RadioState};
+use crate::components::{RadioState, ICON_FAVICON};
 
 #[derive(PartialEq, Props, Clone)]
 pub struct TaskbarItemProps {
   pub title: String,
   pub id: String,
-  pub icon: Option<String>,
+  pub icon: Option<Asset>,
   pub is_visible: Signal<bool>,
 }
 
@@ -23,7 +23,7 @@ pub fn TaskbarItem(props: TaskbarItemProps) -> Element {
         warnings::copy_value_hoisted::allow(|| is_visible.toggle());
         active_window.set( if is_active { "based-radio".to_string() } else { props.id.clone() });
       }, // TODO: set last window
-      div { class: "taskbar-icon icon", style: format!("background: url({}) no-repeat; ", props.icon.unwrap_or(ICON_FAVICON.to_string())) },
+      div { class: "taskbar-icon icon", style: format!("background: url({}) no-repeat; ", props.icon.unwrap_or(ICON_FAVICON).to_string()) },
       "{props.title}"
     }
   }

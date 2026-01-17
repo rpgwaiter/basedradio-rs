@@ -41,8 +41,7 @@ pub fn SettingsButton() -> Element {
                 TaskbarItem {
                   id: id(),
                   title: "Settings".to_string(),
-                  is_visible: is_visible,
-                  icon: None,
+                  is_visible: is_visible
                 }
               },
               window: rsx! { SettingsWindow { is_visible: is_visible } }

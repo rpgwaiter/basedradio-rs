@@ -40,8 +40,7 @@ pub fn UpdatesButton() -> Element {
                 TaskbarItem {
                   id: id(),
                   title: "Updates".to_string(),
-                  is_visible: is_visible,
-                  icon: None,
+                  is_visible: is_visible
                 }
               },
               window: rsx! { UpdatesWindow { is_visible: is_visible } }

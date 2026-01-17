@@ -38,8 +38,7 @@ pub fn MoreInfoButton() -> Element {
                 TaskbarItem {
                   id: id(),
                   title: "More Info".to_string(),
-                  is_visible: is_visible,
-                  icon: None,
+                  is_visible: is_visible
                 }
               },
               window: rsx! { MoreInfoWindow { is_visible: is_visible } }

@@ -62,7 +62,7 @@ fn Home() -> Element {
       open_windows.push(OpenWindow {
       id: "based-radio".to_string(),
       window: rsx! { Player { is_visible: player_is_visible } },
-      taskbar_item: rsx! { TaskbarItem { id: "based-radio", icon: None, title: "BasedRadio", is_visible: player_is_visible }},
+      taskbar_item: rsx! { TaskbarItem { id: "based-radio", title: "BasedRadio", is_visible: player_is_visible }},
     })
     }
   });
