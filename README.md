@@ -1,1 +1,1 @@
-Project moved to Codeburg: https://codeberg.org/rpgwaiter/basedradio-rs
+Project moved to Codeberg: https://codeberg.org/rpgwaiter/basedradio-rs
